@@ -1,0 +1,17 @@
+{
+  "name": "monot",
+  "version": "1.0.0",
+  "description": "The new web browser by monochrome",
+  "main": "main.js",
+  "scripts": {
+    "test": "npx electron ."
+  },
+  "author": "Sorakime",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^13.1.7"
+  },
+  "dependencies": {
+    "electron-builder": "^22.11.7"
+  }
+}
