@@ -1,2 +1,17 @@
-# monot
-The new web browser by monochrome. It was made with Electron. It doesn't have setting, bookmark. It's just beta.
+# Monot
+新しいウェブブラウザ。まだベータ。
+
+どうも。
+
+「オシャレ、機能多め？使いやすい」
+
+を目標に作ったブラウザです。また、ベータ版ですから機能びっくりするぐらい少ないです。同期がなくても何とタブすらない。ベータ２ではそこら辺を実装しようと思いまーす。
+
+以上!ウェブサイトは十年後くらいに作ります！
+
+Ver.1.0 Beta 1 Build 1.
+
+## Screenshot
+![image](https://user-images.githubusercontent.com/69241694/127771423-5aa62829-80a5-4901-955f-960451c067b2.png)
+
+# 自分でビルドして！！明日出すから！！
