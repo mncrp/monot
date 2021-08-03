@@ -8,6 +8,7 @@ function nw(){
     transparent: false,
     backgroundColor: '#ffffff',
     title: 'Monot by monochrome.',
+    icon: `${__dirname}/src/image/logo.png`,
     webPreferences: {
       worldSafeExecuteJavaScript: true,
       nodeIntegration:false,
@@ -32,7 +33,7 @@ function nw(){
   })
   win.on('maximize',()=>{
     winSize=win.getContentSize();
-    bv.setBounds({x:0, y: 49, width: winSize[0], height: winSize[1]-50});
+    bv.setBounds({x:0, y: 50, width: winSize[0], height: winSize[1]-50});
   })
   win.on('unmaximize',()=>{
     winSize=win.getContentSize();
@@ -131,7 +132,8 @@ Copyright 2021 Sorakime.`
       },
       {
         label: '終了',
-        role: 'quit'
+        role: 'quit',
+        accelerator: 'CmdOrCtrl+Q'
       }
     ]
   },
@@ -140,21 +142,21 @@ Copyright 2021 Sorakime.`
     submenu: [
       {
         label: '再読み込み',
-        accelerator: 'Ctrl+R',
+        accelerator: 'CtrlOrCmd+R',
         click: ()=>{
           bv.webContents.reload();
         }
       },
       {
         label: '戻る',
-        accelerator: 'Ctrl+Shift+Z',
+        accelerator: 'CtrlOrCmd+Shift+Z',
         click: ()=>{
           bv.webContents.goBack();
         }
       },
       {
         label: '進む',
-        accelerator: 'Ctrl+Shift+X',
+        accelerator: 'CtrlOrCmd+Shift+X',
         click: ()=>{
           bv.webContents.goForward();
         }

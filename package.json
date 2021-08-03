@@ -9,9 +9,23 @@
   "author": "Sorakime",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^13.1.7"
-  },
-  "dependencies": {
+    "electron": "^13.1.7",
     "electron-builder": "^22.11.7"
+  },
+  "build": {
+    "appId": "io.github.sorakime.monot",
+    "win": {
+      "icon": "src/image/logo.ico",
+      "target": "portable",
+      "legalTrademarks": "Copyright 2021 Sorakime."
+    },
+    "linux": {
+      "icon": "src/image/icon.png",
+      "target": "AppImage"
+    },
+    "appImage": {
+      "category": "Utility",
+      "synopsis": "Monot ver1.0b1Build1"
+    }
   }
 }

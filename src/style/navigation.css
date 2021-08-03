@@ -46,10 +46,11 @@ script, style{
 }
 
 a{
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
   transition: all 0.1s 0s ease-in-out;
+  cursor: default;
 }
 a:nth-child(1){
   background-image: url('../image/reload.png');
