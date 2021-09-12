@@ -99,6 +99,13 @@ ipcMain.on('moveView',(e,link)=>{
       */
     })
   }
+
+  if(link!=`file://${__dirname}/../resource/index.html`){
+    bv.webContents.executeJavaScript(`
+      document.getElementsByTagName('head')[0].innerHTML=document.getElementsByTagName('head')[0].innerHTML+'<style>*{-webkit-app-region: none!important}</style>'
+      document.body.style.userSelect='inherit'
+      `);
+  }
 })
 ipcMain.on('windowClose',()=>{
   win.close();
@@ -223,8 +230,11 @@ Copyright 2021 Sorakime.`
     label: '開発',
     submenu: [
       {
-        role: 'toggleDevTools',
-        accelerator: 'F12'
+        label: '開発者向けツール',
+        accelerator: 'F12',
+        click: ()=>{
+          bv.webContents.toggleDevTools()
+        }
       }
     ]
   }
