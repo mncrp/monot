@@ -150,12 +150,14 @@ let menu=Menu.buildFromTemplate([
             type: 'info',
             icon: './src/image/logo.png',
             title: 'Monotについて',
-            message: 'Monot 1.0 Beta 1について',
-            detail: `バージョン: 1.0.0 Beta 1
-ビルド番号: 1
+            message: 'Monot 1.0 Beta 2について',
+            detail: `バージョン: 1.0.0 Beta 2
+ビルド番号: 2
 開発者: Sorakime
 
 リポジトリ: https://github.com/Sorakime/monot
+公式サイト: https://sorakime.github.io/mncr/project/monot
+
 Copyright 2021 Sorakime.`
           })
         }
