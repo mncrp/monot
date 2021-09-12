@@ -5,13 +5,29 @@
     <title>New Tab</title>
     <link rel="stylesheet" href="style/main.css">
     <link rel="stylesheet" href="style/font.css">
+    <style media="screen">
+    body{
+      -webkit-app-region: drag;
+      user-select: none;
+      margin: 1.5px;
+      margin-top: 0;
+      padding: 0;
+      width: calc(100vw - 3px);
+      height: calc(100vh - 1.5px);
+    }
+    input{
+      user-select: text;
+      -webkit-app-region: none;
+    }
+    </style>
   </head>
   <body>
     <div>
       <h1>Monot<h5> by monochrome.</h5></h1>
-      <div><input type="search" placeholder="検索する単語またはURLを入力"><a href="javascript:searchBrowser()"></a></div>
+      <div><input type="search" placeholder="検索する単語を入力"><a href="javascript:searchBrowser()"></a></div>
       <p>Monot by monochrome. Ver.1.0 Beta 1 Build 1</p>
-      <p><a href="https://github.com/Sorakime/monot">GitHub</a></p>
+      <p><a href="https://github.com/Sorakime/monot">Repository</a></p>
+      <p><a href="https://sorakime.github.io/mncr/project/monot">Website</a></p>
     </div>
     <script src="script/search.js"></script>
   </body>

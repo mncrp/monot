@@ -7,14 +7,20 @@
     <link rel="stylesheet" href="resource/style/font.css">
   </head>
   <body>
-    <a href="javascript:node.reloadBrowser()"></a>
-    <a href="javascript:node.backBrowser()"></a>
-    <a href="javascript:node.goBrowser()"></a>
-    <input type="text" placeholder="検索する単語またはURLを入力">
-    <a href="javascript:moveBrowser()"></a>
-    <a href="javascript:node.winMinimize()"></a>
-    <a href="javascript:maxMin()" id="maxMini"></a>
-    <a href="javascript:node.winClose()"></a>
+    <nav>
+      <a href="javascript:node.moveToNewTab()"></a>
+      <a href="javascript:node.reloadBrowser()"></a>
+      <a href="javascript:node.backBrowser()"></a>
+      <a href="javascript:node.goBrowser()"></a>
+      <input type="text" placeholder="検索する単語またはURLを入力">
+      <a href="javascript:moveBrowser()"></a>
+      <a href="javascript:node.winMinimize()"></a>
+      <a href="javascript:maxMin()" id="maxMini"></a>
+      <a href="javascript:node.winClose()"></a>
+    </nav>
+    <tab-el></tab-el>
+    <yomikomi-bar></yomikomi-bar>
     <script src="script/moveBrowser.js"></script>
+    <script src="script/tabMan.js"></script>
   </body>
 </html>

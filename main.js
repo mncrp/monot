@@ -1,5 +1,9 @@
 const {app, BrowserWindow, BrowserView, dialog, ipcMain, ipcRenderer, screen, Menu}=require('electron');
-var win, bv;
+const fs=require('fs');
+var win;
+var bv=[];
+const viewY=50;
+var nowTab=0;
 
 function nw(){
   win=new BrowserWindow({
@@ -24,7 +28,7 @@ function nw(){
   })
   let winSize=win.getSize();
   win.setBrowserView(bv);
-  bv.setBounds({x: 0, y: 50, width: winSize[0], height: 500});
+  bv.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
   bv.setAutoResize({width: true, height: true});
   bv.webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
 
@@ -33,17 +37,29 @@ function nw(){
   })
   win.on('maximize',()=>{
     winSize=win.getContentSize();
-    bv.setBounds({x:0, y: 50, width: winSize[0], height: winSize[1]-50});
+    bv.setBounds({x:0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
   })
   win.on('unmaximize',()=>{
     winSize=win.getContentSize();
-    bv.setBounds({x: 0, y: 50, width: winSize[0], height: winSize[1]-50});
+    bv.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
   })
   win.on('enter-full-screen',()=>{
     winSize=win.getContentSize();
-    bv.setBounds({x: 0, y: 50, width: winSize[0], height: winSize[1]-50});
+    bv.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
   })
+}/*
+function newTab(){
+  let b=new BrowserView();
+  bv.push(b);
+  win.setBrowserView(bv.slice(-1)[0]);
+  bv.slice(-1)[0].setBounds({x:0,y:viewY,width:winSize[0],height:winSize[1]-viewY});
+  bv.slice(-1)[0].setAutoResize({width:true,height:true});
+  nowTab=bv.length+1;
+  bv[nowTab].webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
 }
+function removeTab(num){
+  bv.splice(num);
+}*/
 
 app.on('ready', nw);
 
@@ -57,8 +73,32 @@ app.on('activate',()=>{
     nw();
 })
 
+//ipc channels
 ipcMain.on('moveView',(e,link)=>{
-  bv.webContents.loadURL(link);
+  if(link==''){
+    return true;
+  }else{
+    bv.webContents.loadURL(link).then(()=>{
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv.webContents.getURL().substring(bv.webContents.getURL().indexOf('/')+2, bv.webContents.getURL().length)}'`)
+    }).catch(()=>{
+      bv.webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(()=>{
+        win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='';`);
+        bv.webContents.executeJavaScript(`document.getElementsByTagName('span')[0].innerText='${link}';
+          window.node.reload='${bv.webContents.reload}';
+        `);
+      })
+      console.log('The previous error is normal. It redirected to a page where the server couldn\'t be found.');
+      /*
+      fs.writeFileSync(`${__dirname}/src/config/history.json`,
+        JSON.stringify(
+          JSON.parse(
+            fs.readFileSync(`${__dirname}/src/config/history.json`,'utf-8')
+          ).unshift([link, bv.webContents.getTitle()])
+        )
+      );
+      */
+    })
+  }
 })
 ipcMain.on('windowClose',()=>{
   win.close();
@@ -91,6 +131,12 @@ ipcMain.on('browserBack',()=>{
 ipcMain.on('browserGoes',()=>{
   bv.webContents.goForward();
 })
+ipcMain.on('getTabList',()=>{
+  return bv;
+})
+ipcMain.on('makeNewTab',()=>{
+  newTab();
+})
 
 let menu=Menu.buildFromTemplate([
   {
@@ -113,6 +159,14 @@ let menu=Menu.buildFromTemplate([
 Copyright 2021 Sorakime.`
           })
         }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'togglefullscreen',
+        accelerator: 'F11',
+        label: '全画面表示'
       },
       {
         type: 'separator'
@@ -142,24 +196,33 @@ Copyright 2021 Sorakime.`
     submenu: [
       {
         label: '再読み込み',
-        accelerator: 'CtrlOrCmd+R',
+        accelerator: 'CmdOrCtrl+R',
         click: ()=>{
           bv.webContents.reload();
         }
       },
       {
         label: '戻る',
-        accelerator: 'CtrlOrCmd+Shift+Z',
+        accelerator: 'CtrlOrCmd+Alt+Z',
         click: ()=>{
           bv.webContents.goBack();
         }
       },
       {
         label: '進む',
-        accelerator: 'CtrlOrCmd+Shift+X',
+        accelerator: 'CtrlOrCmd+Alt+X',
         click: ()=>{
           bv.webContents.goForward();
         }
+      }
+    ]
+  },
+  {
+    label: '開発',
+    submenu: [
+      {
+        role: 'toggleDevTools',
+        accelerator: 'F12'
       }
     ]
   }

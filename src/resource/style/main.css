@@ -5,7 +5,7 @@
 }
 
 body{
-  background-color: #fff;
+  background-color: #efefef;
 }
 
 h1{
@@ -42,6 +42,7 @@ body>div{
 }
 div>div *{
   vertical-align: middle;
+  box-shadow: 2px 2px 5px #bfbfbf99;
 }
 div input{
   position: relative;
@@ -77,6 +78,6 @@ p>a{
   position: relative;
   background: none;
   box-shadow: none;
-  color: #1152ff;
+  color: #aaa;
   text-decoration: none;
 }
