@@ -20,10 +20,10 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |言語|日本語|
 
 ## スクショ
-![起動直後の画面](https://user-images.githubusercontent.com/69241694/132985469-64b7f8a2-a46e-4c82-b08c-9fd6dcd97e47.png)
+![起動直後の画面](https://user-images.githubusercontent.com/69241694/132985469-64b7f8a2-a46e-4c82-b08c-9fd6dcd97e47.png)<br>
 起動直後の画面
 
-![実際にウェブサイトを閲覧している様子](https://user-images.githubusercontent.com/69241694/132985645-4ea891ed-1c03-450e-ad01-f23263409697.png)
+![実際にウェブサイトを閲覧している様子](https://user-images.githubusercontent.com/69241694/132985645-4ea891ed-1c03-450e-ad01-f23263409697.png)<br>
 実際にウェブサイトを閲覧している様子
 
 
