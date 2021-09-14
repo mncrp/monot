@@ -8,3 +8,7 @@ document.getElementsByTagName('input')[0].addEventListener('keydown',(e)=>{
     location.href=`https://www.duckduckgo.com/?q=${word}`;
   }
 })
+
+window.onbeforeunload=()=>{
+  document.body.style.setProperty('-webkit-app-region','none');
+}

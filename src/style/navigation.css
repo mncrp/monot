@@ -22,6 +22,7 @@ body{
 nav{
   display: block;
   position: relative;
+  height: 40px;
 }
 
 body nav *{
@@ -94,13 +95,13 @@ nav a:active{
 tab-el,tab-el,tab-el{
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: #fffa #fff0;
+  scrollbar-color: #ddd #fff0;
   display: flex;
   position: relative;
   left: 0; top: 0;
   padding: 0;
   margin: 0;
-  height: 37px;
+  height: 30px;
   padding: 5px;
   padding-top: 0;
   overflow-x: hidden;
@@ -117,7 +118,7 @@ tab-el div{
   min-width: 175px;
   font-weight: 100;
   padding: 5px;
-  height: 20px;
+  height: 13px;
   background-color: #aaa4;
   margin-right: 5px;
   border-radius: 10px;
@@ -127,14 +128,16 @@ tab-el div{
   text-overflow: ellipsis;
   -webkit-user-select: auto;
   -webkit-app-region: none;
+  transition: all 0.2s ease-in-out;
 }
 tab-el div a{
   content: '';
   display: inline-block;
   float: right;
-  right: -4px;
-  height: 20px;
-  width: 20px;
+  top: -1.5px;
+  right: -5.5px;
+  height: 16px;
+  width: 16px;
   margin-right: 5px;
   border-radius: 5px;
   z-index: +1;
@@ -143,17 +146,22 @@ tab-el div a{
 tab-el div p{
   width: calc(100% - 27px);
   overflow: hidden;
+  top: -2px;
   text-overflow: ellipsis;
   display: inline-block;
+}
+tab-el *{
+  -webkit-app-region: none;
 }
 
 yomikomi-bar{
   display: block;
   position: relative;
+  top: -1px;
   bottom: 0; left: -9px;
   width: 0;
   height: 3px;
-  background-color: #000;
+  background-color: #bbb;
   transition: all 0.2s ease-in-out;
   opacity: 1;
 }
