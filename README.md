@@ -1,4 +1,4 @@
-# Monot v.1.0 Beta 2
+# Monot v.1.0 Beta 3
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
 
 ## 注意
@@ -14,8 +14,8 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|バージョン|v.1.0 Beta 2|
-|ビルド|2|
+|バージョン|v.1.0 Beta 3|
+|ビルド|3|
 |ライセンス|[monochrome. License](https://sorakime.github.io/source/license.txt)|
 |言語|日本語|
 
@@ -39,6 +39,8 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |再読み込み|Ctrl(Dmd) + R|
 |戻る|Ctrl(Cmd) + Shift + Z|
 |進む|Ctrl(Cmd) + Shift + X|
+|Webサイトの開発者向けツール|F12|
+|Monotの開発者向けツール|Alt + F12|
 
 戻る進むがあるのはいいんじゃない？
 
