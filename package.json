@@ -1,7 +1,7 @@
 {
   "name": "monot",
   "version": "1.0.0",
-  "description": "The new web browser by monochrome. v.1.0 Beta 3",
+  "description": "The new web browser by monochrome. v.1.0 Beta 3.1",
   "main": "main.js",
   "scripts": {
     "test": "npx electron ."
@@ -25,7 +25,7 @@
     },
     "appImage": {
       "category": "Utility",
-      "synopsis": "Monot ver1.0b1Build3"
+      "synopsis": "Monot ver1.0b1Build3.1"
     }
   }
 }
