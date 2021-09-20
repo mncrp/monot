@@ -143,8 +143,8 @@ let menu=Menu.buildFromTemplate([
             type: 'info',
             icon: './src/image/logo.png',
             title: 'Monotについて',
-            message: 'Monot 1.0.0 Beta 3について',
-            detail: `バージョン: 1.0.0 Beta 3
+            message: 'Monot 1.0.0 Beta 3.1について',
+            detail: `バージョン: 1.0.0 Beta 3.1
 ビルド番号: 3
 開発者: Sorakime
 
