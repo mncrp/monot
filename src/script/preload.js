@@ -1,4 +1,5 @@
-const {contextBridge, ipcRenderer} = require('electron');
+const {contextBridge, ipcRenderer, Menu} = require('electron');
+const fs = require('fs');
 
 contextBridge.exposeInMainWorld('node',{
   winClose: ()=>{
@@ -17,6 +18,9 @@ contextBridge.exposeInMainWorld('node',{
     ipcRenderer.send('windowMaxMin');
   },
   moveBrowser: (word)=>{
+    let file=fs.readFileSync(`${__dirname}/../config/engines.mncfg`,'utf-8');
+    let obj=JSON.parse(file);
+    let engine=obj.values[obj.engine];
     if(word.toLowerCase().substring(0, 6)=='http:/' || word.toLowerCase().substring(0, 7)=='https:/'){
       // for like "https://example.com" and "http://example.com"
       if(word.indexOf(' ')==-1){
@@ -24,14 +28,14 @@ contextBridge.exposeInMainWorld('node',{
         ipcRenderer.send('moveView',word);
       }else{
         //if it's not url
-        ipcRenderer.send('moveView',`https://www.duckduckgo.com/?q=${word}`);
+        ipcRenderer.send('moveView',engine+word);
       }
     }else if(word.indexOf(' ')==-1&&word.indexOf('.')!=-1){
       //for like "example.com" and "example.com/example/"
       ipcRenderer.send('moveView',`http://${word}`);
     }else{
       //LAST
-      ipcRenderer.send('moveView',`https://www.duckduckgo.com/?q=${word}`);
+      ipcRenderer.send('moveView',engine+word);
     }
   },
   moveToNewTab: ()=>{
@@ -46,14 +50,5 @@ contextBridge.exposeInMainWorld('node',{
   goBrowser: ()=>{
     ipcRenderer.send('browserGoes');
   },
-  searchBrowser: (word)=>{
-    ipcRenderer.send('moveView',`https://www.duckduckgo.com/?q=${word}`);
-  },
-  dirName: ()=>{return __dirname},
-  getTab: ()=>{
-    return ipcRenderer.send('getTabList');
-  },
-  makeTab: ()=>{
-    ipcRenderer.send('makeNewTab');
-  }
+  dirName: ()=>{return __dirname}
 })

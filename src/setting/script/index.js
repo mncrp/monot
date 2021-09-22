@@ -1,0 +1,9 @@
+/*document.getElementById('custom').addEventListener('click',()=>{
+  node.filePopUp();
+})
+document.getElementById('default').addEventListener('click',()=>{
+  node.writeBackgroundDefault();
+})*/
+document.getElementsByTagName('select')[0].addEventListener('change',()=>{
+  node.changeSearchEngine(document.getElementsByTagName('select')[0].value)
+})

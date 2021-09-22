@@ -5,6 +5,10 @@
   border: none; outline: none;
   color: #000; text-decoration: none;
 }
+script, style{
+  display: none!important;
+  width: 0; height: 0;
+}
 body{
   background-color: #efefef;
   -webkit-app-region: drag;
@@ -18,6 +22,14 @@ body{
   margin-top: 5px;
   overflow: hidden;
 }
+body::before{
+  content: '';
+  display: block;
+  position: fixed;
+  top: 47.4px; left: 0; right: 0;
+  height: 1px; width: 100%;
+  background-color: #ddd;
+}
 
 nav{
   display: block;
@@ -26,40 +38,48 @@ nav{
 }
 
 body nav *{
-  box-shadow: 2px 2px 5px #bfbfbf99;
+  box-shadow: 0 0 0 #0000;
   position: relative;
   display: inline-block;
-  top: 0;
+  top: -.5px;
   -webkit-user-select: auto;
   -webkit-app-region: none;
   border-radius: 10px;
   height: 27px;
   width: 27px;
-  margin: 3.5px;
-  background-color: #aaa4;
+  margin: 2.55px;
+  background-color: #ccc0;
+  border: 0.5px solid #ddd;
+  transition: all 0.3s ease-in-out;
+}
+body nav *:hover{
+  box-shadow: 1px 1px 5px #bfbfbf99;
+  background-color: #f0f0f0;
 }
 body nav a:first-child{
   margin-left: 40px;
 }
 body input{
-  top: -11.2px;
+  top: -11.6px;
   width: calc(100% - calc(47px * 8) + 10px);
   margin-left: 5px; margin-right: 5px;
   padding-left: 7.5px;
   padding-right: 7.5px;
   font-size: 12.5px;
 }
-script, style{
-  display: none!important;
-  width: 0; height: 0;
+body input:focus{
+  box-shadow: 1px 1px 5px #bfbfbf99;
+  background-color: #fff0;
 }
-
 nav a{
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
-  transition: all 0.1s 0s ease-in-out;
   cursor: default;
+}
+nav a:active{
+  background-color: #fff0;
+  box-shadow: 0 0 0 #0000;
 }
 nav a:nth-child(1){
   background-image: url('../image/home.png');
@@ -85,82 +105,14 @@ nav a:nth-child(8){
 nav a:nth-child(9){
   background-image: url('../image/close.png');
 }
-nav a:hover{
-  background-color: #0003;
-}
-nav a:active{
-  background-color: #0005;
-}
-
-tab-el,tab-el,tab-el{
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: #ddd #fff0;
-  display: flex;
-  position: relative;
-  left: 0; top: 0;
-  padding: 0;
-  margin: 0;
-  height: 30px;
-  padding: 5px;
-  padding-top: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
-tab-el:hover{
-  overflow-x: auto;
-}
-tab-el div{
-  box-shadow: 2px 2px 5px #bfbfbf99;
-  text-align: center;
-  display: inline-block;
-  width: 100%;
-  min-width: 175px;
-  font-weight: 100;
-  padding: 5px;
-  height: 13px;
-  background-color: #aaa4;
-  margin-right: 5px;
-  border-radius: 10px;
-  font-size: 12.5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-user-select: auto;
-  -webkit-app-region: none;
-  transition: all 0.2s ease-in-out;
-}
-tab-el div a{
-  content: '';
-  display: inline-block;
-  float: right;
-  top: -1.5px;
-  right: -5.5px;
-  height: 16px;
-  width: 16px;
-  margin-right: 5px;
-  border-radius: 5px;
-  z-index: +1;
-  background-color: #bcbcbc;
-}
-tab-el div p{
-  width: calc(100% - 27px);
-  overflow: hidden;
-  top: -2px;
-  text-overflow: ellipsis;
-  display: inline-block;
-}
-tab-el *{
-  -webkit-app-region: none;
-}
 
 yomikomi-bar{
   display: block;
   position: relative;
-  top: -1px;
+  top: -2px;
   bottom: 0; left: -9px;
   width: 0;
-  height: 3px;
+  height: 2.4px;
   background-color: #bbb;
   transition: all 0.2s ease-in-out;
   opacity: 1;

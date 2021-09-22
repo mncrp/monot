@@ -1,4 +1,4 @@
-window.tab=node.getTab();
+/*window.tab=node.getTab();
 function removeTab(e){
 
 }
@@ -14,3 +14,4 @@ function makeTab(){
   tabEl.appendChild(div);
   //node.makeTab();
 }
+*/

@@ -1,0 +1,40 @@
+body{
+  user-select: none;
+  margin: 2px;
+  margin-top: 0;
+  padding: 0;
+  width: calc(100vw - 4px);
+  height: calc(100vh - 2px);
+}
+input{
+  user-select: text;
+  -webkit-app-region: none;
+}
+body>div:nth-child(2){
+  display: inline-block;
+  position: fixed;
+  bottom: 15px; right: 15px;
+  text-align: right;
+}
+
+body>a{
+  position: fixed;
+  display: inline-block;
+  border-radius: 10px;
+  height: 27px; width: 27px;
+  bottom: 15px; left: 15px;
+  box-shadow: 2px 2px 5px #bfbfbf99;
+  background-color: #ccc2;
+  background-image: url('../image/menu.png');
+  background-size: 65%;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: all 0.1s 0s ease-in-out;
+  cursor: default;
+}
+body>a:hover{
+  background-color: #ccc7;
+}
+body>a:active{
+  background-color: #ccc;
+}
