@@ -1,10 +1,11 @@
-# Monot v.1.0 Beta 3
+# Monot v.1.0 Beta 4
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
 
 ## 注意
-まだ初期ベータand開発が遅いので、タブさえもできません。
-
-しかし、少しずつ開発の目途が立ってきているので、今年中には完成させたいと思っています。
+- タブが実装されていません。
+- 更新頻度がビビるほど遅いです
+- 開発者はただの馬鹿です
+- [Twitter](https://twitter.com/Sorakime_)をフォローしてくれると嬉しがります。
 
 また、オシャレは事実だと思います。実際、とてもデザインには気にかけて開発しています。monochrome Project.の一環として開発しているので、そのまま色はモノトーンで落ち着いたようにしています。
 
@@ -14,16 +15,18 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|バージョン|v.1.0 Beta 3|
-|ビルド|3|
+|バージョン|v.1.0 Beta 4|
+|ビルド|4|
+|公開日|2021年9月22日|
 |ライセンス|[monochrome. License](https://sorakime.github.io/source/license.txt)|
 |言語|日本語|
 
 ## スクショ
-![起動直後の画面](https://user-images.githubusercontent.com/69241694/132985469-64b7f8a2-a46e-4c82-b08c-9fd6dcd97e47.png)<br>
+![起動直後の画面](https://user-images.githubusercontent.com/69241694/134348138-3920bfbe-fa3b-46c3-ba9b-88815e56f8bc.png)<br>
 起動直後の画面
 
-![実際にウェブサイトを閲覧している様子](https://user-images.githubusercontent.com/69241694/132985645-4ea891ed-1c03-450e-ad01-f23263409697.png)<br>
+![実際にウェブサイトを閲覧している様子](https://user-images.githubusercontent.com/69241694/134348222-ecc71e4b-e493-4f7b-b6a5-cc451822f537.png)<br>
+
 実際にウェブサイトを閲覧している様子
 
 
@@ -41,6 +44,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |進む|Ctrl(Cmd) + Shift + X|
 |Webサイトの開発者向けツール|F12|
 |Monotの開発者向けツール|Alt + F12|
+|設定ウィンドウ|Ctrl(Cmd) + Alt + S|
 
 
 # ダウンロードしてくださいっ！！！！！
@@ -50,3 +54,4 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 
 ---
 Copyright 2021 Sorakime.
+Licensed by [monochrome. License](https://sorakime.github.io/mncr/license?v=1.1.1)
