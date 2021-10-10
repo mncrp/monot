@@ -2,9 +2,10 @@ const {app, BrowserWindow, BrowserView, dialog, ipcMain, ipcRenderer, screen, Me
 const contextMenu=require('electron-context-menu');
 const fs=require('fs');
 const path = require('path');
-var win, setting;
+let win, setting;
+var options;
 var bv=[];
-const viewY=48;
+let viewY=38;
 var nowTab=0;
 
 
@@ -20,6 +21,19 @@ contextMenu({
       label: '進む',
       click: ()=>{
         bv[0].webContents.goForward();
+      }
+    },
+    {
+      label: '設定',
+      click: ()=>{
+        setting=new BrowserWindow({
+          width: 760, height: 480, minWidth: 300, minHeight: 270,
+          webPreferences: {
+            preload: `${__dirname}/src/setting/preload.js`,
+            scrollBounce: true
+          }
+        })
+        setting.loadFile(`${__dirname}/src/setting/index.html`)
       }
     }
   ]
@@ -61,7 +75,7 @@ function nw(){
   })
   win.on('maximize',()=>{
     winSize=win.getContentSize();
-    bv[0].setBounds({x:0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
+    bv[0].setBounds({x:0, y: viewY, width: winSize[0], height: winSize[1]-viewY+3});
   })
   win.on('unmaximize',()=>{
     winSize=win.getContentSize();
@@ -78,18 +92,32 @@ function nw(){
       node.context();
     })`)
   })
-  bv[0].webContents.on('did-stop-loading',()=>{
-    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')')
-
-    //ifの条件が糞長いのが気になる
-    if(bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length).slice(0,1)!='/'){
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length)}'`)
-    }
-  })
   bv[0].webContents.on('did-finish-load',()=>{
     win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].setAttribute(\'id\',\'loaded\')')
     if(bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length).slice(0,1)!='/'){
       win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length)}'`)
+    }
+  })
+  bv[0].webContents.on('did-stop-loading',()=>{
+    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')')
+
+    //ifの条件が糞長いのが気になる。これはただただアドレスバーにURL出力してるだけ。
+    if(bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length).slice(0,1)!='/'){
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length)}'`)
+    }
+
+    //強制ダークモード(Force-Dark)
+    if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.forceDark==true){
+      bv[0].webContents.insertCSS(`
+        body,body>*{
+          background-color: #202020!important;
+        }
+        *{
+          color: #bbb!important;
+        }
+        a{
+          color: #7aa7cd!important;
+        }`)
     }
   })
 
@@ -123,8 +151,7 @@ ipcMain.on('moveView',(e,link)=>{
       win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length)}'`)
     }).catch(()=>{
       bv[0].webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(()=>{
-        win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='';`);
-        bv[0].webContents.executeJavaScript(`document.getElementsByTagName('span')[0].innerText='${link}';
+        bv[0].webContents.executeJavaScript(`document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';
           var requiredUrl='${link}';
         `);
       })
@@ -173,9 +200,26 @@ ipcMain.on('getBrowserUrl',()=>{
 ipcMain.on('context', ()=>{
   menu.popup()
 });
-ipcMain.on('changeSearchEngine',(engine)=>{
+ipcMain.on('dark',()=>{
 })
-/*ipcMain.on('wallpaperFileOpen',()=>{
+/*
+ipcMain.on('options',()=>{
+  if(options===null){
+    options=new BrowserWindow({
+      width: 400, height: 750,
+      resizable: false,
+      webPreferences: {
+        preload: `${__dirname}/src/script/option.js`
+      }
+    })
+    options.loadFile(`${__dirname}/src/options.html`);
+
+    options.on('closed',()=>{
+      options=null;
+    })
+  }
+})
+ipcMain.on('wallpaperFileOpen',()=>{
   let d=dialog.showOpenDialogSync(setting,{
     title: '壁紙を選択してください',
     filters: [
@@ -246,6 +290,23 @@ let menu=Menu.buildFromTemplate([
     ]
   },
   {
+    label: '編集',
+    submenu: [
+      {
+        label: 'カット',
+        role: 'cut'
+      },
+      {
+        label: 'コピー',
+        role: 'copy'
+      },
+      {
+        label: 'ペースト',
+        role: 'paste'
+      }
+    ]
+  },
+  {
     label: 'ウィンドウ',
     submenu: [
       {
@@ -256,14 +317,11 @@ let menu=Menu.buildFromTemplate([
             type: 'info',
             icon: './src/image/logo.png',
             title: 'Monotについて',
-            message: 'Monot 1.0.0 Beta 4について',
-            detail: `Monot by monochrome. v.1.0.0 Beta 4 (Build 4)
-バージョン: 1.0.0 Beta 4
-ビルド番号: 4
+            message: 'Monot 1.0.0 Beta 5について',
+            detail: `Monot by monochrome. v.1.0.0 Beta 5 (Build 5)
+バージョン: 1.0.0 Beta 5
+ビルド番号: 5
 開発者: Sorakime
-Electron: v.14.0.0
-Node.js (Electron): 14.17.0
-Chromium (Electron): 93.0.4577.58
 
 リポジトリ: https://github.com/Sorakime/monot
 公式サイト: https://sorakime.github.io/mncr/project/monot/
