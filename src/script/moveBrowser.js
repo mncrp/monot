@@ -11,3 +11,8 @@ document.getElementsByTagName('input')[0].addEventListener('keydown',(e)=>{
     node.moveBrowser(word);
   }
 })
+/*
+function options(){
+  node.optionsWindow();
+}
+*/

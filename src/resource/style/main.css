@@ -6,7 +6,8 @@
 
 body{
   background-color: #efefef;
-  color: #555;
+  color: #444;
+  font-weight: 100;
 }
 
 h1{
@@ -16,6 +17,7 @@ h5{
   font-size: 15px;
   display: inline;
 }
+
 h1::before{
   content: '';
   display: inline-block;
@@ -52,14 +54,16 @@ div input{
   width: 50vw;
   height: 40px;
   border: 0;
-  border-radius: 10px;
-  padding-left: 10px; padding-right: 45px;
+  border-radius: 15px;
+  padding: 0 35px 0 10px;
   font-size: 17px;
   margin: 0; top: 0;
   box-shadow: 0 0 0 #0000;
   background-color: #0000;
-  border: 0.5px solid #ddd;
+  border: 1px solid #ddd0;
   transition: all 0.2s ease-in-out;
+  background-color: #fff3;
+  box-sizing: border-box;
 }
 div:nth-child(1) a{
   position: absolute;
@@ -68,24 +72,22 @@ div:nth-child(1) a{
   top: 5px;
   width: 30px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: 13px;
   background-image: url('../../image/search.png');
   background-position: center;
   background-size: 80%;
   background-repeat: no-repeat;
   transition: all 0.2s ease-in-out;
 }
-div:nth-child(1)>div *:hover{
-  box-shadow: 1px 1px 5px #bfbfbf99;
-  background-color: #f0f0f0;
+div:nth-child(1)>div *:hover, input:focus{
+  box-shadow: 1px 1px 5px #bfbfbf55;
+  background-color: #eee;
 }
-div:nth-child(1) input:focus{
-  box-shadow: 1px 1px 5px #bfbfbf99;
-  background-color: #fff0;
+div:nth-child(1)>div a:hover{
+  background-color: #fff5;
 }
-div:nth-child(1) a:focus{
-  background-color: #fff0;
-  box-shadow: 0 0 0 #0000;
+input:hover,input:focus{
+  border: 1px solid #ddd;
 }
 p{
   font-size: 10px;
@@ -101,4 +103,21 @@ p>a{
 
 hr{
   border: 0.1px solid #6669;
+}
+
+@media(prefers-color-scheme: dark){
+  body{
+    background-color: #222;
+    color: #ddd;
+  }
+  body div input {
+    color: #fff;
+  }
+  div:nth-child(1)>div *:hover, input:focus{
+    box-shadow: 1px 1px 5px #7775;
+    background-color: inherit;
+  }
+  input:hover,input:focus{
+    border: 1px solid #aaa;
+  }
 }

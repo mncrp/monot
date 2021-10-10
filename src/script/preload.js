@@ -1,4 +1,4 @@
-const {contextBridge, ipcRenderer, Menu} = require('electron');
+const {contextBridge, ipcRenderer} = require('electron');
 const fs = require('fs');
 
 contextBridge.exposeInMainWorld('node',{
@@ -50,5 +50,11 @@ contextBridge.exposeInMainWorld('node',{
   goBrowser: ()=>{
     ipcRenderer.send('browserGoes');
   },
-  dirName: ()=>{return __dirname}
+  dirName: ()=>{return __dirname},
+  optionsWindow: ()=>{
+    ipcRenderer.send('options');
+  },
+  dark: ()=>{
+    ipcRenderer.send('dark');
+  }
 })

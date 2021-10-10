@@ -64,8 +64,29 @@ main>*{
 #engine>select{
   width: 150px;
   padding: 2px 5px;
-  background-color: #efefef;
+  background-color: #efefef00;
   border: 2.5px solid #ddd;
   border-radius: 10px;
+  box-shadow: 2px 2px 0px #ddd0;
+  transition: all 0.2s ease-in-out;
+}
+#engine>select:hover{
   box-shadow: 2px 2px 15px #ddd;
+  background-color: #efefef;
+}
+
+input[type="checkbox"]{
+  margin: 5px;
+}
+form>*{
+  user-select: none;
+}
+@media (prefers-color-scheme: dark) {
+  body{
+    background-color: #202020;
+    border-bottom: 1px solid #333;
+  }
+  *{
+    color: #eee;
+  }
 }

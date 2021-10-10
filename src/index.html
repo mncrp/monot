@@ -8,18 +8,17 @@
   </head>
   <body>
     <nav>
-      <a href="javascript:node.moveToNewTab()"></a>
-      <a href="javascript:node.reloadBrowser()"></a>
-      <a href="javascript:node.backBrowser()"></a>
-      <a href="javascript:node.goBrowser()"></a>
-      <input type="text" placeholder="検索する単語またはURLを入力">
-      <a href="javascript:moveBrowser()"></a>
-      <a href="javascript:node.winMinimize()"></a>
-      <a href="javascript:maxMin()" id="maxMini"></a>
-      <a href="javascript:node.winClose()"></a>
+      <a href="javascript:node.moveToNewTab()" title="ホーム"></a>
+      <a href="javascript:node.reloadBrowser()" title="再読み込み"></a>
+      <a href="javascript:node.backBrowser()" title="戻る"></a>
+      <a href="javascript:node.goBrowser()" title="進む"></a>
+      <input type="text" placeholder="検索する単語またはURLを入力" title="検索する単語またはURLを入力">
+      <a href="javascript:moveBrowser()" title="移動"></a>
+      <a href="javascript:node.winMinimize()" title="最小化"></a>
+      <a href="javascript:maxMin()" id="maxMini" title="最大化"></a>
+      <a href="javascript:node.winClose()" title="終了"></a>
     </nav>
     <yomikomi-bar></yomikomi-bar>
     <script src="script/moveBrowser.js"></script>
-    <script src="script/tabMan.js"></script>
   </body>
 </html>
