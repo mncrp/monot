@@ -1,4 +1,4 @@
-# Monot v.1.0 Beta 4
+# Monot v.1.0 Beta 5
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
 
 ## 注意
@@ -15,9 +15,9 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|バージョン|v.1.0 Beta 4|
-|ビルド|4|
-|公開日|2021年9月22日|
+|バージョン|v.1.0 Beta 5|
+|ビルド|5|
+|公開日|2021年10月|
 |ライセンス|[monochrome. License](https://sorakime.github.io/source/license.txt)|
 |言語|日本語|
 
