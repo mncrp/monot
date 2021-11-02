@@ -51,6 +51,10 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 右上のこのボタンをクリックしてください。
 ![image](https://user-images.githubusercontent.com/69241694/132985506-fa49c272-6032-4349-bad9-e97a068aa8fe.png)
 
+## 追記
+タブはBeta 6で実装されます。更新頻度は僕含め5人の開発チームを構成したため、おそらく早くなると思います。
+
+今後ともMonotにぜひご期待お寄せください！
 
 ---
 Copyright 2021 Sorakime.
