@@ -4,11 +4,12 @@
     "plugin:node/recommended",
     "plugin:jsdoc/recommended"
   ],
-  "plugins": ["node"],
+  "plugins": ["node", "browser"],
   "parserOptions": {
     "node": true,
     "es2021": true,
-    "ecmaVersion": "latest"
+    "ecmaVersion": "latest",
+    "browser": true
   },
   "env": {
     "node": true,
