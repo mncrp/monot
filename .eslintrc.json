@@ -15,5 +15,8 @@
     "node": true,
     "es2021": true
   },
+  "eslint.workingDirectories": [
+    { "mode": "auto" }
+  ],
   "globals": {}
 }
