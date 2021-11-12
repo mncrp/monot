@@ -4,7 +4,7 @@
     "plugin:node/recommended",
     "plugin:jsdoc/recommended"
   ],
-  "plugins": ["node", "browser"],
+  "plugins": ["node"],
   "parserOptions": {
     "node": true,
     "es2021": true,
@@ -13,7 +13,8 @@
   },
   "env": {
     "node": true,
-    "es2021": true
+    "es2021": true,
+    "browser": true
   },
   "globals": {}
 }
