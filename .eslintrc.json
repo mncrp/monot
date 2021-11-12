@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "plugin:jsdoc/recommended"
+  ],
+  "plugins": ["node"],
+  "parserOptions": {
+    "node": true,
+    "es2021": true,
+    "ecmaVersion": "latest"
+  },
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+  "globals": {}
+}
