@@ -2,7 +2,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:node/recommended",
-    "plugin:jsdoc/recommended"
+    "plugin:jsdoc/recommended",
+    "plugin:browser/recommended"
   ],
   "plugins": ["node"],
   "parserOptions": {
@@ -16,5 +17,9 @@
     "es2021": true,
     "browser": true
   },
-  "globals": {}
+  "globals": {},
+  "rules": {
+    "node/no-unpublished-require": [0],
+    "no-unused-vars": [0]
+  }
 }
