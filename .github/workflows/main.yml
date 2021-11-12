@@ -1,0 +1,21 @@
+name: Format
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: npm install
+        run: "npm install"
+
+      - name: run eslint and prettier
+        run: "npx npm run fix"
+        
+      - name: commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "format"
