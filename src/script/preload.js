@@ -1,60 +1,65 @@
-const {contextBridge, ipcRenderer} = require('electron');
-const fs = require('fs');
+const { contextBridge, ipcRenderer } = require("electron");
+const fs = require("fs");
 
-contextBridge.exposeInMainWorld('node',{
-  winClose: ()=>{
-    ipcRenderer.send('windowClose');
+contextBridge.exposeInMainWorld("node", {
+  winClose: () => {
+    ipcRenderer.send("windowClose");
   },
-  winMinimize: ()=>{
-    ipcRenderer.send('windowMinimize');
+  winMinimize: () => {
+    ipcRenderer.send("windowMinimize");
   },
-  winMaximize: ()=>{
-    ipcRenderer.send('windowMaximize');
+  winMaximize: () => {
+    ipcRenderer.send("windowMaximize");
   },
-  winUnmaximize: ()=>{
-    ipcRenderer.send('windowUnmaximize');
+  winUnmaximize: () => {
+    ipcRenderer.send("windowUnmaximize");
   },
-  maxMin: ()=>{
-    ipcRenderer.send('windowMaxMin');
+  maxMin: () => {
+    ipcRenderer.send("windowMaxMin");
   },
-  moveBrowser: (word)=>{
-    let file=fs.readFileSync(`${__dirname}/../config/engines.mncfg`,'utf-8');
-    let obj=JSON.parse(file);
-    let engine=obj.values[obj.engine];
-    if(word.toLowerCase().substring(0, 6)=='http:/' || word.toLowerCase().substring(0, 7)=='https:/'){
+  moveBrowser: (word) => {
+    let file = fs.readFileSync(`${__dirname}/../config/engines.mncfg`, "utf-8");
+    let obj = JSON.parse(file);
+    let engine = obj.values[obj.engine];
+    if (
+      word.toLowerCase().substring(0, 6) == "http:/" ||
+      word.toLowerCase().substring(0, 7) == "https:/"
+    ) {
       // for like "https://example.com" and "http://example.com"
-      if(word.indexOf(' ')==-1){
+      if (word.indexOf(" ") == -1) {
         //if it's url
-        ipcRenderer.send('moveView',word);
-      }else{
+        ipcRenderer.send("moveView", word);
+      } else {
         //if it's not url
-        ipcRenderer.send('moveView',engine+word);
+        ipcRenderer.send("moveView", engine + word);
       }
-    }else if(word.indexOf(' ')==-1&&word.indexOf('.')!=-1){
+    } else if (word.indexOf(" ") == -1 && word.indexOf(".") != -1) {
       //for like "example.com" and "example.com/example/"
-      ipcRenderer.send('moveView',`http://${word}`);
-    }else{
+      ipcRenderer.send("moveView", `http://${word}`);
+    } else {
       //LAST
-      ipcRenderer.send('moveView',engine+word);
+      ipcRenderer.send("moveView", engine + word);
     }
   },
-  moveToNewTab: ()=>{
-    ipcRenderer.send('moveView',`file://${__dirname}/../resource/index.html`)
+  moveToNewTab: () => {
+    ipcRenderer.send("moveView", `file://${__dirname}/../resource/index.html`);
   },
-  reloadBrowser: ()=>{
-    ipcRenderer.send('reloadBrowser');
+  reloadBrowser: () => {
+    ipcRenderer.send("reloadBrowser");
   },
-  backBrowser: ()=>{
-    ipcRenderer.send('browserBack');
+  backBrowser: () => {
+    ipcRenderer.send("browserBack");
   },
-  goBrowser: ()=>{
-    ipcRenderer.send('browserGoes');
+  goBrowser: () => {
+    ipcRenderer.send("browserGoes");
   },
-  dirName: ()=>{return __dirname},
-  optionsWindow: ()=>{
-    ipcRenderer.send('options');
+  dirName: () => {
+    return __dirname;
   },
-  dark: ()=>{
-    ipcRenderer.send('dark');
-  }
-})
+  optionsWindow: () => {
+    ipcRenderer.send("options");
+  },
+  dark: () => {
+    ipcRenderer.send("dark");
+  },
+});
