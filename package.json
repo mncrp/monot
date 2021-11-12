@@ -18,6 +18,7 @@
     "eslint": "^7.32.0",
     "eslint-plugin-jsdoc": "^37.0.3",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-browser": "^0.0.0",
     "prettier": "^2.4.1"
   },
   "build": {
