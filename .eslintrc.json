@@ -2,8 +2,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:node/recommended",
-    "plugin:jsdoc/recommended",
-    "plugin:browser/recommended"
+    "plugin:jsdoc/recommended"
   ],
   "plugins": ["node"],
   "parserOptions": {
