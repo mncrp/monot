@@ -3,3 +3,12 @@ README.md
 package-lock.json
 package.json
 .github/*
+src/config/*
+src/image/*
+src/resource/image/*
+src/resource/style/*
+src/resource/*.html
+src/setting/*.html
+src/setting/style/*
+src/style/*
+src/*.html
