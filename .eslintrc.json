@@ -15,8 +15,5 @@
     "node": true,
     "es2021": true
   },
-  "workingDirectories": [
-    { "mode": "auto" }
-  ],
   "globals": {}
 }
