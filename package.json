@@ -5,13 +5,20 @@
   "main": "main.js",
   "scripts": {
     "test": "npx electron .",
-    "build": "npx electron-builder"
+    "build": "npx electron-builder",
+    "fix": "npx npm run lint && npx npm run prettier",
+    "lint": "npx eslint --fix .",
+    "prettier": "npx prettier --write ."
   },
   "author": "Sorakime",
   "license": "ISC",
   "devDependencies": {
     "electron": "^14.0.0",
-    "electron-builder": "^22.11.7"
+    "electron-builder": "^22.11.7",
+    "eslint": "^7.32.0",
+    "eslint-plugin-jsdoc": "^37.0.3",
+    "eslint-plugin-node": "^11.1.0",
+    "prettier": "^2.4.1"
   },
   "build": {
     "appId": "io.github.sorakime.monot",
