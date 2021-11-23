@@ -1,25 +1,42 @@
 {
   "name": "monot",
   "version": "1.0.0",
-  "description": "The new web browser by monochrome. v.1.0.0 Beta 5",
+  "description": "The new web browser \"Monot\"",
   "main": "main.js",
   "scripts": {
     "test": "npx electron .",
-    "build": "npx electron-builder"
+    "build": "npx electron-builder",
+    "makeEnv": "src\\environment.cmd"
   },
   "author": "Sorakime",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^14.0.0",
-    "electron-builder": "^22.11.7"
+    "electron": "^14.2.0",
+    "electron-builder": "^22.14.5",
+    "electron-tabs": "^0.15.0"
   },
   "build": {
-    "appId": "io.github.sorakime.monot",
+    "appId": "me.soraki.monot",
+    "productName": "Monot",
+    "files": [
+      "!.git",
+      "!.dist",
+      "node_modules",
+      "src",
+      "main.js",
+      "package-lock.json",
+      "package.json"
+    ],
     "asar": false,
     "win": {
       "icon": "src/image/logo.ico",
-      "target": "portable",
+      "target": "nsis",
       "legalTrademarks": "Copyright 2021 Sorakime."
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "src/image/logo.ico"
     },
     "linux": {
       "icon": "src/image/icon.png",
@@ -27,7 +44,7 @@
     },
     "appImage": {
       "category": "Utility",
-      "synopsis": "Monot ver1.0b4Build4"
+      "synopsis": "Monot ver1.0b6Build6"
     }
   },
   "dependencies": {

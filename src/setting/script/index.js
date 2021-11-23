@@ -13,3 +13,14 @@ function changeExperimental(arg){
 }
 
 document.getElementsByTagName('input')[0].addEventListener('change',changeExperimental);
+document.getElementsByTagName('input')[1].addEventListener('change',(arg)=>{
+  changeExperimental(arg);
+  if(arg.target.checked){
+    document.getElementById('changedfont').removeAttribute('disabled');
+  }else{
+    document.getElementById('changedfont').setAttribute('disabled','')
+  }
+})
+document.getElementById('changedfont').addEventListener('input',()=>{
+  node.changeExperimentalFunctions('changedfont',document.getElementById('changedfont').value);
+})

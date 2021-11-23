@@ -88,6 +88,7 @@ div:nth-child(1)>div a:hover{
 }
 input:hover,input:focus{
   border: 1px solid #ddd;
+  background-color: #eee;
 }
 p{
   font-size: 10px;
@@ -110,14 +111,16 @@ hr{
     background-color: #222;
     color: #ddd;
   }
-  body div input {
+  body div input{
+    background-color: #fff1;
     color: #fff;
   }
-  div:nth-child(1)>div *:hover, input:focus{
-    box-shadow: 1px 1px 5px #7775;
-    background-color: inherit;
+  div:nth-child(1) a{
+    background-image: url('../../image/search-white.png');
   }
-  input:hover,input:focus{
-    border: 1px solid #aaa;
-  }
+  div:nth-child(1)>div input:hover, input:focus{
+    box-shadow: 1px 1px 5px #bfbfbf55;
+    background-color: #444;
+    border: 1px solid #666e;
+  }\
 }

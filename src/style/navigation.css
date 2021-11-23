@@ -6,6 +6,9 @@
   color: #000; text-decoration: none;
   z-index: 100;
 }
+::-webkit-scrollbar{
+  display: none;
+}
 script, style{
   display: none!important;
   width: 0; height: 0;
@@ -22,13 +25,11 @@ body{
   overflow: hidden;
   border-bottom: 1px solid #ddd;
 }
-
 nav{
   display: flex;
   position: relative;
   height: auto;
   width: 100%;
-  backdrop-filter: blur(20px);
 }
 
 body nav *{
@@ -39,9 +40,9 @@ body nav *{
   top: 0;
   display: inline-block;
   border-radius: 10px;
-  height: 24px;
+  height: 23px;
   aspect-ratio: 1/1;
-  margin: 4px 2px 5px;
+  margin: 3px;
   background-color: #ccc0;
   transition: all 0.2s ease-in-out;
   border: 1px solid #ddd0;
@@ -50,9 +51,9 @@ body input{
   width: 100%;
   padding: 0 7.5px;
   font-size: 11px;
-  background-color: #fff3;
+  background-color: #bbb3;
 }
-body nav *:hover{
+body nav *:hover, div>span:hover,tab-el>a:hover{
   box-shadow: 1px 1px 5px #bfbfbf55;
   background-color: #eee;
   border: 1px solid #ddde;
@@ -68,6 +69,9 @@ nav a{
   background-repeat: no-repeat;
   background-size: 65%;
   cursor: default;
+}
+body nav input:focus{
+  border: 1px solid #ddde;
 }
 nav a:active{
   background-color: #fff0;
@@ -98,6 +102,84 @@ nav a:nth-child(9){
   background-image: url('../image/close.png');
 }
 
+div>span>a:first-child{
+  color: #333;
+  font-weight: 100;
+  cursor: default;
+}
+div>span>a:last-child{
+  display: inline-block;
+  cursor: default;
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  transform: translate(0, -50%);
+  width: 17px; height: 17px;
+  font-size: 12px;
+  border-radius: 7px;
+  background-color: #fff0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 65%;
+  background-image: url('../image/close.png');
+  transition: all 0.2s ease-in-out;
+}
+div>span>a:last-child:hover{
+  background-color: #fff4;
+}
+div>span#opened{
+  background-color: #bbb3;
+}
+tab-el{
+  height: auto;
+  vertical-align: middle;
+  display: flex;
+  overflow: hidden;
+}
+tab-el>div{
+  width: 100%;
+  overflow: auto;
+  display: flex;
+}
+tab-el>div>span{
+  min-width: 70px;
+  overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+  padding-right: 20px;
+  padding-left: 5px;
+  width: 100%;
+  margin: 5px;
+  margin-top: 2px;
+  text-align: center;
+  padding: 2px;
+  padding-right: 15px;
+  font-size: 12px;
+  -webkit-font-smoothing: antialiased;
+  border-radius: 10px;
+  border: 1px solid #ddd0;
+  transition: all 0.2s ease-in-out;
+  cursor: default;
+  -webkit-app-region: none;
+}
+tab-el>a{
+  display: block;
+  height: 24px;
+  width: 24px;
+  margin: 3px;
+  aspect-ratio: 1/1;
+  background-image: url('../image/plus.png');
+  background-position: center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  background-color: #fff0;
+  box-shadow: 1px 1px 5px #fff0;
+  border: 1px solid #fff0;
+  transition: all 0.2s ease-in-out;
+  -webkit-app-region: none;
+  cursor: default;
+}
 yomikomi-bar{
   display: block;
   position: absolute;
@@ -106,10 +188,11 @@ yomikomi-bar{
   left: -9px;
   width: 0;
   height: calc(100% + 1px);
-  background: #ddd;
+  background: #fff;
   z-index: 0;
   transition: all 0.2s ease-in-out;
   border-radius: 0 5px 0 0;
+  filter: blur(20px);
 }
 yomikomi-bar#loading{
   width: 30vw;
@@ -125,7 +208,7 @@ yomikomi-bar#frame-finished{
 
 @media (prefers-color-scheme: dark) {
   body{
-    background-color: #202020;
+    background-color: #222;
     border-bottom: 1px solid #333;
   }
   yomikomi-bar{
@@ -135,10 +218,17 @@ yomikomi-bar#frame-finished{
     background-color: #fff1;
     color: #fff;
   }
-  body nav *:hover, body input:focus{
+  body nav *:hover, div>span:hover, tab-el>a:hover{
     box-shadow: 1px 1px 5px #bfbfbf55;
     background-color: #444;
     border: 1px solid #666e;
+  }
+  body nav input:focus{
+    border: 1px solid #666e;
+  }
+  nav a:active{
+    background-color: #fff0;
+    box-shadow: 0 0 0 #0000;
   }
   nav a:nth-child(1){
     background-image: url('../image/home-white.png');
@@ -163,5 +253,20 @@ yomikomi-bar#frame-finished{
   }
   nav a:nth-child(9){
     background-image: url('../image/close-white.png');
+  }
+  div>span:hover{
+    background-color: #444;
+  }
+  div>span#opened{
+    background-color: #fff1;
+  }
+  div>span>a:first-child{
+    color: #bbb;
+  }
+  div>span>a:last-child{
+    background-image: url('../image/close-white.png');
+  }
+  tab-el>a{
+    background-image: url('../image/plus-white.png');
   }
 }

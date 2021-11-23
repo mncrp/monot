@@ -3,24 +3,23 @@ const contextMenu=require('electron-context-menu');
 const fs=require('fs');
 const path = require('path');
 let win, setting;
-var options;
+var options,index;
 var bv=[];
-let viewY=38;
-var nowTab=0;
-
+let viewY=66;
+index=0;
 
 contextMenu({
   prepend: (defaultActions, parameters, browserWindow)=>[
     {
       label: '戻る',
       click: ()=>{
-        bv[0].webContents.goBack();
+        bv[index].webContents.goBack();
       }
     },
     {
       label: '進む',
       click: ()=>{
-        bv[0].webContents.goForward();
+        bv[index].webContents.goForward();
       }
     },
     {
@@ -39,7 +38,103 @@ contextMenu({
   ]
 })
 
+//creating new tab function
+function newtab(){
+  let winSize=win.getSize();
+  //create new tab
+  let browserview=new BrowserView({
+    webPreferences: {
+      scrollBounce: true,
+      preload: `${__dirname}/src/script/preload-browserview.js`
+    }
+  })
+  browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
+    node.context();
+  })`)
+  browserview.webContents.on('did-start-loading',()=>{
+    browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
+      node.context();
+    })`)
+  })
+
+  //window's behavior
+  win.on('closed',()=>{
+    win=null;
+  })
+  win.on('maximize',()=>{
+    winSize=win.getContentSize();
+    browserview.setBounds({x:0, y: viewY, width: winSize[0], height: winSize[1]-viewY+3});
+  })
+  win.on('unmaximize',()=>{
+    winSize=win.getContentSize();
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
+  })
+  win.on('enter-full-screen',()=>{
+    winSize=win.getContentSize();
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY+2});
+  })
+
+  browserview.webContents.on('did-start-loading',()=>{
+    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].setAttribute(\'id\',\'loading\')')
+    browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
+      node.context();
+    })`)
+  })
+  browserview.webContents.on('did-finish-load',()=>{
+    win.webContents.executeJavaScript(`document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`)
+    if(browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length).slice(0,1)!='/'){
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length)}'`)
+    }
+    win.webContents.executeJavaScript(
+      `document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
+      document.getElementById('opened').getElementsByTagName('a')[0].innerText='${browserview.webContents.getTitle()}';`)
+  })
+  browserview.webContents.on('did-stop-loading',()=>{
+    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')')
+
+    //ifの条件が糞長いのが気になる。これはただただアドレスバーにURL出力してるだけ。
+    if(browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length).slice(0,1)!='/'){
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length)}'`)
+    }
+
+    //強制ダークモード(Force-Dark)
+    if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.forceDark==true){
+      browserview.webContents.insertCSS(`
+        *{
+          background-color: #202020!important;
+        }
+        *{
+          color: #bbb!important;
+        }
+        a{
+          color: #7aa7cd!important;
+        }`)
+    }
+    //フォント変更
+    if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.fontChange==true){
+      browserview.webContents.insertCSS(`
+        body,body>*, *{
+          font-family: ${JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.changedfont},'Noto Sans JP'!important;
+        }`)
+    }
+  })
+
+  //when the page title is updated (update the window title and tab title)
+  browserview.webContents.on('page-title-updated',(e, t)=>{
+    win.webContents.executeJavaScript(
+      `document.getElementsByTagName('title')[0].innerText='${t} - Monot';
+      document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';`)
+  })
+  index=bv.length;
+  bv.push(browserview);
+  win.addBrowserView(browserview);
+  browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
+  browserview.setAutoResize({width: true, height: true});
+  browserview.webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
+}
+
 function nw(){
+  //create window
   win=new BrowserWindow({
     width: 1000, height: 700, minWidth: 400, minHeight: 400,
     frame: false,
@@ -55,77 +150,30 @@ function nw(){
     }
   });
   win.loadFile(`${__dirname}/src/index.html`);
-  bv[0]=new BrowserView({
-    webPreferences: {
-      scrollBounce: true,
-      preload: `${__dirname}/src/script/preload-browserview.js`
+  //create tab
+  newtab();
+  let configObj=JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8'));
+  if(configObj.startup==true){
+    configObj.startup=false;
+    function exists(path) {
+      try{
+        fs.readFileSync(path,'utf-8');
+        return true;
+      }catch (e){
+        return false;
+      }
     }
-  })
-  let winSize=win.getSize();
-  win.setBrowserView(bv[0]);
-  bv[0].setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
-  bv[0].setAutoResize({width: true, height: true});
-  bv[0].webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
-  bv[0].webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
-    node.context();
-  })`)
-
-  win.on('closed',()=>{
-    win=null;
-  })
-  win.on('maximize',()=>{
-    winSize=win.getContentSize();
-    bv[0].setBounds({x:0, y: viewY, width: winSize[0], height: winSize[1]-viewY+3});
-  })
-  win.on('unmaximize',()=>{
-    winSize=win.getContentSize();
-    bv[0].setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
-  })
-  win.on('enter-full-screen',()=>{
-    winSize=win.getContentSize();
-    bv[0].setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY+1});
-  })
-
-  bv[0].webContents.on('did-start-loading',()=>{
-    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].setAttribute(\'id\',\'loading\')')
-    bv[0].webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
-      node.context();
-    })`)
-  })
-  bv[0].webContents.on('did-finish-load',()=>{
-    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].setAttribute(\'id\',\'loaded\')')
-    if(bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length).slice(0,1)!='/'){
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length)}'`)
+    if(exists(`/mncr/applications.mncfg`)){
+      let obj=JSON.parse(fs.readFileSync(`/mncr/applications.mncfg`,'utf-8'));
+      obj.monot=['v.1.0.0 Beta 6','6'];
+      fs.writeFileSync(`/mncr/applications.mncfg`,JSON.stringify(obj));
+    }else{
+      fs.mkdir('/mncr/',()=>{return true;})
+      let obj={monot:['v.1.0.0 Beta 6','6']};
+      fs.writeFileSync(`/mncr/applications.mncfg`,JSON.stringify(obj));
     }
-  })
-  bv[0].webContents.on('did-stop-loading',()=>{
-    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')')
-
-    //ifの条件が糞長いのが気になる。これはただただアドレスバーにURL出力してるだけ。
-    if(bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length).slice(0,1)!='/'){
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length)}'`)
-    }
-
-    //強制ダークモード(Force-Dark)
-    if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.forceDark==true){
-      bv[0].webContents.insertCSS(`
-        body,body>*{
-          background-color: #202020!important;
-        }
-        *{
-          color: #bbb!important;
-        }
-        a{
-          color: #7aa7cd!important;
-        }`)
-    }
-  })
-
-  bv[0].webContents.on('page-title-updated',(e, t)=>{
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('title')[0].innerText='${t} - Monot';
-    `)
-  })
+    fs.writeFileSync(`${__dirname}/src/config/config.mncfg`,JSON.stringify(configObj));
+  }
 }
 
 app.on('ready', nw);
@@ -139,19 +187,19 @@ app.on('activate',()=>{
 })
 
 //ipc channels
-ipcMain.on('moveView',(e,link)=>{
-  bv[0].webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
+ipcMain.on('moveView',(e,link,index)=>{
+  bv[index].webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
     node.context();
   })`)
-  bv[0].webContents.insertCSS('*{-webkit-app-region: none;}')
+  console.log(index);
   if(link==''){
     return true;
   }else{
-    bv[0].webContents.loadURL(link).then(()=>{
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length)}'`)
+    bv[index].webContents.loadURL(link).then(()=>{
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[index].webContents.getURL().substring(bv[index].webContents.getURL().indexOf('/')+2, bv[index].webContents.getURL().length)}'`)
     }).catch(()=>{
-      bv[0].webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(()=>{
-        bv[0].webContents.executeJavaScript(`document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';
+      bv[index].webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(()=>{
+        bv[index].webContents.executeJavaScript(`document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';
           var requiredUrl='${link}';
         `);
       })
@@ -178,58 +226,45 @@ ipcMain.on('windowMaxMin',()=>{
     win.maximize();
   }
 })
-ipcMain.on('moveViewBlank',()=>{
-  bv[0].webContents.loadURL(`file://${__dirname}/src/resource/blank.html`);
+ipcMain.on('moveViewBlank',(e,index)=>{
+  bv[index].webContents.loadURL(`file://${__dirname}/src/resource/blank.html`);
 })
-ipcMain.on('reloadBrowser',()=>{
-  bv[0].webContents.reload();
+ipcMain.on('reloadBrowser',(e,index)=>{
+  bv[index].webContents.reload();
 })
-ipcMain.on('browserBack',()=>{
-  bv[0].webContents.goBack();
-  if(bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length).slice(0,1)!='/'){
-    win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[0].webContents.getURL().substring(bv[0].webContents.getURL().indexOf('/')+2, bv[0].webContents.getURL().length)}'`)
+ipcMain.on('browserBack',(e,index)=>{
+  bv[index].webContents.goBack();
+  if(bv[index].webContents.getURL().substring(bv[index].webContents.getURL().indexOf('/')+2, bv[index].webContents.getURL().length).slice(0,1)!='/'){
+    win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[index].webContents.getURL().substring(bv[index].webContents.getURL().indexOf('/')+2, bv[index].webContents.getURL().length)}'`)
   }
 })
-ipcMain.on('browserGoes',()=>{
-  bv[0].webContents.goForward();
+ipcMain.on('browserGoes',(e,index)=>{
+  bv[index].webContents.goForward();
 })
-ipcMain.on('getBrowserUrl',()=>{
-  console.log(bv[0].webContents.getURL())
-  return bv[0].webContents.getURL();
+ipcMain.on('getBrowserUrl',(e,index)=>{
+  return bv[index].webContents.getURL();
+})
+ipcMain.on('moveToNewTab',(e,index)=>{
+  bv[index].webContents.loadURL(`${__dirname}/src/resource/index.html`)
 })
 ipcMain.on('context', ()=>{
   menu.popup()
-});
-ipcMain.on('dark',()=>{
 })
-/*
-ipcMain.on('options',()=>{
-  if(options===null){
-    options=new BrowserWindow({
-      width: 400, height: 750,
-      resizable: false,
-      webPreferences: {
-        preload: `${__dirname}/src/script/option.js`
-      }
-    })
-    options.loadFile(`${__dirname}/src/options.html`);
+ipcMain.on('newtab',()=>{
+  newtab();
+})
+ipcMain.on('tabMove',(e,i)=>{
+  win.setTopBrowserView(bv[i]);
+  index=i;
+  win.webContents.executeJavaScript(
+    `document.getElementsByTagName('title')[0].innerText='${bv[index].webContents.getTitle()} - Monot';`)
+})
+ipcMain.on('removeTab',(e,index)=>{
+  //source: https://www.gesource.jp/weblog/?p=4112
+  win.removeBrowserView(bv[index])
+  bv.splice(index,1);
+})
 
-    options.on('closed',()=>{
-      options=null;
-    })
-  }
-})
-ipcMain.on('wallpaperFileOpen',()=>{
-  let d=dialog.showOpenDialogSync(setting,{
-    title: '壁紙を選択してください',
-    filters: [
-      {name: 'Images', extensions: ['png','jpeg','jpg','webp']}
-    ]
-  })
-  let file=JSON.parse(fs.readFileSync(`${__dirname}/src/config/background.mncfg`));
-  file.background=`url('${d}')`;
-  fs.writeFileSync(`${__dirname}/src/config/background.mncfg`,JSON.stringify(file));
-})*/
 
 let menu=Menu.buildFromTemplate([
   {
@@ -270,21 +305,21 @@ let menu=Menu.buildFromTemplate([
         label: '再読み込み',
         accelerator: 'CmdOrCtrl+R',
         click: ()=>{
-          bv[0].webContents.reload();
+          bv[index].webContents.reload();
         }
       },
       {
         label: '戻る',
         accelerator: 'CmdOrCtrl+Alt+Z',
         click: ()=>{
-          bv[0].webContents.goBack();
+          bv[index].webContents.goBack();
         }
       },
       {
         label: '進む',
         accelerator: 'CmdOrCtrl+Alt+X',
         click: ()=>{
-          bv[0].webContents.goForward();
+          bv[index].webContents.goForward();
         }
       }
     ]
@@ -317,10 +352,10 @@ let menu=Menu.buildFromTemplate([
             type: 'info',
             icon: './src/image/logo.png',
             title: 'Monotについて',
-            message: 'Monot 1.0.0 Beta 5について',
-            detail: `Monot by monochrome. v.1.0.0 Beta 5 (Build 5)
-バージョン: 1.0.0 Beta 5
-ビルド番号: 5
+            message: 'Monot 1.0.0 Beta 6について',
+            detail: `Monot by monochrome. v.1.0.0 Beta 6 (Build 6)
+バージョン: 1.0.0 Beta 6
+ビルド番号: 6
 開発者: Sorakime
 
 リポジトリ: https://github.com/Sorakime/monot
@@ -336,12 +371,18 @@ Copyright 2021 Sorakime.`
         click: ()=>{
           setting=new BrowserWindow({
             width: 760, height: 480, minWidth: 300, minHeight: 270,
+            icon: `${__dirname}/src/image/logo.ico`,
             webPreferences: {
               preload: `${__dirname}/src/setting/preload.js`,
               scrollBounce: true
             }
           })
-          setting.loadFile(`${__dirname}/src/setting/index.html`)
+          setting.loadFile(`${__dirname}/src/setting/index.html`);
+          if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.forceDark==true){
+            setting.webContents.executeJavaScript(
+              `document.querySelectorAll('input[type="checkbox"]')[0].checked=true`
+            )
+          }
         }
       }
     ]
@@ -353,7 +394,8 @@ Copyright 2021 Sorakime.`
         label: '開発者向けツール',
         accelerator: 'F12',
         click: ()=>{
-          bv[0].webContents.toggleDevTools();
+          console.log(index);
+          bv[index].webContents.toggleDevTools();
         }
       },
       {

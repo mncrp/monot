@@ -2,9 +2,11 @@
   position: relative;
   color: #000;
   margin: 0;
+  outline: none;
 }
 body{
   margin: 10px 20px;
+  margin-top: 60px;
   width: auto; height: auto;
   background-color: #efefef;
 }
@@ -29,9 +31,6 @@ header{
   padding-left: 20px;
 }
 
-main{
-  top: 64px;
-}
 main>*{
   display: block;
 }
@@ -62,17 +61,26 @@ main>*{
 }
 
 #engine>select{
-  width: 150px;
+  width: 160px;
+}
+select, input{
   padding: 2px 5px;
-  background-color: #efefef00;
-  border: 2.5px solid #ddd;
-  border-radius: 10px;
+  background-color: #0001;
+  border-radius: 12px;
   box-shadow: 2px 2px 0px #ddd0;
   transition: all 0.2s ease-in-out;
+  border: 2px solid #0000;
 }
-#engine>select:hover{
+select:hover, input:hover{
+  border: 2px solid #0001;
   box-shadow: 2px 2px 15px #ddd;
-  background-color: #efefef;
+}
+input[type="text"]{
+  width: 40vw;
+  min-width: 450px;
+  max-width: 90vw;
+  padding: 5px;
+  font-size: 12px;
 }
 
 input[type="checkbox"]{
@@ -81,12 +89,28 @@ input[type="checkbox"]{
 form>*{
   user-select: none;
 }
+label{
+  display: block;
+}
+
 @media (prefers-color-scheme: dark) {
   body{
     background-color: #202020;
-    border-bottom: 1px solid #333;
   }
   *{
     color: #eee;
+  }
+
+  select, input{
+    background-color: #fff1;
+  }
+  select:hover, input:hover{
+    border: 2px solid #444;
+    box-shadow: 2px 2px 15px #333;
+  }
+  option{
+    color: #eee;
+    background-color: #222;
+    padding: 0;
   }
 }

@@ -3,21 +3,27 @@ const fs = require('fs');
 
 contextBridge.exposeInMainWorld('node',{
   winClose: ()=>{
+    //Close window
     ipcRenderer.send('windowClose');
   },
   winMinimize: ()=>{
+    //Minimize Window
     ipcRenderer.send('windowMinimize');
   },
   winMaximize: ()=>{
+    //Maximize Window
     ipcRenderer.send('windowMaximize');
   },
   winUnmaximize: ()=>{
+    //Unmaximize Window
     ipcRenderer.send('windowUnmaximize');
   },
   maxMin: ()=>{
+    //Maximize or Minimize Window
     ipcRenderer.send('windowMaxMin');
   },
-  moveBrowser: (word)=>{
+  moveBrowser: (word,index)=>{
+    //Page navigation
     let file=fs.readFileSync(`${__dirname}/../config/engines.mncfg`,'utf-8');
     let obj=JSON.parse(file);
     let engine=obj.values[obj.engine];
@@ -25,36 +31,50 @@ contextBridge.exposeInMainWorld('node',{
       // for like "https://example.com" and "http://example.com"
       if(word.indexOf(' ')==-1){
         //if it's url
-        ipcRenderer.send('moveView',word);
+        ipcRenderer.send('moveView',word,index);
       }else{
         //if it's not url
-        ipcRenderer.send('moveView',engine+word);
+        ipcRenderer.send('moveView',engine+word,index);
       }
     }else if(word.indexOf(' ')==-1&&word.indexOf('.')!=-1){
       //for like "example.com" and "example.com/example/"
-      ipcRenderer.send('moveView',`http://${word}`);
+      ipcRenderer.send('moveView',`http://${word}`,index);
     }else{
       //LAST
-      ipcRenderer.send('moveView',engine+word);
+      ipcRenderer.send('moveView',engine+word,index);
     }
   },
-  moveToNewTab: ()=>{
-    ipcRenderer.send('moveView',`file://${__dirname}/../resource/index.html`)
+  moveToNewTab: (index)=>{
+    //move to new tab
+    ipcRenderer.send('moveToNewTab',index)
   },
-  reloadBrowser: ()=>{
-    ipcRenderer.send('reloadBrowser');
+  reloadBrowser: (index)=>{
+    //reload current BrowserView
+    ipcRenderer.send('reloadBrowser',index);
   },
-  backBrowser: ()=>{
-    ipcRenderer.send('browserBack');
+  backBrowser: (index)=>{
+    //back current BrowserView
+    ipcRenderer.send('browserBack',index);
   },
-  goBrowser: ()=>{
-    ipcRenderer.send('browserGoes');
+  goBrowser: (index)=>{
+    //go current BrowserView
+    ipcRenderer.send('browserGoes',index);
   },
   dirName: ()=>{return __dirname},
   optionsWindow: ()=>{
+    //open options (settings) window
     ipcRenderer.send('options');
   },
-  dark: ()=>{
-    ipcRenderer.send('dark');
+  newtab: ()=>{
+    //create new tab
+    ipcRenderer.send('newtab');
+  },
+  tabMove: (index)=>{
+    //move tab
+    ipcRenderer.send('tabMove',index);
+  },
+  removeTab: (index)=>{
+    //remove tab
+    ipcRenderer.send('removeTab',index)
   }
 })
