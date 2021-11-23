@@ -1,34 +1,37 @@
-# Monot v.1.0.0 Beta 5
+![image](https://user-images.githubusercontent.com/69241694/143031805-9e5636a0-e9c7-44ff-b2d5-5f4cf9bed654.png)
+
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
-
-## 注意
-- タブが実装されていません。
-- 更新頻度がビビるほど遅いです
-- 開発者はただの馬鹿です
-- [Twitter](https://twitter.com/Sorakime_)をフォローしてくれると嬉しがります。
-
-また、オシャレは事実だと思います。実際、とてもデザインには気にかけて開発しています。monochrome Project.の一環として開発しているので、そのまま色はモノトーンで落ち着いたようにしています。
-
-それと、下の方にある「スクショ」項目ですがBeta 4時点でのスクショです。Beta 5以降ではかなりデザインが異なっています。
-
----
 
 ## 概要
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|バージョン|v.1.0 Beta 5|
-|ビルド|5|
-|公開日|2021年10月|
-|ライセンス|[monochrome. License](https://sorakime.github.io/source/license.txt)|
+|正式名称|Monot by monochrome. v.1.0.0 Beta 6 (Build 6)|
+|バージョン|v.1.0 Beta 6|
+|ビルド番号|6|
+|公開日|2021年11月23日(火)|
+|ライセンス|[monochrome License.](https://sorakime.github.io/mncr/license?v=1.1.1)|
 |言語|日本語|
 
+## 注意
+- 更新頻度がビビるほど遅いです
+- [Floorp](https://floorp.ablaze.one)などのブラウザとは違い、どちらかというと[Safari](https://apple.com/jp/safari/)などのようにエコシステムの一部として開発されています。
+- [Twitter](https://twitter.com/Sorakime_)をフォローしてくれると嬉しがります。
+
+---
+
+# アップデート内容
+- タブ対応
+  - タブを左右に移動することには未対応
+- ダークモード完全対応 
+
 ## スクショ
-![起動直後の画面](https://user-images.githubusercontent.com/69241694/134348138-3920bfbe-fa3b-46c3-ba9b-88815e56f8bc.png)<br>
+すべてダークモードで動作しています。ライトモードも完全に対応しています。
+
+![起動直後の画面](https://user-images.githubusercontent.com/69241694/143030979-a3d142b6-cbb0-4775-9673-114aa59ec42f.png)
 起動直後の画面
 
-![実際にウェブサイトを閲覧している様子](https://user-images.githubusercontent.com/69241694/134348222-ecc71e4b-e493-4f7b-b6a5-cc451822f537.png)<br>
-
+![実際にウェブサイトを閲覧している様子](https://user-images.githubusercontent.com/69241694/143031042-9a797fdf-4689-47d2-b0fd-c626f3b9145d.png)
 実際にウェブサイトを閲覧している様子
 
 
@@ -48,16 +51,13 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monotの開発者向けツール|Alt + F12|
 |設定ウィンドウ|Ctrl(Cmd) + Alt + S|
 
+タブの移動には対応していませんが、正式版では対応する見通しです。
+
 
 # ダウンロードしてくださいっ！！！！！
 右上のこのボタンをクリックしてください。
 ![image](https://user-images.githubusercontent.com/69241694/132985506-fa49c272-6032-4349-bad9-e97a068aa8fe.png)
 
-## 追記
-タブはBeta 6で実装されます。更新頻度は僕含め5人の開発チームを構成したため、おそらく早くなると思います。
-
-今後ともMonotにぜひご期待お寄せください！
-
 ---
 Copyright 2021 Sorakime.
-Licensed by [monochrome. License](https://sorakime.github.io/mncr/license?v=1.1.1)
+Licensed by [monochrome License.](https://sorakime.github.io/mncr/license?v=1.1.1)
