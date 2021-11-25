@@ -187,20 +187,20 @@ app.on('activate',()=>{
 })
 
 //ipc channels
-ipcMain.on('moveView',(e,link,index)=>{
-  bv[index].webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
+ipcMain.on('moveView',(e,link,ind)=>{
+  bv[ind].webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
     node.context();
   })`)
-  console.log(index);
-  if(link==''){
+  console.log(ind);
+  if(lindk==''){
     return true;
   }else{
-    bv[index].webContents.loadURL(link).then(()=>{
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[index].webContents.getURL().substring(bv[index].webContents.getURL().indexOf('/')+2, bv[index].webContents.getURL().length)}'`)
+    bv[ind].webContents.loadURL(lindk).then(()=>{
+      win.webContents.executeJavaScript(`document.getElementsByTagName('indput')[0].value='${bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/')+2, bv[ind].webContents.getURL().length)}'`)
     }).catch(()=>{
-      bv[index].webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(()=>{
-        bv[index].webContents.executeJavaScript(`document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';
-          var requiredUrl='${link}';
+      bv[ind].webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(()=>{
+        bv[ind].webContents.executeJavaScript(`document.getElementsByTagName('span')[0].indnerText='${lindk.toLowerCase()}';
+          var requiredUrl='${lindk}';
         `);
       })
       console.log('The previous error is normal. It redirected to a page where the server couldn\'t be found.');
@@ -213,39 +213,39 @@ ipcMain.on('windowClose',()=>{
 ipcMain.on('windowMaximize',()=>{
   win.maximize();
 })
-ipcMain.on('windowMinimize',()=>{
-  win.minimize();
+ipcMain.on('windowMindimize',()=>{
+  win.mindimize();
 })
 ipcMain.on('windowUnmaximize',()=>{
   win.unmaximize();
 })
-ipcMain.on('windowMaxMin',()=>{
+ipcMain.on('windowMaxMind',()=>{
   if(win.isMaximized()==true){
     win.unmaximize();
   }else{
     win.maximize();
   }
 })
-ipcMain.on('moveViewBlank',(e,index)=>{
-  bv[index].webContents.loadURL(`file://${__dirname}/src/resource/blank.html`);
+ipcMain.on('moveViewBlank',(e,ind)=>{
+  bv[ind].webContents.loadURL(`file://${__dirname}/src/resource/blank.html`);
 })
-ipcMain.on('reloadBrowser',(e,index)=>{
-  bv[index].webContents.reload();
+ipcMain.on('reloadBrowser',(e,ind)=>{
+  bv[ind].webContents.reload();
 })
-ipcMain.on('browserBack',(e,index)=>{
-  bv[index].webContents.goBack();
-  if(bv[index].webContents.getURL().substring(bv[index].webContents.getURL().indexOf('/')+2, bv[index].webContents.getURL().length).slice(0,1)!='/'){
-    win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[index].webContents.getURL().substring(bv[index].webContents.getURL().indexOf('/')+2, bv[index].webContents.getURL().length)}'`)
+ipcMain.on('browserBack',(e,ind)=>{
+  bv[ind].webContents.goBack();
+  if(bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/')+2, bv[ind].webContents.getURL().length).slice(0,1)!='/'){
+    win.webContents.executeJavaScript(`document.getElementsByTagName('indput')[0].value='${bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/')+2, bv[ind].webContents.getURL().length)}'`)
   }
 })
-ipcMain.on('browserGoes',(e,index)=>{
-  bv[index].webContents.goForward();
+ipcMain.on('browserGoes',(e,ind)=>{
+  bv[ind].webContents.goForward();
 })
-ipcMain.on('getBrowserUrl',(e,index)=>{
-  return bv[index].webContents.getURL();
+ipcMain.on('getBrowserUrl',(e,ind)=>{
+  return bv[ind].webContents.getURL();
 })
-ipcMain.on('moveToNewTab',(e,index)=>{
-  bv[index].webContents.loadURL(`${__dirname}/src/resource/index.html`)
+ipcMain.on('moveToNewTab',(e,ind)=>{
+  bv[ind].webContents.loadURL(`${__dirname}/src/resource/index.html`)
 })
 ipcMain.on('context', ()=>{
   menu.popup()
@@ -254,15 +254,23 @@ ipcMain.on('newtab',()=>{
   newtab();
 })
 ipcMain.on('tabMove',(e,i)=>{
+  if(i<0)
+    i=0;
   win.setTopBrowserView(bv[i]);
-  index=i;
-  win.webContents.executeJavaScript(
-    `document.getElementsByTagName('title')[0].innerText='${bv[index].webContents.getTitle()} - Monot';`)
+  ind=i;
+
+  try{
+    win.webContents.executeJavaScript(
+     `document.getElementsByTagName('title')[0].indnerText='${bv[i].webContents.getTitle()} - Monot';`)
+  }catch(e){
+    win.webContents.executeJavaScript(
+     `document.getElementsByTagName('title')[0].indnerText='New Tab - Monot';`);
+  }
 })
-ipcMain.on('removeTab',(e,index)=>{
+ipcMain.on('removeTab',(e,ind)=>{
   //source: https://www.gesource.jp/weblog/?p=4112
-  win.removeBrowserView(bv[index])
-  bv.splice(index,1);
+  win.removeBrowserView(bv[ind])
+  bv.splice(ind,1);
 })
 
 
