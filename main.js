@@ -269,7 +269,8 @@ ipcMain.on('tabMove',(e,i)=>{
 })
 ipcMain.on('removeTab',(e,ind)=>{
   //source: https://www.gesource.jp/weblog/?p=4112
-  win.removeBrowserView(bv[ind])
+  win.removeBrowserView(bv[ind]);
+  bv[ind].webContents.destroy();
   bv.splice(ind,1);
 })
 
