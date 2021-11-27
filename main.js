@@ -1,31 +1,31 @@
-const {app, BrowserWindow, BrowserView, dialog, ipcMain, ipcRenderer, screen, Menu}=require('electron');
-const contextMenu=require('electron-context-menu');
-const fs=require('fs');
+const { app, BrowserWindow, BrowserView, dialog, ipcMain, ipcRenderer, screen, Menu } = require('electron');
+const contextMenu = require('electron-context-menu');
+const fs = require('fs');
 const path = require('path');
 let win, setting;
-var options,index;
-var bv=[];
-let viewY=66;
-index=0;
+var options, index;
+var bv = [];
+let viewY = 66;
+index = 0;
 
 contextMenu({
-  prepend: (defaultActions, parameters, browserWindow)=>[
+  prepend: (defaultActions, parameters, browserWindow) => [
     {
-      label: 'Êàª„Çã',
-      click: ()=>{
+      label: 'ñﬂÇÈ',
+      click: () => {
         bv[index].webContents.goBack();
       }
     },
     {
-      label: 'ÈÄ≤„ÇÄ',
-      click: ()=>{
+      label: 'êiÇﬁ',
+      click: () => {
         bv[index].webContents.goForward();
       }
     },
     {
-      label: 'Ë®≠ÂÆö',
-      click: ()=>{
-        setting=new BrowserWindow({
+      label: 'ê›íË',
+      click: () => {
+        setting = new BrowserWindow({
           width: 760, height: 480, minWidth: 300, minHeight: 270,
           webPreferences: {
             preload: `${__dirname}/src/setting/preload.js`,
@@ -39,10 +39,10 @@ contextMenu({
 })
 
 //creating new tab function
-function newtab(){
-  let winSize=win.getSize();
+function newtab() {
+  let winSize = win.getSize();
   //create new tab
-  let browserview=new BrowserView({
+  let browserview = new BrowserView({
     webPreferences: {
       scrollBounce: true,
       preload: `${__dirname}/src/script/preload-browserview.js`
@@ -51,54 +51,54 @@ function newtab(){
   browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
     node.context();
   })`)
-  browserview.webContents.on('did-start-loading',()=>{
+  browserview.webContents.on('did-start-loading', () => {
     browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
       node.context();
     })`)
   })
 
   //window's behavior
-  win.on('closed',()=>{
-    win=null;
+  win.on('closed', () => {
+    win = null;
   })
-  win.on('maximize',()=>{
-    winSize=win.getContentSize();
-    browserview.setBounds({x:0, y: viewY, width: winSize[0], height: winSize[1]-viewY+3});
+  win.on('maximize', () => {
+    winSize = win.getContentSize();
+    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3 });
   })
-  win.on('unmaximize',()=>{
-    winSize=win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
+  win.on('unmaximize', () => {
+    winSize = win.getContentSize();
+    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY });
   })
-  win.on('enter-full-screen',()=>{
-    winSize=win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY+2});
+  win.on('enter-full-screen', () => {
+    winSize = win.getContentSize();
+    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2 });
   })
 
-  browserview.webContents.on('did-start-loading',()=>{
+  browserview.webContents.on('did-start-loading', () => {
     win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].setAttribute(\'id\',\'loading\')')
     browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
       node.context();
     })`)
   })
-  browserview.webContents.on('did-finish-load',()=>{
+  browserview.webContents.on('did-finish-load', () => {
     win.webContents.executeJavaScript(`document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`)
-    if(browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length).slice(0,1)!='/'){
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length)}'`)
+    if (browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/') + 2, browserview.webContents.getURL().length).slice(0, 1) != '/') {
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/') + 2, browserview.webContents.getURL().length)}'`)
     }
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
       document.getElementById('opened').getElementsByTagName('a')[0].innerText='${browserview.webContents.getTitle()}';`)
   })
-  browserview.webContents.on('did-stop-loading',()=>{
+  browserview.webContents.on('did-stop-loading', () => {
     win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')')
 
-    //if„ÅÆÊù°‰ª∂„ÅåÁ≥ûÈï∑„ÅÑ„ÅÆ„ÅåÊ∞ó„Å´„Å™„Çã„ÄÇ„Åì„Çå„ÅØ„Åü„Å†„Åü„Å†„Ç¢„Éâ„É¨„Çπ„Éê„Éº„Å´URLÂá∫Âäõ„Åó„Å¶„Çã„Å†„Åë„ÄÇ
-    if(browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length).slice(0,1)!='/'){
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length)}'`)
+    //ifÇÃèåèÇ™ï≥í∑Ç¢ÇÃÇ™ãCÇ…Ç»ÇÈÅBÇ±ÇÍÇÕÇΩÇæÇΩÇæÉAÉhÉåÉXÉoÅ[Ç…URLèoóÕÇµÇƒÇÈÇæÇØÅB
+    if (browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/') + 2, browserview.webContents.getURL().length).slice(0, 1) != '/') {
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/') + 2, browserview.webContents.getURL().length)}'`)
     }
 
-    //Âº∑Âà∂„ÉÄ„Éº„ÇØ„É¢„Éº„Éâ(Force-Dark)
-    if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.forceDark==true){
+    //ã≠êßÉ_Å[ÉNÉÇÅ[Éh(Force-Dark)
+    if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.forceDark == true) {
       browserview.webContents.insertCSS(`
         *{
           background-color: #202020!important;
@@ -110,32 +110,32 @@ function newtab(){
           color: #7aa7cd!important;
         }`)
     }
-    //„Éï„Ç©„É≥„ÉàÂ§âÊõ¥
-    if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.fontChange==true){
+    //ÉtÉHÉìÉgïœçX
+    if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.fontChange == true) {
       browserview.webContents.insertCSS(`
         body,body>*, *{
-          font-family: ${JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.changedfont},'Noto Sans JP'!important;
+          font-family: ${JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.changedfont},'Noto Sans JP'!important;
         }`)
     }
   })
 
   //when the page title is updated (update the window title and tab title)
-  browserview.webContents.on('page-title-updated',(e, t)=>{
+  browserview.webContents.on('page-title-updated', (e, t) => {
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('title')[0].innerText='${t} - Monot';
       document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';`)
   })
-  index=bv.length;
+  index = bv.length;
   bv.push(browserview);
   win.addBrowserView(browserview);
-  browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
-  browserview.setAutoResize({width: true, height: true});
+  browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY });
+  browserview.setAutoResize({ width: true, height: true });
   browserview.webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
 }
 
-function nw(){
+function nw() {
   //create window
-  win=new BrowserWindow({
+  win = new BrowserWindow({
     width: 1000, height: 700, minWidth: 400, minHeight: 400,
     frame: false,
     transparent: false,
@@ -144,7 +144,7 @@ function nw(){
     icon: `${__dirname}/src/image/logo.png`,
     webPreferences: {
       worldSafeExecuteJavaScript: true,
-      nodeIntegration:false,
+      nodeIntegration: false,
       contextIsolation: true,
       preload: `${__dirname}/src/script/preload.js`
     }
@@ -152,53 +152,53 @@ function nw(){
   win.loadFile(`${__dirname}/src/index.html`);
   //create tab
   newtab();
-  let configObj=JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8'));
-  if(configObj.startup==true){
-    configObj.startup=false;
+  let configObj = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
+  if (configObj.startup == true) {
+    configObj.startup = false;
     function exists(path) {
-      try{
-        fs.readFileSync(path,'utf-8');
+      try {
+        fs.readFileSync(path, 'utf-8');
         return true;
-      }catch (e){
+      } catch (e) {
         return false;
       }
     }
-    if(exists(`/mncr/applications.mncfg`)){
-      let obj=JSON.parse(fs.readFileSync(`/mncr/applications.mncfg`,'utf-8'));
-      obj.monot=['v.1.0.0 Beta 6','6'];
-      fs.writeFileSync(`/mncr/applications.mncfg`,JSON.stringify(obj));
-    }else{
-      fs.mkdir('/mncr/',()=>{return true;})
-      let obj={monot:['v.1.0.0 Beta 6','6']};
-      fs.writeFileSync(`/mncr/applications.mncfg`,JSON.stringify(obj));
+    if (exists(`/mncr/applications.mncfg`)) {
+      let obj = JSON.parse(fs.readFileSync(`/mncr/applications.mncfg`, 'utf-8'));
+      obj.monot = ['v.1.0.0 Beta 6', '6'];
+      fs.writeFileSync(`/mncr/applications.mncfg`, JSON.stringify(obj));
+    } else {
+      fs.mkdir('/mncr/', () => { return true; })
+      let obj = { monot: ['v.1.0.0 Beta 6', '6'] };
+      fs.writeFileSync(`/mncr/applications.mncfg`, JSON.stringify(obj));
     }
-    fs.writeFileSync(`${__dirname}/src/config/config.mncfg`,JSON.stringify(configObj));
+    fs.writeFileSync(`${__dirname}/src/config/config.mncfg`, JSON.stringify(configObj));
   }
 }
 
 app.on('ready', nw);
-app.on('window-all-closed',()=>{
-  if(process.platform!=='darwin')
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin')
     app.quit();
 });
-app.on('activate',()=>{
-  if(win===null)
+app.on('activate', () => {
+  if (win === null)
     nw();
 })
 
 //ipc channels
-ipcMain.on('moveView',(e,link,ind)=>{
+ipcMain.on('moveView', (e, link, ind) => {
   bv[ind].webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
     node.context();
   })`)
   console.log(ind);
-  if(lindk==''){
+  if (lindk == '') {
     return true;
-  }else{
-    bv[ind].webContents.loadURL(lindk).then(()=>{
-      win.webContents.executeJavaScript(`document.getElementsByTagName('indput')[0].value='${bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/')+2, bv[ind].webContents.getURL().length)}'`)
-    }).catch(()=>{
-      bv[ind].webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(()=>{
+  } else {
+    bv[ind].webContents.loadURL(lindk).then(() => {
+      win.webContents.executeJavaScript(`document.getElementsByTagName('indput')[0].value='${bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/') + 2, bv[ind].webContents.getURL().length)}'`)
+    }).catch(() => {
+      bv[ind].webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(() => {
         bv[ind].webContents.executeJavaScript(`document.getElementsByTagName('span')[0].indnerText='${lindk.toLowerCase()}';
           var requiredUrl='${lindk}';
         `);
@@ -207,77 +207,81 @@ ipcMain.on('moveView',(e,link,ind)=>{
     })
   }
 })
-ipcMain.on('windowClose',()=>{
+ipcMain.on('windowClose', () => {
   win.close();
 })
-ipcMain.on('windowMaximize',()=>{
+ipcMain.on('windowMaximize', () => {
   win.maximize();
 })
-ipcMain.on('windowMindimize',()=>{
+ipcMain.on('windowMindimize', () => {
   win.mindimize();
 })
-ipcMain.on('windowUnmaximize',()=>{
+ipcMain.on('windowUnmaximize', () => {
   win.unmaximize();
 })
-ipcMain.on('windowMaxMind',()=>{
-  if(win.isMaximized()==true){
+ipcMain.on('windowMaxMind', () => {
+  if (win.isMaximized() == true) {
     win.unmaximize();
-  }else{
+  } else {
     win.maximize();
   }
 })
-ipcMain.on('moveViewBlank',(e,ind)=>{
+ipcMain.on('moveViewBlank', (e, ind) => {
   bv[ind].webContents.loadURL(`file://${__dirname}/src/resource/blank.html`);
 })
-ipcMain.on('reloadBrowser',(e,ind)=>{
+ipcMain.on('reloadBrowser', (e, ind) => {
   bv[ind].webContents.reload();
 })
-ipcMain.on('browserBack',(e,ind)=>{
+ipcMain.on('browserBack', (e, ind) => {
   bv[ind].webContents.goBack();
-  if(bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/')+2, bv[ind].webContents.getURL().length).slice(0,1)!='/'){
-    win.webContents.executeJavaScript(`document.getElementsByTagName('indput')[0].value='${bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/')+2, bv[ind].webContents.getURL().length)}'`)
+  if (bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/') + 2, bv[ind].webContents.getURL().length).slice(0, 1) != '/') {
+    win.webContents.executeJavaScript(`document.getElementsByTagName('indput')[0].value='${bv[ind].webContents.getURL().substrindg(bv[ind].webContents.getURL().indOf('/') + 2, bv[ind].webContents.getURL().length)}'`)
   }
 })
-ipcMain.on('browserGoes',(e,ind)=>{
+ipcMain.on('browserGoes', (e, ind) => {
   bv[ind].webContents.goForward();
 })
-ipcMain.on('getBrowserUrl',(e,ind)=>{
+ipcMain.on('getBrowserUrl', (e, ind) => {
   return bv[ind].webContents.getURL();
 })
-ipcMain.on('moveToNewTab',(e,ind)=>{
+ipcMain.on('moveToNewTab', (e, ind) => {
   bv[ind].webContents.loadURL(`${__dirname}/src/resource/index.html`)
 })
-ipcMain.on('context', ()=>{
+ipcMain.on('context', () => {
   menu.popup()
 })
-ipcMain.on('newtab',()=>{
+ipcMain.on('newtab', () => {
   newtab();
 })
-ipcMain.on('tabMove',(e,i)=>{
-  if(i<0)
-    i=0;
+ipcMain.on('tabMove', (e, i) => {
+  if (i < 0)
+    i = 0;
   win.setTopBrowserView(bv[i]);
-  ind=i;
+  ind = i;
 
-  try{
+  try {
     win.webContents.executeJavaScript(
-     `document.getElementsByTagName('title')[0].indnerText='${bv[i].webContents.getTitle()} - Monot';`)
-  }catch(e){
+      `document.getElementsByTagName('title')[0].indnerText='${bv[i].webContents.getTitle()} - Monot';`)
+  } catch (e) {
     win.webContents.executeJavaScript(
-     `document.getElementsByTagName('title')[0].indnerText='New Tab - Monot';`);
+      `document.getElementsByTagName('title')[0].indnerText='New Tab - Monot';`);
   }
 })
-ipcMain.on('removeTab',(e,ind)=>{
-  //source: https://www.gesource.jp/weblog/?p=4112
-  win.removeBrowserView(bv[ind]);
-  bv[ind].webContents.destroy();
-  bv.splice(ind,1);
+ipcMain.on('removeTab', (e, ind) => {
+  try {
+    //source: https://www.gesource.jp/weblog/?p=4112
+    win.removeBrowserView(bv[ind]);
+    bv[ind].webContents.destroy();
+    bv.splice(ind, 1);
+  } catch (err) {
+    errLog(err);
+  }
 })
 
 
-let menu=Menu.buildFromTemplate([
+let menu = Menu.buildFromTemplate([
   {
-    label: 'Ë°®Á§∫',
+    label: 'ï\é¶',
     submenu: [
       {
         type: 'separator'
@@ -285,100 +289,100 @@ let menu=Menu.buildFromTemplate([
       {
         role: 'togglefullscreen',
         accelerator: 'F11',
-        label: 'ÂÖ®ÁîªÈù¢Ë°®Á§∫'
+        label: 'ëSâÊñ ï\é¶'
       },
       {
         role: 'hide',
-        label: 'Èö†„Åô'
+        label: 'âBÇ∑'
       },
       {
         role: 'hideothers',
-        label: '‰ªñ„ÇíÈö†„Åô'
+        label: 'ëºÇâBÇ∑'
       },
       {
         role: 'reload',
-        label: 'nav„ÅÆÂÜçË°®Á§∫',
+        label: 'navÇÃçƒï\é¶',
         accelerator: 'CmdOrCtrl+Alt+R'
       },
       {
-        label: 'ÁµÇ‰∫Ü',
+        label: 'èIóπ',
         role: 'quit',
         accelerator: 'CmdOrCtrl+Q'
       }
     ]
   },
   {
-    label: 'ÁßªÂãï',
+    label: 'à⁄ìÆ',
     submenu: [
       {
-        label: 'ÂÜçË™≠„ÅøËæº„Åø',
+        label: 'çƒì«Ç›çûÇ›',
         accelerator: 'CmdOrCtrl+R',
-        click: ()=>{
+        click: () => {
           bv[index].webContents.reload();
         }
       },
       {
-        label: 'Êàª„Çã',
+        label: 'ñﬂÇÈ',
         accelerator: 'CmdOrCtrl+Alt+Z',
-        click: ()=>{
+        click: () => {
           bv[index].webContents.goBack();
         }
       },
       {
-        label: 'ÈÄ≤„ÇÄ',
+        label: 'êiÇﬁ',
         accelerator: 'CmdOrCtrl+Alt+X',
-        click: ()=>{
+        click: () => {
           bv[index].webContents.goForward();
         }
       }
     ]
   },
   {
-    label: 'Á∑®ÈõÜ',
+    label: 'ï“èW',
     submenu: [
       {
-        label: '„Ç´„ÉÉ„Éà',
+        label: 'ÉJÉbÉg',
         role: 'cut'
       },
       {
-        label: '„Ç≥„Éî„Éº',
+        label: 'ÉRÉsÅ[',
         role: 'copy'
       },
       {
-        label: '„Éö„Éº„Çπ„Éà',
+        label: 'ÉyÅ[ÉXÉg',
         role: 'paste'
       }
     ]
   },
   {
-    label: '„Ç¶„Ç£„É≥„Éâ„Ç¶',
+    label: 'ÉEÉBÉìÉhÉE',
     submenu: [
       {
-        label: 'Monot„Å´„Å§„ÅÑ„Å¶',
+        label: 'MonotÇ…Ç¬Ç¢Çƒ',
         accelerator: 'CmdOrCtrl+Alt+A',
-        click: ()=>{
+        click: () => {
           dialog.showMessageBox(null, {
             type: 'info',
             icon: './src/image/logo.png',
-            title: 'Monot„Å´„Å§„ÅÑ„Å¶',
-            message: 'Monot 1.0.0 Beta 6„Å´„Å§„ÅÑ„Å¶',
+            title: 'MonotÇ…Ç¬Ç¢Çƒ',
+            message: 'Monot 1.0.0 Beta 6Ç…Ç¬Ç¢Çƒ',
             detail: `Monot by monochrome. v.1.0.0 Beta 6 (Build 6)
-„Éê„Éº„Ç∏„Éß„É≥: 1.0.0 Beta 6
-„Éì„É´„ÉâÁï™Âè∑: 6
-ÈñãÁô∫ËÄÖ: Sorakime
+ÉoÅ[ÉWÉáÉì: 1.0.0 Beta 6
+ÉrÉãÉhî‘çÜ: 6
+äJî≠é“: Sorakime
 
-„É™„Éù„Ç∏„Éà„É™: https://github.com/Sorakime/monot
-ÂÖ¨Âºè„Çµ„Ç§„Éà: https://sorakime.github.io/mncr/project/monot/
+ÉäÉ|ÉWÉgÉä: https://github.com/Sorakime/monot
+åˆéÆÉTÉCÉg: https://sorakime.github.io/mncr/project/monot/
 
 Copyright 2021 Sorakime.`
           })
         }
       },
       {
-        label: 'Ë®≠ÂÆö',
+        label: 'ê›íË',
         accelerator: 'CmdOrCtrl+Alt+S',
-        click: ()=>{
-          setting=new BrowserWindow({
+        click: () => {
+          setting = new BrowserWindow({
             width: 760, height: 480, minWidth: 300, minHeight: 270,
             icon: `${__dirname}/src/image/logo.ico`,
             webPreferences: {
@@ -387,7 +391,7 @@ Copyright 2021 Sorakime.`
             }
           })
           setting.loadFile(`${__dirname}/src/setting/index.html`);
-          if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.forceDark==true){
+          if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.forceDark == true) {
             setting.webContents.executeJavaScript(
               `document.querySelectorAll('input[type="checkbox"]')[0].checked=true`
             )
@@ -397,20 +401,20 @@ Copyright 2021 Sorakime.`
     ]
   },
   {
-    label: 'ÈñãÁô∫',
+    label: 'äJî≠',
     submenu: [
       {
-        label: 'ÈñãÁô∫ËÄÖÂêë„Åë„ÉÑ„Éº„É´',
+        label: 'äJî≠é“å¸ÇØÉcÅ[Éã',
         accelerator: 'F12',
-        click: ()=>{
+        click: () => {
           console.log(index);
           bv[index].webContents.toggleDevTools();
         }
       },
       {
-        label: 'Monot„ÅÆÈñãÁô∫ËÄÖÂêë„Åë„ÉÑ„Éº„É´',
+        label: 'MonotÇÃäJî≠é“å¸ÇØÉcÅ[Éã',
         accelerator: 'Alt+F12',
-        click: ()=>{
+        click: () => {
           win.webContents.toggleDevTools();
         }
       }
@@ -418,3 +422,7 @@ Copyright 2021 Sorakime.`
   }
 ])
 Menu.setApplicationMenu(menu);
+
+function errLog(err) {
+  console.log(`ÉGÉâÅ[Ç™î≠ê∂ÇµÇ‹ÇµÇΩ\n${err}`)
+}
