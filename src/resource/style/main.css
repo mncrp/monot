@@ -39,9 +39,11 @@ body{
 body>div:nth-child(1){
   position: absolute;
   display: inline-block;
-  height: auto; width: auto;
+  height: auto;
+  width: auto;
   text-align: center;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform : translate(-50%,-50%);
 }
 div>div:nth-child(1) *{
@@ -65,7 +67,7 @@ div input{
   background-color: #fff3;
   box-sizing: border-box;
 }
-div:nth-child(1) a{
+div:nth-child(1) button{
   position: absolute;
   display: inline-block;
   right: 5px;
@@ -78,12 +80,13 @@ div:nth-child(1) a{
   background-size: 80%;
   background-repeat: no-repeat;
   transition: all 0.2s ease-in-out;
+  border: 0;
 }
 div:nth-child(1)>div *:hover, input:focus{
   box-shadow: 1px 1px 5px #bfbfbf55;
   background-color: #eee;
 }
-div:nth-child(1)>div a:hover{
+div:nth-child(1)>div button:hover{
   background-color: #fff5;
 }
 input:hover,input:focus{
@@ -115,12 +118,14 @@ hr{
     background-color: #fff1;
     color: #fff;
   }
-  div:nth-child(1) a{
+  div:nth-child(1) button{
     background-image: url('../../image/search-white.png');
+    background-color: #2220;
   }
-  div:nth-child(1)>div input:hover, input:focus{
+  input:hover,
+  input:focus{
     box-shadow: 1px 1px 5px #bfbfbf55;
-    background-color: #444;
+    background-color: #444!important;
     border: 1px solid #666e;
-  }\
+  }
 }
