@@ -33,7 +33,7 @@ nav{
 }
 
 body nav *{
-  -webkit-user-select: auto;
+  user-select: auto;
   -webkit-app-region: none;
   box-shadow: 0 0 0 #0000;
   position: relative;
@@ -187,12 +187,12 @@ yomikomi-bar{
   bottom: 0;
   left: -9px;
   width: 0;
-  height: calc(100% + 1px);
+  height: 10px;
   background: #fff;
   z-index: 0;
   transition: all 0.2s ease-in-out;
   border-radius: 0 5px 0 0;
-  filter: blur(20px);
+  filter: blur(5px) brightness(125%);
 }
 yomikomi-bar#loading{
   width: 30vw;
@@ -200,6 +200,7 @@ yomikomi-bar#loading{
 }
 yomikomi-bar#loaded{
   width: 95vw;
+  opacity: 1;
 }
 yomikomi-bar#frame-finished{
   width: 100vw;

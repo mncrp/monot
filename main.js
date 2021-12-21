@@ -1,104 +1,108 @@
-const {app, BrowserWindow, BrowserView, dialog, ipcMain, ipcRenderer, screen, Menu}=require('electron');
-const contextMenu=require('electron-context-menu');
-const fs=require('fs');
-const path = require('path');
+const {app, BrowserWindow, BrowserView, dialog, ipcMain, Menu} = require('electron');
+const contextMenu = require('electron-context-menu');
+const fs = require('fs');
 let win, setting;
-var options,index;
-var bv=[];
-let viewY=66;
-index=0;
+let index = 0;
+const bv = [];
+const viewY = 66;
 
 contextMenu({
-  prepend: (defaultActions, parameters, browserWindow)=>[
+  prepend: () => [
     {
       label: '戻る',
-      click: ()=>{
+      click: () => {
         bv[index].webContents.goBack();
       }
     },
     {
       label: '進む',
-      click: ()=>{
+      click: () => {
         bv[index].webContents.goForward();
       }
     },
     {
       label: '設定',
-      click: ()=>{
-        setting=new BrowserWindow({
-          width: 760, height: 480, minWidth: 300, minHeight: 270,
-          webPreferences: {
-            preload: `${__dirname}/src/setting/preload.js`,
-            scrollBounce: true
-          }
-        })
-        setting.loadFile(`${__dirname}/src/setting/index.html`)
+      click: () => {
+        showSetting();
       }
     }
   ]
-})
+});
 
-//creating new tab function
-function newtab(){
-  let winSize=win.getSize();
-  //create new tab
-  let browserview=new BrowserView({
+// creating new tab function
+function newtab() {
+  let winSize = win.getSize();
+  // create new tab
+  const browserview = new BrowserView({
+    backgroundColor: '#efefef',
     webPreferences: {
       scrollBounce: true,
       preload: `${__dirname}/src/script/preload-browserview.js`
     }
-  })
-  browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
-    node.context();
-  })`)
-  browserview.webContents.on('did-start-loading',()=>{
-    browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
+  });
+  browserview.webContents.executeJavaScript(
+    `document.addEventListener('contextmenu',()=>{
       node.context();
-    })`)
-  })
+    })`
+  );
+  browserview.webContents.on('did-start-loading', () => {
+    browserview.webContents.executeJavaScript(
+      `document.addEventListener('contextmenu',()=>{
+        node.context();
+      })`
+    );
+  });
 
-  //window's behavior
-  win.on('closed',()=>{
-    win=null;
-  })
-  win.on('maximize',()=>{
-    winSize=win.getContentSize();
-    browserview.setBounds({x:0, y: viewY, width: winSize[0], height: winSize[1]-viewY+3});
-  })
-  win.on('unmaximize',()=>{
-    winSize=win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
-  })
-  win.on('enter-full-screen',()=>{
-    winSize=win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY+2});
-  })
+  // window's behavior
+  win.on('closed', () => {
+    win = null;
+  });
+  win.on('maximize', () => {
+    winSize = win.getContentSize();
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3});
+  });
+  win.on('unmaximize', () => {
+    winSize = win.getContentSize();
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY});
+  });
+  win.on('enter-full-screen', () => {
+    winSize = win.getContentSize();
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2});
+  });
 
-  browserview.webContents.on('did-start-loading',()=>{
-    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].setAttribute(\'id\',\'loading\')')
-    browserview.webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
-      node.context();
-    })`)
-  })
-  browserview.webContents.on('did-finish-load',()=>{
-    win.webContents.executeJavaScript(`document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`)
-    if(browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length).slice(0,1)!='/'){
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length)}'`)
+  browserview.webContents.on('did-start-loading', () => {
+    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].setAttribute(\'id\',\'loading\')');
+    browserview.webContents.executeJavaScript(
+      `document.addEventListener('contextmenu',()=>{
+        node.context();
+      })`
+    );
+  });
+  browserview.webContents.on('did-finish-load', () => {
+    win.webContents.executeJavaScript(
+      `document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`);
+    const url = browserview.webContents.getURL();
+    if (url.substring(url.indexOf('/') + 2, url.length).slice(0, 1) !== '/') {
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${url.substring(url.indexOf('/') + 2, url.length)}'`);
     }
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
-      document.getElementById('opened').getElementsByTagName('a')[0].innerText='${browserview.webContents.getTitle()}';`)
-  })
-  browserview.webContents.on('did-stop-loading',()=>{
-    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')')
+      document.getElementById('opened').getElementsByTagName('a')[0].innerText='${browserview.webContents.getTitle()}';`);
+    browserview.webContents.executeJavaScript(
+      `if(document.body.style.backgroundColor==undefined)
+            document.body.style.backgroundColor='efefef'`
+    );
+  });
+  browserview.webContents.on('did-stop-loading', () => {
+    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')');
 
-    //ifの条件が糞長いのが気になる。これはただただアドレスバーにURL出力してるだけ。
-    if(browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length).slice(0,1)!='/'){
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/')+2, browserview.webContents.getURL().length)}'`)
+    // ifの条件が糞長いのが気になる。これはただただアドレスバーにURL出力してるだけ。
+    if (browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/') + 2, browserview.webContents.getURL().length).slice(0, 1) !== '/') {
+      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/') + 2, browserview.webContents.getURL().length)}'`);
     }
 
-    //強制ダークモード(Force-Dark)
-    if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.forceDark==true){
+    // 強制ダークモード(Force-Dark)
+    if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.forceDark === true) {
       browserview.webContents.insertCSS(`
         *{
           background-color: #202020!important;
@@ -108,34 +112,34 @@ function newtab(){
         }
         a{
           color: #7aa7cd!important;
-        }`)
+        }`);
     }
-    //フォント変更
-    if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.fontChange==true){
+    // フォント変更
+    if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.fontChange === true) {
       browserview.webContents.insertCSS(`
         body,body>*, *{
-          font-family: ${JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.changedfont},'Noto Sans JP'!important;
-        }`)
+          font-family: ${JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.changedfont},'Noto Sans JP'!important;
+        }`);
     }
-  })
+  });
 
-  //when the page title is updated (update the window title and tab title)
-  browserview.webContents.on('page-title-updated',(e, t)=>{
+  // when the page title is updated (update the window title and tab title)
+  browserview.webContents.on('page-title-updated', (e, t) => {
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('title')[0].innerText='${t} - Monot';
-      document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';`)
-  })
-  index=bv.length;
+      document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';`);
+  });
+  index = bv.length;
   bv.push(browserview);
   win.addBrowserView(browserview);
-  browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1]-viewY});
-  browserview.setAutoResize({width: true, height: true});
-  browserview.webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
+  bv[bv.length - 1].setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY});
+  bv[bv.length - 1].setAutoResize({width: true, height: true});
+  bv[bv.length - 1].webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
 }
 
-function nw(){
-  //create window
-  win=new BrowserWindow({
+function nw() {
+  // create window
+  win = new BrowserWindow({
     width: 1000, height: 700, minWidth: 400, minHeight: 400,
     frame: false,
     transparent: false,
@@ -144,138 +148,172 @@ function nw(){
     icon: `${__dirname}/src/image/logo.png`,
     webPreferences: {
       worldSafeExecuteJavaScript: true,
-      nodeIntegration:false,
+      nodeIntegration: false,
       contextIsolation: true,
       preload: `${__dirname}/src/script/preload.js`
     }
   });
   win.loadFile(`${__dirname}/src/index.html`);
-  //create tab
+  console.log(`${__dirname}/src/script/preload.js`);
+  // create tab
   newtab();
-  let configObj=JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8'));
-  if(configObj.startup==true){
-    configObj.startup=false;
-    function exists(path) {
-      try{
-        fs.readFileSync(path,'utf-8');
+  /* koko nokoshitoite ne!!!(ichiou)
+  let configObj = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
+  if (configObj.startup == true) {
+    configObj.startup = false;
+    const exists = (path) => {
+      try {
+        fs.readFileSync(path, 'utf-8');
         return true;
-      }catch (e){
+      } catch (e) {
         return false;
       }
+    };
+    if (exists(`/mncr/applications.mncfg`)) {
+      let obj = JSON.parse(fs.readFileSync(`/mncr/applications.mncfg`, 'utf-8'));
+      obj.monot = ['v.1.0.0 Beta 6', '6'];
+      fs.writeFileSync(`/mncr/applications.mncfg`, JSON.stringify(obj));
+    } else {
+      fs.mkdir('/mncr/', () => {
+        return true;
+      });
+      let obj = { monot: ['v.1.0.0 Beta 6', '6'] };
+      fs.writeFileSync(`/mncr/applications.mncfg`, JSON.stringify(obj));
     }
-    if(exists(`/mncr/applications.mncfg`)){
-      let obj=JSON.parse(fs.readFileSync(`/mncr/applications.mncfg`,'utf-8'));
-      obj.monot=['v.1.0.0 Beta 6','6'];
-      fs.writeFileSync(`/mncr/applications.mncfg`,JSON.stringify(obj));
-    }else{
-      fs.mkdir('/mncr/',()=>{return true;})
-      let obj={monot:['v.1.0.0 Beta 6','6']};
-      fs.writeFileSync(`/mncr/applications.mncfg`,JSON.stringify(obj));
+    fs.writeFileSync(`${__dirname}/src/config/config.mncfg`, JSON.stringify(configObj));
+  }*/
+}
+
+function showSetting() {
+  setting = new BrowserWindow({
+    width: 760,
+    height: 480,
+    minWidth: 300,
+    minHeight: 270,
+    icon: `${__dirname}/src/image/logo.ico`,
+    webPreferences: {
+      preload: `${__dirname}/src/setting/preload.js`,
+      scrollBounce: true
     }
-    fs.writeFileSync(`${__dirname}/src/config/config.mncfg`,JSON.stringify(configObj));
+  });
+  setting.loadFile(`${__dirname}/src/setting/index.html`);
+  const config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
+  if (config.experiments.forceDark === true) {
+    setting.webContents.executeJavaScript(
+      `document.querySelectorAll('input[type="checkbox"]')[0].checked=true`
+    );
+  }
+}
+
+function moveBrowser() {
+  const url = bv[index].webContents.getURL();
+  if (url.substring(url.indexOf('/') + 2, url.length).slice(0, 1) !== '/') {
+    win.webContents.executeJavaScript(
+      `document.getElementsByTagName('input')[0].value='${url.substring(url.indexOf('/') + 2, url.length)}'`
+    );
   }
 }
 
 app.on('ready', nw);
-app.on('window-all-closed',()=>{
-  if(process.platform!=='darwin')
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin')
     app.quit();
 });
-app.on('activate',()=>{
-  if(win===null)
+app.on('activate', () => {
+  if (win === null)
     nw();
-})
+});
 
-//ipc channels
-ipcMain.on('moveView',(e,link,ind)=>{
-  bv[ind].webContents.executeJavaScript(`document.addEventListener('contextmenu',()=>{
-    node.context();
-  })`)
-  console.log(ind);
-  if(link==''){
-    return true;
-  }else{
-    bv[ind].webContents.loadURL(link).then(()=>{
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[ind].webContents.getURL().substring(bv[ind].webContents.getURL().indexOf('/')+2, bv[ind].webContents.getURL().length)}'`)
-    }).catch((e)=>{
-      console.log(e);
-      bv[ind].webContents.loadURL(`file://${__dirname}/src/resource/server-notfound.html`).then(()=>{
-        bv[ind].webContents.executeJavaScript(`document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';
-          var requiredUrl='${link}';
-        `);
-      })
-      console.log('The previous error is normal. It redirected to a page where the server couldn\'t be found.');
-    })
+// ipc channels
+ipcMain.handle('moveView', (e, link, ind) => {
+  bv[ind].webContents.executeJavaScript(
+    `document.addEventListener('contextmenu',()=>{
+      node.context();
+    })`
+  );
+  if (link === '') {
+    return;
   }
-})
-ipcMain.on('windowClose',()=>{
+
+  try {
+    moveBrowser();
+    bv[ind].webContents.loadURL(link);
+  } catch (e) {
+    bv[ind].webContents.loadURL(
+      `file://${__dirname}/src/resource/server-notfound.html`
+    );
+    bv[ind].webContents.executeJavaScript(
+      `document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';`
+    );
+  }
+
+});
+ipcMain.handle('windowClose', () => {
   win.close();
-})
-ipcMain.on('windowMaximize',()=>{
+});
+ipcMain.handle('windowMaximize', () => {
   win.maximize();
-})
-ipcMain.on('windowMinimize',()=>{
+});
+ipcMain.handle('windowMinimize', () => {
   win.minimize();
-})
-ipcMain.on('windowUnmaximize',()=>{
+});
+ipcMain.handle('windowUnmaximize', () => {
   win.unmaximize();
-})
-ipcMain.on('windowMaxMin',()=>{
-  if(win.isMaximized()==true){
+});
+ipcMain.handle('windowMaxMin', () => {
+  if (win.isMaximized() === true) {
     win.unmaximize();
-  }else{
+  } else {
     win.maximize();
   }
-})
-ipcMain.on('moveViewBlank',(e,index)=>{
-  bv[index].webContents.loadURL(`file://${__dirname}/src/resource/blank.html`);
-})
-ipcMain.on('reloadBrowser',(e,index)=>{
+});
+ipcMain.handle('moveViewBlank', (e, index) => {
+  bv[index].webContents.loadURL(
+    `file://${__dirname}/src/resource/blank.html`
+  );
+});
+ipcMain.handle('reloadBrowser', (e, index) => {
   bv[index].webContents.reload();
-})
-ipcMain.on('browserBack',(e,index)=>{
+});
+ipcMain.handle('browserBack', (e, index) => {
   bv[index].webContents.goBack();
-  if(bv[index].webContents.getURL().substring(bv[index].webContents.getURL().indexOf('/')+2, bv[index].webContents.getURL().length).slice(0,1)!='/'){
-    win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${bv[index].webContents.getURL().substring(bv[index].webContents.getURL().indexOf('/')+2, bv[index].webContents.getURL().length)}'`)
-  }
-})
-ipcMain.on('browserGoes',(e,index)=>{
+
+});
+ipcMain.handle('browserGoes', (e, index) => {
   bv[index].webContents.goForward();
-})
-ipcMain.on('getBrowserUrl',(e,index)=>{
+});
+ipcMain.handle('getBrowserUrl', (e, index) => {
   return bv[index].webContents.getURL();
-})
-ipcMain.on('moveToNewTab',(e,index)=>{
-  bv[index].webContents.loadURL(`${__dirname}/src/resource/index.html`)
-})
-ipcMain.on('context', ()=>{
-  menu.popup()
-})
-ipcMain.on('newtab',()=>{
+});
+ipcMain.handle('moveToNewTab', (e, index) => {
+  bv[index].webContents.loadURL(`${__dirname}/src/resource/index.html`);
+});
+ipcMain.handle('context', () => {
+  menu.popup();
+});
+ipcMain.handle('newtab', () => {
   newtab();
-})
-ipcMain.on('tabMove',(e,i)=>{
-  if(i<0)
-    i=0;
+});
+ipcMain.handle('tabMove', (e, i) => {
+  if (i < 0)
+    i = 0;
   win.setTopBrowserView(bv[i]);
-  index=i;
+  index = i;
   win.webContents.executeJavaScript(
-    `document.getElementsByTagName('title')[0].innerText='${bv[i].webContents.getTitle()} - Monot';`)
-})
-ipcMain.on('removeTab',(e,i)=>{
-  //source: https://www.gesource.jp/weblog/?p=4112
-  try{
-    win.removeBrowserView(bv[i])
-    console.log(bv[i]);
+    `document.getElementsByTagName('title')[0].innerText='${bv[i].webContents.getTitle()} - Monot';`);
+});
+ipcMain.handle('removeTab', (e, i) => {
+  // source: https://www.gesource.jp/weblog/?p=4112
+  try {
+    win.removeBrowserView(bv[i]);
     bv[i].webContents.destroy();
-    bv.splice(i,1);
-  }catch(e){
-    return true;
+    bv.splice(i, 1);
+  } catch (e) {
+    return;
   }
-})
+});
 
-
-let menu=Menu.buildFromTemplate([
+const menu = Menu.buildFromTemplate([
   {
     label: '表示',
     submenu: [
@@ -313,21 +351,21 @@ let menu=Menu.buildFromTemplate([
       {
         label: '再読み込み',
         accelerator: 'CmdOrCtrl+R',
-        click: ()=>{
+        click: () => {
           bv[index].webContents.reload();
         }
       },
       {
         label: '戻る',
-        accelerator: 'CmdOrCtrl+Alt+Z',
-        click: ()=>{
+        accelerator: 'Alt+Left',
+        click: () => {
           bv[index].webContents.goBack();
         }
       },
       {
         label: '進む',
-        accelerator: 'CmdOrCtrl+Alt+X',
-        click: ()=>{
+        accelerator: 'Alt+Right',
+        click: () => {
           bv[index].webContents.goForward();
         }
       }
@@ -356,7 +394,7 @@ let menu=Menu.buildFromTemplate([
       {
         label: 'Monotについて',
         accelerator: 'CmdOrCtrl+Alt+A',
-        click: ()=>{
+        click: () => {
           dialog.showMessageBox(null, {
             type: 'info',
             icon: './src/image/logo.png',
@@ -365,33 +403,20 @@ let menu=Menu.buildFromTemplate([
             detail: `Monot by monochrome. v.1.0.0 Beta 6 (Build 6)
 バージョン: 1.0.0 Beta 6
 ビルド番号: 6
-開発者: Sorakime
+開発者: 6人のMonot開発チーム
 
 リポジトリ: https://github.com/Sorakime/monot
 公式サイト: https://sorakime.github.io/mncr/project/monot/
 
-Copyright 2021 Sorakime.`
-          })
+Copyright 2021 Sorakime and Monot development team.`
+          });
         }
       },
       {
         label: '設定',
         accelerator: 'CmdOrCtrl+Alt+S',
-        click: ()=>{
-          setting=new BrowserWindow({
-            width: 760, height: 480, minWidth: 300, minHeight: 270,
-            icon: `${__dirname}/src/image/logo.ico`,
-            webPreferences: {
-              preload: `${__dirname}/src/setting/preload.js`,
-              scrollBounce: true
-            }
-          })
-          setting.loadFile(`${__dirname}/src/setting/index.html`);
-          if(JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`,'utf-8')).experiments.forceDark==true){
-            setting.webContents.executeJavaScript(
-              `document.querySelectorAll('input[type="checkbox"]')[0].checked=true`
-            )
-          }
+        click: () => {
+          showSetting();
         }
       }
     ]
@@ -402,19 +427,19 @@ Copyright 2021 Sorakime.`
       {
         label: '開発者向けツール',
         accelerator: 'F12',
-        click: ()=>{
-          console.log(index);
+        click: () => {
           bv[index].webContents.toggleDevTools();
         }
       },
       {
-        label: 'Monotの開発者向けツール',
-        accelerator: 'Alt+F12',
-        click: ()=>{
-          win.webContents.toggleDevTools();
+        label: '開発者向けツール',
+        accelerator: 'CmdOrCtrl+Shift+I',
+        visible: false,
+        click: () => {
+          bv[index].webContents.toggleDevTools();
         }
       }
     ]
   }
-])
+]);
 Menu.setApplicationMenu(menu);

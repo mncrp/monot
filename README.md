@@ -23,7 +23,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 # アップデート内容
 - タブ対応
   - タブを左右に移動することには未対応
-- ダークモード完全対応 
+- ダークモード完全対応
 
 ## スクショ
 すべてダークモードで動作しています。ライトモードも完全に対応しています。
@@ -33,7 +33,6 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 
 ![実際にウェブサイトを閲覧している様子](https://user-images.githubusercontent.com/69241694/143031042-9a797fdf-4689-47d2-b0fd-c626f3b9145d.png)
 実際にウェブサイトを閲覧している様子
-
 
 
 ## ショートカットキー
@@ -53,6 +52,20 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 
 タブの移動には対応していませんが、正式版では対応する見通しです。
 
+## 開発チーム
+Monot開発者である僕は2021年10月ごろにMonot開発チームを立ち上げ、複数人でMonotの開発を始めました。
+
+メンバーは
+- [waryu](https://twitter.com/waryu_YND)
+- [ひでまる](https://twitter.com/hidemal_OwO)
+- [USB 3.14](https://twitter.com/f82n9szax)
+- [蒼凰](https://twitter.com/Ao_skyblue_pika)
+
+とMonot for Androidの
+
+- [ZIP](https://twitter.com/ZIP_Muryobochi)
+
+の5人です。
 
 # ダウンロードしてくださいっ！！！！！
 右上のこのボタンをクリックしてください。
