@@ -81,10 +81,7 @@ function newtab() {
   browserview.webContents.on('did-finish-load', () => {
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`);
-    const url = browserview.webContents.getURL();
-    if (url.substring(url.indexOf('/') + 2, url.length).slice(0, 1) !== '/') {
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${url.substring(url.indexOf('/') + 2, url.length)}'`);
-    }
+    setTitleUrl(browserview.webContents.getURL());
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
       document.getElementById('opened').getElementsByTagName('a')[0].innerText='${browserview.webContents.getTitle()}';`);
@@ -95,11 +92,7 @@ function newtab() {
   });
   browserview.webContents.on('did-stop-loading', () => {
     win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')');
-
-    // ifの条件が糞長いのが気になる。これはただただアドレスバーにURL出力してるだけ。
-    if (browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/') + 2, browserview.webContents.getURL().length).slice(0, 1) !== '/') {
-      win.webContents.executeJavaScript(`document.getElementsByTagName('input')[0].value='${browserview.webContents.getURL().substring(browserview.webContents.getURL().indexOf('/') + 2, browserview.webContents.getURL().length)}'`);
-    }
+    setTitleUrl(browserview.webContents.getURL());
 
     // 強制ダークモード(Force-Dark)
     if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.forceDark === true) {
@@ -205,13 +198,20 @@ function showSetting() {
   }
 }
 
-function moveBrowser() {
-  const url = bv[index].webContents.getURL();
-  if (url.substring(url.indexOf('/') + 2, url.length).slice(0, 1) !== '/') {
-    win.webContents.executeJavaScript(
-      `document.getElementsByTagName('input')[0].value='${url.substring(url.indexOf('/') + 2, url.length)}'`
-    );
-  }
+// This function set URL to the URL bar of the title bar.
+function setTitleUrl(url) {
+  if (!(url instanceof URL))
+    url = new URL(url);
+
+  // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
+  const resourceIndex = new URL(`file://${__dirname}/`);
+  if (url.href.includes(resourceIndex.href))
+    return Promise.resolve();
+
+  // Set URL in the URL bar.
+  return win.webContents.executeJavaScript(
+    `document.getElementsByTagName('input')[0].value='${url.host + url.pathname + url.search + url.hash}'`
+  );
 }
 
 app.on('ready', nw);
@@ -236,7 +236,7 @@ ipcMain.handle('moveView', (e, link, ind) => {
   }
 
   try {
-    moveBrowser();
+    setTitleUrl(bv[index].webContents.getURL());
     bv[ind].webContents.loadURL(link);
   } catch (e) {
     bv[ind].webContents.loadURL(
