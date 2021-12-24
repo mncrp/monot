@@ -11,8 +11,8 @@ document.getElementById('searchButton').addEventListener('click', () => {
   searchBrowser();
 });
 
-document.getElementsById('search').addEventListener('keydown', (e) => {
-  if (e.keyCode === 13) {
+document.getElementById('search').addEventListener('keydown', (e) => {
+  if (!e.isComposing && e.code === 'Enter') {
     searchBrowser();
   }
 });
