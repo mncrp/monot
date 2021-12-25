@@ -79,6 +79,7 @@ function newtab() {
     );
   });
   browserview.webContents.on('did-finish-load', () => {
+    browserview.setBackgroundColor('#efefef');
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`);
     setTitleUrl(browserview.webContents.getURL());
