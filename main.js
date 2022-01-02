@@ -1,33 +1,36 @@
-const {app, BrowserWindow, BrowserView, dialog, ipcMain, Menu} = require('electron');
+const { app, BrowserWindow, BrowserView, dialog, ipcMain, Menu } = require('electron');
 const contextMenu = require('electron-context-menu');
 const fs = require('fs');
 let win, setting;
 let index = 0;
 const bv = [];
 const viewY = 66;
+let adBlockCode;
+let config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
+if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.forceDark === true)
 
-contextMenu({
-  prepend: () => [
-    {
-      label: '戻る',
-      click: () => {
-        bv[index].webContents.goBack();
+  contextMenu({
+    prepend: () => [
+      {
+        label: '戻る',
+        click: () => {
+          bv[index].webContents.goBack();
+        }
+      },
+      {
+        label: '進む',
+        click: () => {
+          bv[index].webContents.goForward();
+        }
+      },
+      {
+        label: '設定',
+        click: () => {
+          showSetting();
+        }
       }
-    },
-    {
-      label: '進む',
-      click: () => {
-        bv[index].webContents.goForward();
-      }
-    },
-    {
-      label: '設定',
-      click: () => {
-        showSetting();
-      }
-    }
-  ]
-});
+    ]
+  });
 
 // creating new tab function
 function newtab() {
@@ -59,15 +62,15 @@ function newtab() {
   });
   win.on('maximize', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3});
+    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3 });
   });
   win.on('unmaximize', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY});
+    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY });
   });
   win.on('enter-full-screen', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2});
+    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2 });
   });
 
   browserview.webContents.on('did-start-loading', () => {
@@ -92,11 +95,12 @@ function newtab() {
     );
   });
   browserview.webContents.on('did-stop-loading', () => {
+    config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
     win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')');
     setTitleUrl(browserview.webContents.getURL());
 
     // 強制ダークモード(Force-Dark)
-    if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.forceDark === true) {
+    if (config.experiments.forceDark === true) {
       browserview.webContents.insertCSS(`
         *{
           background-color: #202020!important;
@@ -109,15 +113,15 @@ function newtab() {
         }`);
     }
     // フォント変更
-    if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.fontChange === true) {
+    if (config.experiments.fontChange === true) {
       browserview.webContents.insertCSS(`
         body,body>*, *{
-          font-family: ${JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.changedfont},'Noto Sans JP'!important;
+          font-family: ${config.experiments.changedfont},'Noto Sans JP'!important;
         }`);
     }
   });
 
-  // when the page title is updated (update the window title and tab title)
+  // when the page title is updated (update the window title and tab title) config.mncfg
   browserview.webContents.on('page-title-updated', (e, t) => {
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('title')[0].innerText='${t} - Monot';
@@ -126,8 +130,8 @@ function newtab() {
   index = bv.length;
   bv.push(browserview);
   win.addBrowserView(browserview);
-  bv[bv.length - 1].setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY});
-  bv[bv.length - 1].setAutoResize({width: true, height: true});
+  bv[bv.length - 1].setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY });
+  bv[bv.length - 1].setAutoResize({ width: true, height: true });
   bv[bv.length - 1].webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
 }
 
@@ -191,7 +195,6 @@ function showSetting() {
     }
   });
   setting.loadFile(`${__dirname}/src/setting/index.html`);
-  const config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
   if (config.experiments.forceDark === true) {
     setting.webContents.executeJavaScript(
       `document.querySelectorAll('input[type="checkbox"]')[0].checked=true`
@@ -204,7 +207,7 @@ function setTitleUrl(url) {
   if (!(url instanceof URL))
     url = new URL(url);
 
-  // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
+  // If the URL is Monot build-in HTML, the URL is not set in the URL bar.config.mncfg
   const resourceIndex = new URL(`file://${__dirname}/`);
   if (url.href.includes(resourceIndex.href))
     return Promise.resolve();
