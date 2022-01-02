@@ -122,10 +122,9 @@ function newtab() {
     }
     //AD Block
     if (config.experiments.adBlock === true) {
-      browserview.webContents.executeJavascript(adBlockCode);
+      browserview.webContents.executeJavaScript(adBlockCode);
     }
   });
-  console.log(Object.keys(browserview.webContents))
   // when the page title is updated (update the window title and tab title) config.mncfg
   browserview.webContents.on('page-title-updated', (e, t) => {
     win.webContents.executeJavaScript(

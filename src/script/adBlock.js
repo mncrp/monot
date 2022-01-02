@@ -16,6 +16,7 @@ const adBlock = () => {
     dc("yjAdImage");
     dc("yadsOverlay");
     da(/ad/gi);
+    dt("ins")
 }
 
 const dt = (elementTag) => { //Delete tag
