@@ -1,1 +1,9 @@
-{"experiments":{"forceDark":false,"fontChange":false,"changedfont":""},"startup":false}
+{
+    "experiments": {
+        "forceDark": false,
+        "fontChange": false,
+        "changedfont": "",
+        "adBlock": true
+    },
+    "startup": false
+}
