@@ -24,3 +24,4 @@ document.getElementsByTagName('input')[1].addEventListener('change', (arg) => {
 document.getElementById('changedfont').addEventListener('input', () => {
   node.changeExperimentalFunctions('changedfont', document.getElementById('changedfont').value);
 });
+document.getElementsByTagName('input')[3].addEventListener('change', changeExperimental);

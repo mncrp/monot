@@ -1,36 +1,37 @@
 const { app, BrowserWindow, BrowserView, dialog, ipcMain, Menu } = require('electron');
 const contextMenu = require('electron-context-menu');
 const fs = require('fs');
+const { connected } = require('process');
+//
 let win, setting;
 let index = 0;
+let adBlockCode = fs.readFileSync(`${__dirname}/src/script/adBlock.js`, 'utf-8');
+let config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
 const bv = [];
 const viewY = 66;
-let adBlockCode;
-let config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
-if (JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8')).experiments.forceDark === true)
 
-  contextMenu({
-    prepend: () => [
-      {
-        label: '戻る',
-        click: () => {
-          bv[index].webContents.goBack();
-        }
-      },
-      {
-        label: '進む',
-        click: () => {
-          bv[index].webContents.goForward();
-        }
-      },
-      {
-        label: '設定',
-        click: () => {
-          showSetting();
-        }
+contextMenu({
+  prepend: () => [
+    {
+      label: '戻る',
+      click: () => {
+        bv[index].webContents.goBack();
       }
-    ]
-  });
+    },
+    {
+      label: '進む',
+      click: () => {
+        bv[index].webContents.goForward();
+      }
+    },
+    {
+      label: '設定',
+      click: () => {
+        showSetting();
+      }
+    }
+  ]
+});
 
 // creating new tab function
 function newtab() {
@@ -119,8 +120,12 @@ function newtab() {
           font-family: ${config.experiments.changedfont},'Noto Sans JP'!important;
         }`);
     }
+    //AD Block
+    if (config.experiments.adBlock === true) {
+      browserview.webContents.executeJavascript(adBlockCode);
+    }
   });
-
+  console.log(Object.keys(browserview.webContents))
   // when the page title is updated (update the window title and tab title) config.mncfg
   browserview.webContents.on('page-title-updated', (e, t) => {
     win.webContents.executeJavaScript(

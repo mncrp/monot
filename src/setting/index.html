@@ -1,41 +1,45 @@
 <!DOCTYPE html>
 <html lang="ja" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>設定 - Monot</title>
-    <link rel="stylesheet" href="../resource/style/font.css">
-    <link rel="stylesheet" href="./style/index.css">
-  </head>
-  <body>
-    <header>
-      <h1>設定</h1>
-    </header>
-    <main>
-      <!--<div id="wallpaper">
+
+<head>
+  <meta charset="utf-8">
+  <title>設定 - Monot</title>
+  <link rel="stylesheet" href="../resource/style/font.css">
+  <link rel="stylesheet" href="./style/index.css">
+</head>
+
+<body>
+  <header>
+    <h1>設定</h1>
+  </header>
+  <main>
+    <!--<div id="wallpaper">
         <h2>壁紙</h2>
         <div id="wallpaper-select">
           <span id="default"><p>#efefef</p></span>
           <span id="custom"><p>カスタム</p></span>
         </div>
       </div>-->
-      <div id="engine">
-        <h2>検索エンジン</h2>
-        <select>
-          <option value="ddg">DuckDuckGo (標準)</option>
-          <option value="google">Google</option>
-          <option value="yahoo-jp">Yahoo! Japan</option>
-          <option value="bing">Bing</option>
-          <option value="yahoo">Yahoo!</option>
-        </select>
-      </div>
-      <div id="experiments">
-        <h2>実験的な機能</h2>
-        <p style="font-size: 12px;">これらは試験的に実装された機能です。標準ではすべてオフですが、この設定はユーザーが変更できます。また、これらの機能を有効にしてもし損害が発生しても責任は負えません。</p>
-        <label><input type="checkbox" value="forceDark">強制ダークモード (Force Dark)</label>
-        <label><input type="checkbox" value="fontChange">フォント変更 (Font Change)</input></label>
-        <input type="text" name="" placeholder="ここに変更するフォント名を入力" disabled id="changedfont">
-      </div>
-    </main>
-    <script src="./script/index.js"></script>
-  </body>
+    <div id="engine">
+      <h2>検索エンジン</h2>
+      <select>
+        <option value="ddg">DuckDuckGo (標準)</option>
+        <option value="google">Google</option>
+        <option value="yahoo-jp">Yahoo! Japan</option>
+        <option value="bing">Bing</option>
+        <option value="yahoo">Yahoo!</option>
+      </select>
+    </div>
+    <div id="experiments">
+      <h2>実験的な機能</h2>
+      <p style="font-size: 12px;">これらは試験的に実装された機能です。標準ではすべてオフですが、この設定はユーザーが変更できます。また、これらの機能を有効にしてもし損害が発生しても責任は負えません。</p>
+      <label><input type="checkbox" value="forceDark">強制ダークモード (Force Dark)</label>
+      <label><input type="checkbox" value="fontChange">フォント変更 (Font Change)</input></label>
+      <input type="text" name="" placeholder="ここに変更するフォント名を入力" disabled id="changedfont">
+      <label><input type="checkbox" value="adBlock">AD Blocker</label>
+    </div>
+  </main>
+  <script src="./script/index.js"></script>
+</body>
+
 </html>
