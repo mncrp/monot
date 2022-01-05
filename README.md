@@ -56,6 +56,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 Monot開発者である僕は2021年10月ごろにMonot開発チームを立ち上げ、複数人でMonotの開発を始めました。
 
 メンバーは
+- [Sorakime](https://twitter.com/Sorakime_)
 - [waryu](https://twitter.com/waryu_YND)
 - [ひでまる](https://twitter.com/hidemal_OwO)
 - [USB 3.14](https://twitter.com/f82n9szax)
@@ -65,7 +66,7 @@ Monot開発者である僕は2021年10月ごろにMonot開発チームを立ち�
 
 - [ZIP](https://twitter.com/ZIP_Muryobochi)
 
-の5人です。
+の6人です。
 
 # ダウンロードしてくださいっ！！！！！
 右上のこのボタンをクリックしてください。
