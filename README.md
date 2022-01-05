@@ -6,9 +6,9 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|正式名称|Monot by monochrome. v.1.0.0 Beta 6 (Build 6)|
-|バージョン|v.1.0 Beta 6|
-|ビルド番号|6|
+|正式名称|Monot by monochrome. v.1.0.0|
+|バージョン|v.1.0.0|
+|ビルド番号|7|
 |公開日|2021年11月23日(火)|
 |ライセンス|[monochrome License.](https://sorakime.github.io/mncr/license?v=1.1.1)|
 |言語|日本語|
