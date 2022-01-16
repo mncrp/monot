@@ -77,28 +77,31 @@ nav a:active{
   background-color: #fff0;
   box-shadow: 0 0 0 #0000;
 }
-nav a:nth-child(1){
+#home{
   background-image: url('../image/home.png');
 }
-nav a:nth-child(2){
+#reload{
   background-image: url('../image/reload.png');
 }
-nav a:nth-child(3){
+#prev{
   background-image: url('../image/back.png');
 }
-nav a:nth-child(4){
+#menu{
+  background-image: url('../image/option.png');
+}
+#next{
   background-image: url('../image/prev.png');
 }
-nav a:nth-child(6){
+#move{
   background-image: url('../image/go.png');
 }
-nav a:nth-child(7){
+#minimize{
   background-image: url('../image/hide.png');
 }
-nav a:nth-child(8){
+#maximize{
   background-image: url('../image/maximize.png');
 }
-nav a:nth-child(9){
+#close{
   background-image: url('../image/close.png');
 }
 
@@ -231,28 +234,31 @@ yomikomi-bar#frame-finished{
     background-color: #fff0;
     box-shadow: 0 0 0 #0000;
   }
-  nav a:nth-child(1){
+  #home{
     background-image: url('../image/home-white.png');
   }
-  nav a:nth-child(2){
+  #reload{
     background-image: url('../image/reload-white.png');
   }
-  nav a:nth-child(3){
+  #prev{
     background-image: url('../image/back-white.png');
   }
-  nav a:nth-child(4){
+  #menu{
+    background-image: url('../image/option-white.png');
+  }
+  #next{
     background-image: url('../image/prev-white.png');
   }
-  nav a:nth-child(6){
+  #move{
     background-image: url('../image/go-white.png');
   }
-  nav a:nth-child(7){
+  #minimize{
     background-image: url('../image/hide-white.png');
   }
-  nav a:nth-child(8){
+  #maximize{
     background-image: url('../image/maximize-white.png');
   }
-  nav a:nth-child(9){
+  #close{
     background-image: url('../image/close-white.png');
   }
   div>span:hover{

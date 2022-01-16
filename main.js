@@ -1,11 +1,12 @@
-const { app, BrowserWindow, BrowserView, dialog, ipcMain, Menu } = require('electron');
+// require
+const {app, BrowserWindow, BrowserView, dialog, ipcMain, Menu} = require('electron');
 const contextMenu = require('electron-context-menu');
 const fs = require('fs');
-const { connected } = require('process');
-//
+
+// variables
 let win, setting;
 let index = 0;
-let adBlockCode = fs.readFileSync(`${__dirname}/src/script/adBlock.js`, 'utf-8');
+const adBlockCode = fs.readFileSync(`${__dirname}/src/script/adBlock.js`, 'utf-8');
 let config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
 const bv = [];
 const viewY = 66;
@@ -63,19 +64,22 @@ function newtab() {
   });
   win.on('maximize', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3 });
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3});
   });
   win.on('unmaximize', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY });
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY});
   });
   win.on('enter-full-screen', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2 });
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2});
   });
 
   browserview.webContents.on('did-start-loading', () => {
-    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].setAttribute(\'id\',\'loading\')');
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('yomikomi-bar')[0]
+        .setAttribute('id','loading');
+    `);
     browserview.webContents.executeJavaScript(
       `document.addEventListener('contextmenu',()=>{
         node.context();
@@ -85,22 +89,25 @@ function newtab() {
   browserview.webContents.on('did-finish-load', () => {
     browserview.setBackgroundColor('#efefef');
     win.webContents.executeJavaScript(
-      `document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`);
+      `document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`
+    );
     setTitleUrl(browserview.webContents.getURL());
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
-      document.getElementById('opened').getElementsByTagName('a')[0].innerText='${browserview.webContents.getTitle()}';`);
-    browserview.webContents.executeJavaScript(
-      `if(document.body.style.backgroundColor==undefined)
-            document.body.style.backgroundColor='efefef'`
-    );
+      document.getElementById('opened')
+        .getElementsByTagName('a')[0]
+        .innerText='${browserview.webContents.getTitle()}';
+    `);
   });
   browserview.webContents.on('did-stop-loading', () => {
     config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
-    win.webContents.executeJavaScript('document.getElementsByTagName(\'yomikomi-bar\')[0].removeAttribute(\'id\')');
+    win.webContents.executeJavaScript(
+      `document.getElementsByTagName('yomikomi-bar')[0]
+        .removeAttribute('id');
+    `);
     setTitleUrl(browserview.webContents.getURL());
 
-    // 強制ダークモード(Force-Dark)
+    // Force-Dark
     if (config.experiments.forceDark === true) {
       browserview.webContents.insertCSS(`
         *{
@@ -113,17 +120,23 @@ function newtab() {
           color: #7aa7cd!important;
         }`);
     }
-    // フォント変更
+    // fontChange
     if (config.experiments.fontChange === true) {
       browserview.webContents.insertCSS(`
         body,body>*, *{
           font-family: ${config.experiments.changedfont},'Noto Sans JP'!important;
         }`);
     }
-    //AD Block
+    // AD Block
     if (config.experiments.adBlock === true) {
       browserview.webContents.executeJavaScript(adBlockCode);
     }
+  });
+  browserview.webContents.on('dom-ready', () => {
+    // user-agent stylesheet
+    browserview.webContents.insertCSS(
+      fs.readFileSync(`${__dirname}/src/style/ua.css`, 'utf-8')
+    );
   });
   // when the page title is updated (update the window title and tab title) config.mncfg
   browserview.webContents.on('page-title-updated', (e, t) => {
@@ -134,9 +147,19 @@ function newtab() {
   index = bv.length;
   bv.push(browserview);
   win.addBrowserView(browserview);
-  bv[bv.length - 1].setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY });
-  bv[bv.length - 1].setAutoResize({ width: true, height: true });
-  bv[bv.length - 1].webContents.loadURL(`file://${__dirname}/src/resource/index.html`);
+  bv[bv.length - 1].setBounds({
+    x: 0,
+    y: viewY,
+    width: winSize[0],
+    height: winSize[1] - viewY
+  });
+  bv[bv.length - 1].setAutoResize({
+    width: true,
+    height: true
+  });
+  bv[bv.length - 1].webContents.loadURL(
+    `file://${__dirname}/src/resource/index.html`
+  );
 }
 
 function nw() {
@@ -156,9 +179,28 @@ function nw() {
     }
   });
   win.loadFile(`${__dirname}/src/index.html`);
-  console.log(`${__dirname}/src/script/preload.js`);
   // create tab
   newtab();
+  /* let browserView = new BrowserView({
+    backgroundColor: '#efefef',
+    webPreferences: {
+      scrollBounce: true
+    }
+  });
+  browserView.setBounds({
+    x: 50,
+    y: viewY,
+    width: 500,
+    height: 500
+  });
+  browserView.setAutoResize({
+    width: true,
+    height: true
+  });
+  win.addBrowserView(browserView);
+  browserView.webContents.loadURL(
+    `file://${__dirname}/src/resource/test.html`
+  ); */
   /* koko nokoshitoite ne!!!(ichiou)
   let configObj = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
   if (configObj.startup == true) {
@@ -206,7 +248,7 @@ function showSetting() {
   }
 }
 
-// This function set URL to the URL bar of the title bar.
+// This function sets URL to the URL bar of the title bar.
 function setTitleUrl(url) {
   if (!(url instanceof URL))
     url = new URL(url);
@@ -234,7 +276,8 @@ app.on('activate', () => {
 
 // ipc channels
 ipcMain.handle('moveView', (e, link, ind) => {
-  bv[ind].webContents.executeJavaScript(
+  const current = ind;
+  bv[current].webContents.executeJavaScript(
     `document.addEventListener('contextmenu',()=>{
       node.context();
     })`
@@ -244,17 +287,16 @@ ipcMain.handle('moveView', (e, link, ind) => {
   }
 
   try {
-    setTitleUrl(bv[index].webContents.getURL());
-    bv[ind].webContents.loadURL(link);
+    setTitleUrl(bv[current].webContents.getURL());
+    bv[current].webContents.loadURL(link);
   } catch (e) {
-    bv[ind].webContents.loadURL(
+    bv[current].webContents.loadURL(
       `file://${__dirname}/src/resource/server-notfound.html`
     );
-    bv[ind].webContents.executeJavaScript(
+    bv[current].webContents.executeJavaScript(
       `document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';`
     );
   }
-
 });
 ipcMain.handle('windowClose', () => {
   win.close();
@@ -314,7 +356,7 @@ ipcMain.handle('removeTab', (e, i) => {
   // source: https://www.gesource.jp/weblog/?p=4112
   try {
     win.removeBrowserView(bv[i]);
-    bv[i].webContents.destroy();
+    bv[i].destroy();
     bv.splice(i, 1);
   } catch (e) {
     return;
