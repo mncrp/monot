@@ -6,8 +6,18 @@ contextBridge.exposeInMainWorld('node', {
     ipcRenderer.invoke('context');
   },
   getEngineURL: () => {
-    const file = fs.readFileSync(`${__dirname}/../config/engines.mncfg`, 'utf-8');
-    const obj = JSON.parse(file);
-    return obj.values[obj.engine];
+    let url;
+    // たぶんここら辺バグってる
+    async function getUserPath() {
+      const res = await ipcRenderer.invoke('userPath');
+      const file = fs.readFileSync(
+        `${res}/engines.mncfg`,
+        'utf-8'
+      );
+      const obj = JSON.parse(file);
+      url = obj.values[obj.engine];
+      console.log(url);
+    }
+    return url;
   }
 });

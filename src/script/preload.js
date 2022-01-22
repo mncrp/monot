@@ -1,4 +1,4 @@
-const {contextBridge, ipcRenderer} = require('electron');
+const {app, contextBridge, ipcRenderer} = require('electron');
 const fs = require('fs');
 
 contextBridge.exposeInMainWorld('node', {
@@ -24,7 +24,10 @@ contextBridge.exposeInMainWorld('node', {
   },
   moveBrowser: (word, index) => {
     // Page navigation
-    const file = fs.readFileSync(`${__dirname}/../config/engines.mncfg`, 'utf-8');
+    const file = fs.readFileSync(
+      `${app.getPath('userData')}/engines.mncfg`,
+      'utf-8'
+    );
     const obj = JSON.parse(file);
     const engine = obj.values[obj.engine];
 

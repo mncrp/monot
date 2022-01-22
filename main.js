@@ -4,12 +4,44 @@ const contextMenu = require('electron-context-menu');
 const fs = require('fs');
 
 // variables
-let win, setting;
+let win, setting, config;
 let index = 0;
 const adBlockCode = fs.readFileSync(`${__dirname}/src/script/adBlock.js`, 'utf-8');
-let config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
 const bv = [];
 const viewY = 66;
+
+// config.mncfg
+try {
+  fs.readFileSync(
+    `${app.getPath('userData')}/config.mncfg`,
+    'utf-8'
+  );
+} catch (e) {
+  // app.getPath('userData')/config.mncfg isn't found
+  fs.writeFile(
+    `${app.getPath('userData')}/config.mncfg`,
+    fs.readFileSync(`${app.getPath('userData')}/config.mncfg`),
+    (err) => {
+      if (err) throw err;
+    }
+  );
+}
+// engines.mncfg
+try {
+  fs.readFileSync(
+    `${app.getPath('userData')}/engines.mncfg`,
+    'utf-8'
+  );
+} catch (e) {
+  // app.getPath('userData')/config.mncfg isn't found
+  fs.writeFile(
+    `${app.getPath('userData')}/engines.mncfg`,
+    fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`),
+    (err) => {
+      if (err) throw err;
+    }
+  );
+}
 
 contextMenu({
   prepend: () => [
@@ -100,7 +132,7 @@ function newtab() {
     `);
   });
   browserview.webContents.on('did-stop-loading', () => {
-    config = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
+    config = JSON.parse(fs.readFileSync(`${app.getPath('userData')}/config.mncfg`, 'utf-8'));
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('yomikomi-bar')[0]
         .removeAttribute('id');
@@ -179,16 +211,15 @@ function nw() {
     }
   });
   win.loadFile(`${__dirname}/src/index.html`);
-  // create tab
-  newtab();
-  /* let browserView = new BrowserView({
+  // create menu
+  /* const browserView = new BrowserView({
     backgroundColor: '#efefef',
     webPreferences: {
       scrollBounce: true
     }
   });
   browserView.setBounds({
-    x: 50,
+    x: win.getSize()[1] - 100,
     y: viewY,
     width: 500,
     height: 500
@@ -199,10 +230,12 @@ function nw() {
   });
   win.addBrowserView(browserView);
   browserView.webContents.loadURL(
-    `file://${__dirname}/src/resource/test.html`
-  ); */
+    `file://${__dirname}/src/menu/index.html`
+  );*/
+  // create tab
+  newtab();
   /* koko nokoshitoite ne!!!(ichiou)
-  let configObj = JSON.parse(fs.readFileSync(`${__dirname}/src/config/config.mncfg`, 'utf-8'));
+  let configObj = JSON.parse(fs.readFileSync(`${app.getPath('userData')}/config.mncfg`, 'utf-8'));
   if (configObj.startup == true) {
     configObj.startup = false;
     const exists = (path) => {
@@ -224,7 +257,7 @@ function nw() {
       let obj = { monot: ['v.1.0.0 Beta 6', '6'] };
       fs.writeFileSync(`/mncr/applications.mncfg`, JSON.stringify(obj));
     }
-    fs.writeFileSync(`${__dirname}/src/config/config.mncfg`, JSON.stringify(configObj));
+    fs.writeFileSync(`${app.getPath('userData')}/config.mncfg`, JSON.stringify(configObj));
   }*/
 }
 
@@ -361,6 +394,9 @@ ipcMain.handle('removeTab', (e, i) => {
   } catch (e) {
     return;
   }
+});
+ipcMain.handle('userPath', () => {
+  return app.getPath('userData');
 });
 
 const menu = Menu.buildFromTemplate([
