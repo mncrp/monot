@@ -11,12 +11,14 @@ function moveBrowser() {
   document.activeElement.blur();
   node.moveBrowser(word, getCurrent());
 }
-document.getElementsByTagName('input')[0].addEventListener('keydown', (e) => {
-  const word = document.getElementsByTagName('input')[0].value;
-  // press enter
-  if (e.keyCode === 13 && word != null) {
-    // <span#opened>
-    document.activeElement.blur();
-    node.moveBrowser(word, getCurrent());
-  }
-});
+
+document.getElementsByTagName('input')[0]
+  .addEventListener('keydown', (e) => {
+    const word = document.getElementsByTagName('input')[0].value;
+    // press enter
+    if (e.keyCode === 13 && word != null) {
+      // <span#opened>
+      document.activeElement.blur();
+      node.moveBrowser(word, getCurrent());
+    }
+  });

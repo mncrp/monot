@@ -1,4 +1,4 @@
-const {contextBridge, ipcRenderer} = require('electron');
+const {app, contextBridge, ipcRenderer} = require('electron');
 const fs = require('fs');
 
 contextBridge.exposeInMainWorld('node', {
@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('node', {
   getEngineURL: () => {
     let url;
     // たぶんここら辺バグってる
+    alert(app.getPath('userData'));
     async function getUserPath() {
       const res = await ipcRenderer.invoke('userPath');
       const file = fs.readFileSync(

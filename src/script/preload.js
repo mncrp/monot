@@ -1,5 +1,4 @@
 const {app, contextBridge, ipcRenderer} = require('electron');
-const fs = require('fs');
 
 contextBridge.exposeInMainWorld('node', {
   winClose: () => {
@@ -24,21 +23,22 @@ contextBridge.exposeInMainWorld('node', {
   },
   moveBrowser: (word, index) => {
     // Page navigation
-    const file = fs.readFileSync(
+    /* const file = fs.readFileSync(
       `${app.getPath('userData')}/engines.mncfg`,
       'utf-8'
     );
     const obj = JSON.parse(file);
-    const engine = obj.values[obj.engine];
+    const engine = obj.values[obj.engine]; */
+    const engine = 'https://duckduckgo.com/?q=';
 
     try {
       try {
+        alert(`${engine}あはははははははははははははっはははははははあ`);
         const url = new URL(word);
-        ipcRenderer.invoke('moveView', url.origin, index);
+        ipcRenderer.invoke('moveView', word, index);
       } catch (e) {
         if (word.match(/\S+\.\S+/)) {
-          const url = new URL(`http://${word}`);
-          ipcRenderer.invoke('moveView', url.origin, index);
+          ipcRenderer.invoke('moveView', `http://${word}`, index);
         } else {
           ipcRenderer.invoke('moveView', engine + word, index);
         }

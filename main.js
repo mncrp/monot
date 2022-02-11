@@ -286,7 +286,7 @@ function setTitleUrl(url) {
   if (!(url instanceof URL))
     url = new URL(url);
 
-  // If the URL is Monot build-in HTML, the URL is not set in the URL bar.config.mncfg
+  // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
   const resourceIndex = new URL(`file://${__dirname}/`);
   if (url.href.includes(resourceIndex.href))
     return Promise.resolve();
@@ -321,7 +321,8 @@ ipcMain.handle('moveView', (e, link, ind) => {
 
   try {
     setTitleUrl(bv[current].webContents.getURL());
-    bv[current].webContents.loadURL(link);
+    console.log(link);
+    console.log('ajhdslkioiwuudfjkljlkjlkdjlkjlkg😇🤯🤔');
     const title = bv[current].webContents.executeJavaScript(`return document.title;`);
     const description = bv[current].webContents.executeJavaScript(`return document.getElementsByName('description')[0].content;`);
     const url = bv[current].webContents.executeJavaScript(`return location.href;`);
@@ -345,7 +346,7 @@ ipcMain.handle('moveView', (e, link, ind) => {
     };
     const history = JSON.parse(fs.readFileSync(`${__dirname}/src/data/history.mndata`, 'utf-8'));
     history.unshift(writeObj);
-    fs.writeFileSync(`${__dirname}/src/data/history.mndata`, history);
+    fs.writeFileSync(`${__dirname}/src/data/history.mndata`, JSON.stringify(history));
   } catch (e) {
     bv[current].webContents.loadURL(
       `file://${__dirname}/src/resource/server-notfound.html`
