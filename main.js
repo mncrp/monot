@@ -1,9 +1,9 @@
 // require
-const { app, BrowserWindow, BrowserView, dialog, ipcMain, Menu } = require('electron');
+const {app, BrowserWindow, BrowserView, dialog, ipcMain, Menu} = require('electron');
 const contextMenu = require('electron-context-menu');
 const fs = require('fs');
 
-// variables
+// letiables
 let win, setting, config;
 let index = 0;
 const adBlockCode = fs.readFileSync(`${__dirname}/src/script/adBlock.js`, 'utf-8');
@@ -96,15 +96,15 @@ function newtab() {
   });
   win.on('maximize', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3 });
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3});
   });
   win.on('unmaximize', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY });
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY});
   });
   win.on('enter-full-screen', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({ x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2 });
+    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2});
   });
 
   browserview.webContents.on('did-start-loading', () => {
@@ -322,28 +322,28 @@ ipcMain.handle('moveView', (e, link, ind) => {
   try {
     setTitleUrl(bv[current].webContents.getURL());
     bv[current].webContents.loadURL(link);
-    var title = bv[current].webContents.executeJavaScript(`return document.title;`);
-    var description = bv[current].webContents.executeJavaScript(`return document.getElementsByName('description')[0].content;`);
-    var url = bv[current].webContents.executeJavaScript(`return location.href;`);
-    var icon = bv[current].webContents.executeJavaScript(`
-    for (var i = 0; i < document.head.getElementsByTagName('link').length; i++) {
+    const title = bv[current].webContents.executeJavaScript(`return document.title;`);
+    const description = bv[current].webContents.executeJavaScript(`return document.getElementsByName('description')[0].content;`);
+    const url = bv[current].webContents.executeJavaScript(`return location.href;`);
+    const icon = bv[current].webContents.executeJavaScript(`
+    for (let i = 0; i < document.head.getElementsByTagName('link').length; i++) {
       if (document.head.getElementsByTagName('link')[i].getAttribute('rel') === "shortcut icon") {
-        var favicon_url = document.head.getElementsByTagName('link')[i].getAttribute('href');
+        let favicon_url = document.head.getElementsByTagName('link')[i].getAttribute('href');
         break;
       } else {
-        var favicon_url = '';
+        let favicon_url = '';
         return favicon_url;
       }
     };
     return favicon_url;
     `);
-    var writeObj = {
+    const writeObj = {
       pageTitle: title,
       pageDescription: description,
       pageUrl: url,
       pageIcon: icon
     };
-    var history = JSON.parse(fs.readFileSync(`${__dirname}/src/data/history.mndata`, 'utf-8'));
+    const history = JSON.parse(fs.readFileSync(`${__dirname}/src/data/history.mndata`, 'utf-8'));
     history.unshift(writeObj);
     fs.writeFileSync(`${__dirname}/src/data/history.mndata`, history);
   } catch (e) {
