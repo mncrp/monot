@@ -77,18 +77,12 @@ function newtab() {
       preload: `${__dirname}/src/script/preload-browserview.js`
     }
   });
+
   browserview.webContents.executeJavaScript(
     `document.addEventListener('contextmenu',()=>{
       node.context();
     })`
   );
-  browserview.webContents.on('did-start-loading', () => {
-    browserview.webContents.executeJavaScript(
-      `document.addEventListener('contextmenu',()=>{
-        node.context();
-      })`
-    );
-  });
 
   // window's behavior
   win.on('closed', () => {
@@ -108,24 +102,24 @@ function newtab() {
   });
 
   browserview.webContents.on('did-start-loading', () => {
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('yomikomi-bar')[0]
-        .setAttribute('id','loading');
-    `);
     browserview.webContents.executeJavaScript(
       `document.addEventListener('contextmenu',()=>{
         node.context();
       })`
     );
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('yomikomi-bar')[0]
+        .setAttribute('id','loading');
+    `);
   });
   browserview.webContents.on('did-finish-load', () => {
     browserview.setBackgroundColor('#efefef');
-    win.webContents.executeJavaScript(
-      `document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')`
-    );
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')
+    `);
     setTitleUrl(browserview.webContents.getURL());
-    win.webContents.executeJavaScript(
-      `document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
       document.getElementById('opened')
         .getElementsByTagName('a')[0]
         .innerText='${browserview.webContents.getTitle()}';
@@ -133,9 +127,17 @@ function newtab() {
   });
   browserview.webContents.on('did-stop-loading', () => {
     config = JSON.parse(fs.readFileSync(`${app.getPath('userData')}/config.mncfg`, 'utf-8'));
+    const enginesConfig = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
+    const obj = JSON.parse(enginesConfig);
+    const engineURL = obj.values[obj.engine];
     win.webContents.executeJavaScript(
       `document.getElementsByTagName('yomikomi-bar')[0]
         .removeAttribute('id');
+    `);
+    browserview.webContents.executeJavaScript(`
+      url = '${engineURL}';
+      console.log(url);
+      console.log('${engineURL}');
     `);
     setTitleUrl(browserview.webContents.getURL());
 
@@ -310,11 +312,11 @@ app.on('activate', () => {
 // ipc channels
 ipcMain.handle('moveView', (e, link, ind) => {
   const current = ind;
-  bv[current].webContents.executeJavaScript(
-    `document.addEventListener('contextmenu',()=>{
+  bv[current].webContents.executeJavaScript(`
+    document.addEventListener('contextmenu',()=>{
       node.context();
-    })`
-  );
+    })
+  `);
   if (link === '') {
     return;
   }
@@ -394,7 +396,17 @@ ipcMain.handle('getBrowserUrl', (e, index) => {
   return bv[index].webContents.getURL();
 });
 ipcMain.handle('moveToNewTab', (e, index) => {
+  const file = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
+  const obj = JSON.parse(file);
+  const engineURL = obj.values[obj.engine];
   bv[index].webContents.loadURL(`${__dirname}/src/resource/index.html`);
+  bv[index].webContents.on('did-stop-loading', () => {
+    bv[index].webContents.executeJavaScript(`
+      url = '${engineURL}';
+      console.log(url);
+      console.log('${engineURL}');
+    `);
+  });
 });
 ipcMain.handle('context', () => {
   menu.popup();
@@ -407,8 +419,9 @@ ipcMain.handle('tabMove', (e, i) => {
     i = 0;
   win.setTopBrowserView(bv[i]);
   index = i;
-  win.webContents.executeJavaScript(
-    `document.getElementsByTagName('title')[0].innerText='${bv[i].webContents.getTitle()} - Monot';`);
+  win.webContents.executeJavaScript(`
+    document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
+  `);
 });
 ipcMain.handle('removeTab', (e, i) => {
   // source: https://www.gesource.jp/weblog/?p=4112
@@ -420,8 +433,31 @@ ipcMain.handle('removeTab', (e, i) => {
     return;
   }
 });
-ipcMain.handle('userPath', () => {
-  return app.getPath('userData');
+ipcMain.handle('setting.searchEngine', (e, engine) => {
+  const text = fs.readFileSync(
+    `${app.getPath('userData')}/engines.mncfg`,
+    'utf-8'
+  );
+  const obj = JSON.parse(text);
+  obj.engine = engine;
+  fs.writeFileSync(
+    `${app.getPath('userData')}/engines.mncfg`,
+    JSON.stringify(obj)
+  );
+});
+ipcMain.handle('setting.changeExperimental', (e, change, to) => {
+  const obj = JSON.parse(
+    fs.readFileSync(
+      `${app.getPath('userData')}/config.mncfg`,
+      'utf-8'
+    )
+  );
+  // { "experiments": { ${change}: ${to} } }
+  obj.experiments[change] = to;
+  fs.writeFileSync(
+    `${app.getPath('userData')}/config.mncfg`,
+    JSON.stringify(obj)
+  );
 });
 
 const menu = Menu.buildFromTemplate([

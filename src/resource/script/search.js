@@ -1,5 +1,4 @@
-const url = node.getEngineURL();
-
+let url;
 function searchBrowser() {
   const word = document.getElementsByTagName('input')[0].value;
   if (word) {

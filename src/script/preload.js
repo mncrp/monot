@@ -33,7 +33,6 @@ contextBridge.exposeInMainWorld('node', {
 
     try {
       try {
-        alert(`${engine}あはははははははははははははっはははははははあ`);
         const url = new URL(word);
         ipcRenderer.invoke('moveView', word, index);
       } catch (e) {

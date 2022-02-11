@@ -1,31 +1,10 @@
-const {app, contextBridge} = require('electron');
-const fs = require('fs');
+const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('node', {
   changeSearchEngine: (engine) => {
-    const text = fs.readFileSync(
-      `${__dirname}/../config/engines.mncfg`,
-      'utf-8'
-    );
-    const obj = JSON.parse(text);
-    obj.engine = engine;
-    fs.writeFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      JSON.stringify(obj)
-    );
+    ipcRenderer.invoke('setting.searchEngine', engine);
   },
   changeExperimentalFunctions: (change, to) => {
-    const obj = JSON.parse(
-      fs.readFileSync(
-        `${app.getPath('userData')}/config.mncfg`,
-        'utf-8'
-      )
-    );
-    // { "experiments": { ${change}: ${to} } }
-    obj.experiments[change] = to;
-    fs.writeFileSync(
-      `${app.getPath('userData')}/config.mncfg`,
-      JSON.stringify(obj)
-    );
+    ipcRenderer.invoke('setting.changeExperimental');
   }
 });
