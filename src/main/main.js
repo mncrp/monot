@@ -6,7 +6,8 @@ const fs = require('fs');
 // letiables
 let win, setting, config;
 let index = 0;
-const adBlockCode = fs.readFileSync(`${__dirname}/src/script/adBlock.js`, 'utf-8');
+const directory = `${__dirname}/..`;
+const adBlockCode = fs.readFileSync(`${directory}/proprietary/experimental/adBlock.js`, 'utf-8');
 const bv = [];
 const viewY = 66;
 
@@ -74,7 +75,7 @@ function newtab() {
     backgroundColor: '#efefef',
     webPreferences: {
       scrollBounce: true,
-      preload: `${__dirname}/src/script/preload-browserview.js`
+      preload: `${directory}/preload/pages.js`
     }
   });
 
@@ -169,7 +170,7 @@ function newtab() {
   browserview.webContents.on('dom-ready', () => {
     // user-agent stylesheet
     browserview.webContents.insertCSS(
-      fs.readFileSync(`${__dirname}/src/style/ua.css`, 'utf-8')
+      fs.readFileSync(`${directory}/proprietary/style/ua.css`, 'utf-8')
     );
   });
   // when the page title is updated (update the window title and tab title) config.mncfg
@@ -192,7 +193,7 @@ function newtab() {
     height: true
   });
   bv[bv.length - 1].webContents.loadURL(
-    `file://${__dirname}/src/resource/index.html`
+    `file://${directory}/browser/home.html`
   );
 }
 
@@ -204,15 +205,15 @@ function nw() {
     transparent: false,
     backgroundColor: '#ffffff',
     title: 'Monot by monochrome.',
-    icon: `${__dirname}/src/image/logo.png`,
+    icon: `${directory}/image/logo.png`,
     webPreferences: {
       worldSafeExecuteJavaScript: true,
       nodeIntegration: false,
       contextIsolation: true,
-      preload: `${__dirname}/src/script/preload.js`
+      preload: `${directory}/preload/navigation.js`
     }
   });
-  win.loadFile(`${__dirname}/src/index.html`);
+  win.loadFile(`${directory}/renderer/navigation/navigation.html`);
   // create menu
   /* const browserView = new BrowserView({
     backgroundColor: '#efefef',
@@ -232,7 +233,7 @@ function nw() {
   });
   win.addBrowserView(browserView);
   browserView.webContents.loadURL(
-    `file://${__dirname}/src/menu/index.html`
+    `file://${directory}/renderer/option/index.html`
   );*/
   // create tab
   newtab();
@@ -269,13 +270,13 @@ function showSetting() {
     height: 480,
     minWidth: 300,
     minHeight: 270,
-    icon: `${__dirname}/src/image/logo.ico`,
+    icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${__dirname}/src/setting/preload.js`,
+      preload: `${directory}/preload/setting.js`,
       scrollBounce: true
     }
   });
-  setting.loadFile(`${__dirname}/src/setting/index.html`);
+  setting.loadFile(`${directory}/renderer/setting/index.html`);
   if (config.experiments.forceDark === true) {
     setting.webContents.executeJavaScript(
       `document.querySelectorAll('input[type="checkbox"]')[0].checked=true`
@@ -346,12 +347,12 @@ ipcMain.handle('moveView', (e, link, ind) => {
       pageUrl: url,
       pageIcon: icon
     };
-    const history = JSON.parse(fs.readFileSync(`${__dirname}/src/data/history.mndata`, 'utf-8'));
+    const history = JSON.parse(fs.readFileSync(`${directory}/data/history.mndata`, 'utf-8'));
     history.unshift(writeObj);
-    fs.writeFileSync(`${__dirname}/src/data/history.mndata`, JSON.stringify(history));
+    fs.writeFileSync(`${directory}/data/history.mndata`, JSON.stringify(history));
   } catch (e) {
     bv[current].webContents.loadURL(
-      `file://${__dirname}/src/resource/server-notfound.html`
+      `file://${directory}/browser/server-notfound.html`
     );
     bv[current].webContents.executeJavaScript(
       `document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';`
@@ -379,7 +380,7 @@ ipcMain.handle('windowMaxMin', () => {
 });
 ipcMain.handle('moveViewBlank', (e, index) => {
   bv[index].webContents.loadURL(
-    `file://${__dirname}/src/resource/blank.html`
+    `file://${directory}/browser/blank.html`
   );
 });
 ipcMain.handle('reloadBrowser', (e, index) => {
@@ -399,7 +400,7 @@ ipcMain.handle('moveToNewTab', (e, index) => {
   const file = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
   const obj = JSON.parse(file);
   const engineURL = obj.values[obj.engine];
-  bv[index].webContents.loadURL(`${__dirname}/src/resource/index.html`);
+  bv[index].webContents.loadURL(`${directory}/browser/index.html`);
   bv[index].webContents.on('did-stop-loading', () => {
     bv[index].webContents.executeJavaScript(`
       url = '${engineURL}';
