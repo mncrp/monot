@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Monot by monochrome.</title>
+    <link rel="stylesheet" href="style/navigation.css">
+    <link rel="stylesheet" href="resource/style/font.css">
+  </head>
+  <body>
+    <nav>
+      <a href="javascript:node.moveToNewTab(getCurrent())" title="ホーム" id="home"></a>
+      <a href="javascript:node.reloadBrowser(getCurrent())" title="再読み込み" id="reload"></a>
+      <a href="javascript:node.backBrowser(getCurrent())" title="戻る" id="prev"></a>
+      <a href="javascript:node.goBrowser(getCurrent())" title="進む" id="next"></a>
+      <input type="text" placeholder="検索する単語またはURLを入力" title="検索する単語またはURLを入力" id="textbox">
+      <a href="javascript:moveBrowser(getCurrent())" title="移動" id="move"></a>
+      <a href="javascript:node.showMenu()" title="メニュー表示" id="menu"></a>
+      <a href="javascript:node.winMinimize(getCurrent())" title="最小化" id="minimize"></a>
+      <a href="javascript:node.maxMin()" title="最大化" id="maximize"></a>
+      <a href="javascript:node.winClose(getCurrent())" title="終了" id="close"></a>
+    </nav>
+    <tab-el>
+      <div>
+        <span id="opened">
+          <a href="javascript:void(0)">Home</a>
+          <a href="javascript:void(0)"></a>
+        </span>
+      </div>
+      <a href="javascript:newtab('Home')"></a>
+    </tab-el>
+    <yomikomi-bar></yomikomi-bar>
+    <script src="script/moveBrowser.js"></script>
+    <script src="script/event.js"></script>
+  </body>
+</html>
