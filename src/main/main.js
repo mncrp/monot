@@ -575,7 +575,7 @@ const menu = Menu.buildFromTemplate([
 リポジトリ: https://github.com/Sorakime/monot
 公式サイト: https://sorakime.github.io/mncr/project/monot/
 
-Copyright 2021 Sorakime and Monot development team.`
+Copyright 2021 monochrome Project.`
           });
         }
       },
