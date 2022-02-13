@@ -2,7 +2,7 @@
   "name": "monot",
   "version": "1.0.0",
   "description": "The new web browser \"Monot\"",
-  "main": "src\\main\\main.js",
+  "main": "src/main/main.js",
   "scripts": {
     "test": "npx electron .",
     "build": "npx electron-builder"
