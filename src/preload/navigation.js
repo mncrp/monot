@@ -21,31 +21,9 @@ contextBridge.exposeInMainWorld('node', {
     // Maximize or Minimize Window
     ipcRenderer.invoke('windowMaxMin');
   },
-  moveBrowser: (word, index) => {
+  moveBrowser: (url, index) => {
     // Page navigation
-    /* const file = fs.readFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      'utf-8'
-    );
-    const obj = JSON.parse(file);
-    const engine = obj.values[obj.engine]; */
-    const engine = 'https://duckduckgo.com/?q=';
-
-    try {
-      try {
-        let url = new URL(word);
-        url = word;
-        ipcRenderer.invoke('moveView', url, index);
-      } catch (e) {
-        if (word.match(/\S+\.\S+/)) {
-          ipcRenderer.invoke('moveView', `http://${word}`, index);
-        } else {
-          ipcRenderer.invoke('moveView', engine + word, index);
-        }
-      }
-    } catch (e) {
-      ipcRenderer.invoke('moveView', engine + word, index);
-    }
+    ipcRenderer.invoke('moveView', url, index);
   },
   moveToNewTab: (index) => {
     // move to new tab

@@ -7,7 +7,6 @@ const fs = require('fs');
 let win, setting, config;
 let index = 0;
 const directory = `${__dirname}/..`;
-const adBlockCode = fs.readFileSync(`${directory}/proprietary/experimental/adBlock.js`, 'utf-8');
 const bv = [];
 const viewY = 66;
 
@@ -69,6 +68,10 @@ contextMenu({
 
 // creating new tab function
 function newtab() {
+  const adBlockCode = fs.readFileSync(
+    `${directory}/proprietary/experimental/adBlock.js`,
+    'utf-8'
+  );
   let winSize = win.getSize();
   // create new tab
   const browserview = new BrowserView({
@@ -79,11 +82,11 @@ function newtab() {
     }
   });
 
-  browserview.webContents.executeJavaScript(
-    `document.addEventListener('contextmenu',()=>{
+  browserview.webContents.executeJavaScript(`
+    document.addEventListener('contextmenu',()=>{
       node.context();
-    })`
-  );
+    })
+  `);
 
   // window's behavior
   win.on('closed', () => {
@@ -91,23 +94,38 @@ function newtab() {
   });
   win.on('maximize', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 3});
+    browserview.setBounds({
+      x: 0,
+      y: viewY,
+      width: winSize[0],
+      height: winSize[1] - viewY + 3
+    });
   });
   win.on('unmaximize', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY});
+    browserview.setBounds({
+      x: 0,
+      y: viewY,
+      width: winSize[0],
+      height: winSize[1] - viewY
+    });
   });
   win.on('enter-full-screen', () => {
     winSize = win.getContentSize();
-    browserview.setBounds({x: 0, y: viewY, width: winSize[0], height: winSize[1] - viewY + 2});
+    browserview.setBounds({
+      x: 0,
+      y: viewY,
+      width: winSize[0],
+      height: winSize[1] - viewY + 2
+    });
   });
 
   browserview.webContents.on('did-start-loading', () => {
-    browserview.webContents.executeJavaScript(
-      `document.addEventListener('contextmenu',()=>{
+    browserview.webContents.executeJavaScript(`
+      document.addEventListener('contextmenu',()=>{
         node.context();
-      })`
-    );
+      })
+    `);
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
         .setAttribute('id','loading');
@@ -127,25 +145,35 @@ function newtab() {
     `);
   });
   browserview.webContents.on('did-stop-loading', () => {
-    config = JSON.parse(fs.readFileSync(`${app.getPath('userData')}/config.mncfg`, 'utf-8'));
-    const enginesConfig = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
+    config = JSON.parse(
+      fs.readFileSync(
+        `${app.getPath('userData')}/config.mncfg`,
+        'utf-8'
+      )
+    );
+    const enginesConfig = fs.readFileSync(
+      `${app.getPath('userData')}/engines.mncfg`,
+      'utf-8'
+    );
     const obj = JSON.parse(enginesConfig);
     const engineURL = obj.values[obj.engine];
-    win.webContents.executeJavaScript(
-      `document.getElementsByTagName('yomikomi-bar')[0]
+
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('yomikomi-bar')[0]
         .removeAttribute('id');
     `);
     browserview.webContents.executeJavaScript(`
       url = '${engineURL}';
-      console.log(url);
-      console.log('${engineURL}');
     `);
     setTitleUrl(browserview.webContents.getURL());
 
     // Force-Dark
     if (config.experiments.forceDark === true) {
       browserview.webContents.insertCSS(
-        fs.readFileSync(`${directory}/proprietary/style/forcedark.css`, 'utf-8')
+        fs.readFileSync(
+          `${directory}/proprietary/style/forcedark.css`,
+          'utf-8'
+        )
       );
     }
     // fontChange
@@ -153,7 +181,8 @@ function newtab() {
       browserview.webContents.insertCSS(`
         body,body>*, *{
           font-family: ${config.experiments.changedfont},'Noto Sans JP'!important;
-        }`);
+        }
+      `);
     }
     // AD Block
     if (config.experiments.adBlock === true) {
@@ -163,14 +192,18 @@ function newtab() {
   browserview.webContents.on('dom-ready', () => {
     // user-agent stylesheet
     browserview.webContents.insertCSS(
-      fs.readFileSync(`${directory}/proprietary/style/ua.css`, 'utf-8')
+      fs.readFileSync(
+        `${directory}/proprietary/style/ua.css`,
+        'utf-8'
+      )
     );
   });
   // when the page title is updated (update the window title and tab title) config.mncfg
   browserview.webContents.on('page-title-updated', (e, t) => {
-    win.webContents.executeJavaScript(
-      `document.getElementsByTagName('title')[0].innerText='${t} - Monot';
-      document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';`);
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('title')[0].innerText='${t} - Monot';
+      document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';
+    `);
   });
   index = bv.length;
   bv.push(browserview);
@@ -211,54 +244,22 @@ function nw() {
   });
   win.setBackgroundColor('#ffffff');
   win.loadFile(`${directory}/renderer/navigation/navigation.html`);
-  // create menu
-  /* const browserView = new BrowserView({
-    backgroundColor: '#efefef',
-    webPreferences: {
-      scrollBounce: true
-    }
+  function getEngine() {
+    const data = fs.readFileSync(
+      `${app.getPath('userData')}/engines.mncfg`,
+      'utf-8'
+    );
+    const obj = JSON.parse(data);
+    return obj.values[obj.engine];
+  }
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.executeJavaScript(`
+    engine = '${getEngine()}';
+  `);
   });
-  browserView.setBounds({
-    x: win.getSize()[1] - 100,
-    y: viewY,
-    width: 500,
-    height: 500
-  });
-  browserView.setAutoResize({
-    width: true,
-    height: true
-  });
-  win.addBrowserView(browserView);
-  browserView.webContents.loadURL(
-    `file://${directory}/renderer/option/index.html`
-  );*/
+
   // create tab
   newtab();
-  /* koko nokoshitoite ne!!!(ichiou)
-  let configObj = JSON.parse(fs.readFileSync(`${app.getPath('userData')}/config.mncfg`, 'utf-8'));
-  if (configObj.startup == true) {
-    configObj.startup = false;
-    const exists = (path) => {
-      try {
-        fs.readFileSync(path, 'utf-8');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    };
-    if (exists(`/mncr/applications.mncfg`)) {
-      let obj = JSON.parse(fs.readFileSync(`/mncr/applications.mncfg`, 'utf-8'));
-      obj.monot = ['v.1.0.0 Beta 6', '6'];
-      fs.writeFileSync(`/mncr/applications.mncfg`, JSON.stringify(obj));
-    } else {
-      fs.mkdir('/mncr/', () => {
-        return true;
-      });
-      let obj = { monot: ['v.1.0.0 Beta 6', '6'] };
-      fs.writeFileSync(`/mncr/applications.mncfg`, JSON.stringify(obj));
-    }
-    fs.writeFileSync(`${app.getPath('userData')}/config.mncfg`, JSON.stringify(configObj));
-  }*/
 }
 
 function showSetting() {
@@ -276,24 +277,27 @@ function showSetting() {
   setting.loadFile(`${directory}/renderer/setting/index.html`);
   if (config.experiments.forceDark === true) {
     setting.webContents.executeJavaScript(
-      `document.querySelectorAll('input[type="checkbox"]')[0].checked=true`
+      `document.querySelectorAll('input[type="checkbox"]')[0].checked=true;`
     );
   }
 }
 
 // This function sets URL to the URL bar of the title bar.
 function setTitleUrl(url) {
-  if (!(url instanceof URL))
+  if (!(url instanceof URL)) {
     url = new URL(url);
-
+  }
   // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
   const resourceIndex = new URL(`file://${__dirname}/`);
-  if (url.href.includes(resourceIndex.href))
+  const partOfUrl = url.href.substring(0, resourceIndex.href.length - 5);
+  const partOfResourceIndex = resourceIndex.href.substring(0, resourceIndex.href.length - 5);
+  const isSame = partOfUrl === partOfResourceIndex;
+  if (isSame)
     return Promise.resolve();
 
   // Set URL in the URL bar.
   return win.webContents.executeJavaScript(`
-    document.getElementsByTagName('input')[0].value='${url.host + url.pathname + url.search + url.hash}'
+    document.getElementsByTagName('input')[0].value='${url.href}';
   `);
 }
 
@@ -320,12 +324,17 @@ ipcMain.handle('moveView', (e, link, ind) => {
   }
 
   try {
+    bv[current].webContents.loadURL(link);
     setTitleUrl(bv[current].webContents.getURL());
-    console.log(link);
-    console.log('ajhdslkioiwuudfjkljlkjlkdjlkjlkg😇🤯🤔');
-    const title = bv[current].webContents.executeJavaScript(`return document.title;`);
-    const description = bv[current].webContents.executeJavaScript(`return document.getElementsByName('description')[0].content;`);
-    const url = bv[current].webContents.executeJavaScript(`return location.href;`);
+    /* const title = bv[current].webContents.executeJavaScript(`
+      return document.title;
+    `);
+    const description = bv[current].webContents.executeJavaScript(`
+     return document.getElementsByName('description')[0].content;
+    `);
+    const url = bv[current].webContents.executeJavaScript(`
+      return location.href;
+    `);
     const icon = bv[current].webContents.executeJavaScript(`
     for (let i = 0; i < document.head.getElementsByTagName('link').length; i++) {
       if (document.head.getElementsByTagName('link')[i].getAttribute('rel') === "shortcut icon") {
@@ -344,9 +353,17 @@ ipcMain.handle('moveView', (e, link, ind) => {
       pageUrl: url,
       pageIcon: icon
     };
-    const history = JSON.parse(fs.readFileSync(`${directory}/data/history.mndata`, 'utf-8'));
+    const history = JSON.parse(
+      fs.readFileSync(
+        `${directory}/data/history.mndata`,
+        'utf-8'
+      )
+    );
     history.unshift(writeObj);
-    fs.writeFileSync(`${directory}/data/history.mndata`, JSON.stringify(history));
+    fs.writeFileSync(
+      `${directory}/data/history.mndata`,
+      JSON.stringify(history)
+    );*/
   } catch (e) {
     bv[current].webContents.loadURL(
       `file://${directory}/browser/server-notfound.html`
@@ -397,12 +414,10 @@ ipcMain.handle('moveToNewTab', (e, index) => {
   const file = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
   const obj = JSON.parse(file);
   const engineURL = obj.values[obj.engine];
-  bv[index].webContents.loadURL(`${directory}/browser/index.html`);
+  bv[index].webContents.loadURL(`${directory}/browser/home.html`);
   bv[index].webContents.on('did-stop-loading', () => {
     bv[index].webContents.executeJavaScript(`
       url = '${engineURL}';
-      console.log(url);
-      console.log('${engineURL}');
     `);
   });
 });
