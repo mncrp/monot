@@ -120,6 +120,16 @@ function newtab() {
     });
   });
 
+  browserview.webContents.on('did-fail-load', () => {
+    const ind = index;
+    bv[ind].webContents.loadURL(
+      `file://${directory}/browser/server-notfound.html`
+    );
+    bv[ind].webContents.executeJavaScript(
+      `document.getElementsByTagName('span')[0].innerText='${bv[ind].webContents.getURL().toLowerCase()}';`
+    );
+  });
+
   browserview.webContents.on('did-start-loading', () => {
     browserview.webContents.executeJavaScript(`
       document.addEventListener('contextmenu',()=>{
@@ -136,13 +146,15 @@ function newtab() {
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')
     `);
-    setTitleUrl(browserview.webContents.getURL());
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
       document.getElementById('opened')
         .getElementsByTagName('a')[0]
         .innerText='${browserview.webContents.getTitle()}';
     `);
+    setTitleUrl(browserview.webContents.getURL());
+    console.log('Loaded');
+    console.log(browserview.webContents.getURL());
   });
   browserview.webContents.on('did-stop-loading', () => {
     const browserURL = new URL(browserview.webContents.getURL());
@@ -169,7 +181,6 @@ function newtab() {
       document.getElementsByTagName('yomikomi-bar')[0]
         .removeAttribute('id');
     `);
-    setTitleUrl(browserview.webContents.getURL());
 
     // Force-Dark
     if (config.experiments.forceDark === true) {
@@ -296,8 +307,13 @@ function setTitleUrl(url) {
   const partOfUrl = url.href.substring(0, resourceIndex.href.length - 5);
   const partOfResourceIndex = resourceIndex.href.substring(0, resourceIndex.href.length - 5);
   const isSame = partOfUrl === partOfResourceIndex;
-  if (isSame)
+  if (url.href === `${partOfResourceIndex}browser/home.html`) {
+    return win.webContents.executeJavaScript(`
+      document.getElementsByTagName('input')[0].value='';
+    `);
+  } else if (isSame) {
     return Promise.resolve();
+  }
 
   // Set URL in the URL bar.
   return win.webContents.executeJavaScript(`
@@ -439,6 +455,7 @@ ipcMain.handle('tabMove', (e, i) => {
   win.webContents.executeJavaScript(`
     document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
   `);
+  setTitleUrl(bv[i].webContents.getURL());
 });
 ipcMain.handle('removeTab', (e, i) => {
   // source: https://www.gesource.jp/weblog/?p=4112
@@ -566,11 +583,11 @@ const menu = Menu.buildFromTemplate([
             type: 'info',
             icon: './src/image/logo.png',
             title: 'Monotについて',
-            message: 'Monot 1.0.0 Beta 6について',
-            detail: `Monot by monochrome. v.1.0.0 Beta 6 (Build 6)
-バージョン: 1.0.0 Beta 6
-ビルド番号: 6
-開発者: 6人のMonot開発チーム
+            message: 'Monot 1.0.0 Official Versionについて',
+            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
+バージョン: 1.0.0 Official Version
+ビルド番号: 7
+開発者: monochrome Project.
 
 リポジトリ: https://github.com/Sorakime/monot
 公式サイト: https://sorakime.github.io/mncr/project/monot/
