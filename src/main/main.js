@@ -145,25 +145,29 @@ function newtab() {
     `);
   });
   browserview.webContents.on('did-stop-loading', () => {
-    config = JSON.parse(
-      fs.readFileSync(
-        `${app.getPath('userData')}/config.mncfg`,
+    const browserURL = new URL(browserview.webContents.getURL());
+    const fileURL = new URL(`file://${directory}/browser/home.html`);
+    if (browserURL.href === fileURL.href) {
+      config = JSON.parse(
+        fs.readFileSync(
+          `${app.getPath('userData')}/config.mncfg`,
+          'utf-8'
+        )
+      );
+      const enginesConfig = fs.readFileSync(
+        `${app.getPath('userData')}/engines.mncfg`,
         'utf-8'
-      )
-    );
-    const enginesConfig = fs.readFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      'utf-8'
-    );
-    const obj = JSON.parse(enginesConfig);
-    const engineURL = obj.values[obj.engine];
+      );
+      const obj = JSON.parse(enginesConfig);
+      const engineURL = obj.values[obj.engine];
+      browserview.webContents.executeJavaScript(`
+        url = '${engineURL}';
+      `);
+    }
 
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
         .removeAttribute('id');
-    `);
-    browserview.webContents.executeJavaScript(`
-      url = '${engineURL}';
     `);
     setTitleUrl(browserview.webContents.getURL());
 
@@ -457,6 +461,9 @@ ipcMain.handle('setting.searchEngine', (e, engine) => {
     `${app.getPath('userData')}/engines.mncfg`,
     JSON.stringify(obj)
   );
+  win.webContents.executeJavaScript(`
+    engine = ${obj.values[engine]};
+  `);
 });
 ipcMain.handle('setting.changeExperimental', (e, change, to) => {
   const obj = JSON.parse(
