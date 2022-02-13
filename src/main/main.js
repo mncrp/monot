@@ -144,16 +144,9 @@ function newtab() {
 
     // Force-Dark
     if (config.experiments.forceDark === true) {
-      browserview.webContents.insertCSS(`
-        *{
-          background-color: #202020!important;
-        }
-        *{
-          color: #bbb!important;
-        }
-        a{
-          color: #7aa7cd!important;
-        }`);
+      browserview.webContents.insertCSS(
+        fs.readFileSync(`${directory}/proprietary/style/forcedark.css`, 'utf-8')
+      );
     }
     // fontChange
     if (config.experiments.fontChange === true) {
@@ -200,7 +193,10 @@ function newtab() {
 function nw() {
   // create window
   win = new BrowserWindow({
-    width: 1000, height: 700, minWidth: 400, minHeight: 400,
+    width: 1000,
+    height: 700,
+    minWidth: 400,
+    minHeight: 400,
     frame: false,
     transparent: false,
     backgroundColor: '#ffffff',
@@ -213,6 +209,7 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
+  win.setBackgroundColor('#ffffff');
   win.loadFile(`${directory}/renderer/navigation/navigation.html`);
   // create menu
   /* const browserView = new BrowserView({
@@ -295,9 +292,9 @@ function setTitleUrl(url) {
     return Promise.resolve();
 
   // Set URL in the URL bar.
-  return win.webContents.executeJavaScript(
-    `document.getElementsByTagName('input')[0].value='${url.host + url.pathname + url.search + url.hash}'`
-  );
+  return win.webContents.executeJavaScript(`
+    document.getElementsByTagName('input')[0].value='${url.host + url.pathname + url.search + url.hash}'
+  `);
 }
 
 app.on('ready', nw);

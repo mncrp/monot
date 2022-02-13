@@ -1,3 +1,5 @@
+@import url('../../../proprietary/style/font.css');
+
 *{
   position: relative;
   top: 0;
@@ -78,31 +80,31 @@ nav a:active{
   box-shadow: 0 0 0 #0000;
 }
 #home{
-  background-image: url('../image/home.png');
+  background-image: url('../../../image/home.png');
 }
 #reload{
-  background-image: url('../image/reload.png');
+  background-image: url('../../../image/reload.png');
 }
 #prev{
-  background-image: url('../image/back.png');
+  background-image: url('../../../image/back.png');
 }
 #menu{
-  background-image: url('../image/option.png');
+  background-image: url('../../../image/option.png');
 }
 #next{
-  background-image: url('../image/prev.png');
+  background-image: url('../../../image/prev.png');
 }
 #move{
-  background-image: url('../image/go.png');
+  background-image: url('../../../image/go.png');
 }
 #minimize{
-  background-image: url('../image/hide.png');
+  background-image: url('../../../image/hide.png');
 }
 #maximize{
-  background-image: url('../image/maximize.png');
+  background-image: url('../../../image/maximize.png');
 }
 #close{
-  background-image: url('../image/close.png');
+  background-image: url('../../../image/close.png');
 }
 
 div>span>a:first-child{
@@ -124,7 +126,7 @@ div>span>a:last-child{
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
-  background-image: url('../image/close.png');
+  background-image: url('../../../image/close.png');
   transition: all 0.2s ease-in-out;
 }
 div>span>a:last-child:hover{
@@ -171,7 +173,7 @@ tab-el>a{
   width: 24px;
   margin: 3px;
   aspect-ratio: 1/1;
-  background-image: url('../image/plus.png');
+  background-image: url('../../../image/plus.png');
   background-position: center;
   background-size: 80%;
   background-repeat: no-repeat;
@@ -235,31 +237,31 @@ yomikomi-bar#frame-finished{
     box-shadow: 0 0 0 #0000;
   }
   #home{
-    background-image: url('../image/home-white.png');
+    background-image: url('../../../image/home-white.png');
   }
   #reload{
-    background-image: url('../image/reload-white.png');
+    background-image: url('../../../image/reload-white.png');
   }
   #prev{
-    background-image: url('../image/back-white.png');
+    background-image: url('../../../image/back-white.png');
   }
   #menu{
-    background-image: url('../image/option-white.png');
+    background-image: url('../../../image/option-white.png');
   }
   #next{
-    background-image: url('../image/prev-white.png');
+    background-image: url('../../../image/prev-white.png');
   }
   #move{
-    background-image: url('../image/go-white.png');
+    background-image: url('../../../image/go-white.png');
   }
   #minimize{
-    background-image: url('../image/hide-white.png');
+    background-image: url('../../../image/hide-white.png');
   }
   #maximize{
-    background-image: url('../image/maximize-white.png');
+    background-image: url('../../../image/maximize-white.png');
   }
   #close{
-    background-image: url('../image/close-white.png');
+    background-image: url('../../../image/close-white.png');
   }
   div>span:hover{
     background-color: #444;
@@ -271,9 +273,9 @@ yomikomi-bar#frame-finished{
     color: #bbb;
   }
   div>span>a:last-child{
-    background-image: url('../image/close-white.png');
+    background-image: url('../../../image/close-white.png');
   }
   tab-el>a{
-    background-image: url('../image/plus-white.png');
+    background-image: url('../../../image/plus-white.png');
   }
 }
