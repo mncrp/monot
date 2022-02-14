@@ -152,11 +152,24 @@ function newtab() {
         .getElementsByTagName('a')[0]
         .innerText='${browserview.webContents.getTitle()}';
     `);
-    setTitleUrl(browserview.webContents.getURL());
-    console.log('Loaded');
-    console.log(browserview.webContents.getURL());
   });
   browserview.webContents.on('did-stop-loading', () => {
+    // changes the progress
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('yomikomi-bar')[0]
+        .removeAttribute('id');
+    `);
+  });
+  browserview.webContents.on('dom-ready', () => {
+    // user-agent stylesheet
+    browserview.webContents.insertCSS(
+      fs.readFileSync(
+        `${directory}/proprietary/style/ua.css`,
+        'utf-8'
+      )
+    );
+    setTitleUrl(browserview.webContents.getURL());
+
     const browserURL = new URL(browserview.webContents.getURL());
     const fileURL = new URL(`file://${directory}/browser/home.html`);
     if (browserURL.href === fileURL.href) {
@@ -176,11 +189,6 @@ function newtab() {
         url = '${engineURL}';
       `);
     }
-
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('yomikomi-bar')[0]
-        .removeAttribute('id');
-    `);
 
     // Force-Dark
     if (config.experiments.forceDark === true) {
@@ -203,15 +211,6 @@ function newtab() {
     if (config.experiments.adBlock === true) {
       browserview.webContents.executeJavaScript(adBlockCode);
     }
-  });
-  browserview.webContents.on('dom-ready', () => {
-    // user-agent stylesheet
-    browserview.webContents.insertCSS(
-      fs.readFileSync(
-        `${directory}/proprietary/style/ua.css`,
-        'utf-8'
-      )
-    );
   });
   // when the page title is updated (update the window title and tab title) config.mncfg
   browserview.webContents.on('page-title-updated', (e, t) => {
