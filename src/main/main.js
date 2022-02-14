@@ -187,31 +187,29 @@ function newtab() {
   );
 }
 
-const contextMenu = require('electron-context-menu');
-contextMenu({
-  prepend: () => [
-    {
-      label: '戻る',
-      click: () => {
-        bv[index].webContents.goBack();
-      }
-    },
-    {
-      label: '進む',
-      click: () => {
-        bv[index].webContents.goForward();
-      }
-    },
-    {
-      label: '設定',
-      click: () => {
-        showSetting();
-      }
-    }
-  ]
-});
-
 function nw() {
+  // create window
+  win = new BrowserWindow({
+    width: 1000,
+    height: 700,
+    minWidth: 400,
+    minHeight: 400,
+    frame: false,
+    transparent: false,
+    backgroundColor: '#ffffff',
+    title: 'Monot by monochrome.',
+    icon: `${directory}/image/logo.png`,
+    webPreferences: {
+      worldSafeExecuteJavaScript: true,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: `${directory}/preload/navigation.js`
+    }
+  });
+  win.setBackgroundColor('#ffffff');
+  win.loadFile(`${directory}/renderer/navigation/navigation.html`);
+
+  /* config, context */
   // config.mncfg
   try {
     fs.readFileSync(
@@ -244,26 +242,31 @@ function nw() {
       }
     );
   }
-  // create window
-  win = new BrowserWindow({
-    width: 1000,
-    height: 700,
-    minWidth: 400,
-    minHeight: 400,
-    frame: false,
-    transparent: false,
-    backgroundColor: '#ffffff',
-    title: 'Monot by monochrome.',
-    icon: `${directory}/image/logo.png`,
-    webPreferences: {
-      worldSafeExecuteJavaScript: true,
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: `${directory}/preload/navigation.js`
-    }
+
+  const contextMenu = require('electron-context-menu');
+  contextMenu({
+    prepend: () => [
+      {
+        label: '戻る',
+        click: () => {
+          bv[index].webContents.goBack();
+        }
+      },
+      {
+        label: '進む',
+        click: () => {
+          bv[index].webContents.goForward();
+        }
+      },
+      {
+        label: '設定',
+        click: () => {
+          showSetting();
+        }
+      }
+    ]
   });
-  win.setBackgroundColor('#ffffff');
-  win.loadFile(`${directory}/renderer/navigation/navigation.html`);
+
   function getEngine() {
     const data = fs.readFileSync(
       `${app.getPath('userData')}/engines.mncfg`,
