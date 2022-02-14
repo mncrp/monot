@@ -1,6 +1,12 @@
 // require
-const {app, BrowserWindow, BrowserView, dialog, ipcMain, Menu} = require('electron');
-const contextMenu = require('electron-context-menu');
+const {
+  app,
+  BrowserWindow,
+  BrowserView,
+  dialog,
+  ipcMain,
+  Menu
+} = require('electron');
 const fs = require('fs');
 
 // letiables
@@ -42,29 +48,6 @@ try {
     }
   );
 }
-
-contextMenu({
-  prepend: () => [
-    {
-      label: '戻る',
-      click: () => {
-        bv[index].webContents.goBack();
-      }
-    },
-    {
-      label: '進む',
-      click: () => {
-        bv[index].webContents.goForward();
-      }
-    },
-    {
-      label: '設定',
-      click: () => {
-        showSetting();
-      }
-    }
-  ]
-});
 
 // creating new tab function
 function newtab() {
@@ -236,6 +219,30 @@ function newtab() {
     `file://${directory}/browser/home.html`
   );
 }
+
+const contextMenu = require('electron-context-menu');
+contextMenu({
+  prepend: () => [
+    {
+      label: '戻る',
+      click: () => {
+        bv[index].webContents.goBack();
+      }
+    },
+    {
+      label: '進む',
+      click: () => {
+        bv[index].webContents.goForward();
+      }
+    },
+    {
+      label: '設定',
+      click: () => {
+        showSetting();
+      }
+    }
+  ]
+});
 
 function nw() {
   // create window
