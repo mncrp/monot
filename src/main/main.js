@@ -13,41 +13,8 @@ const fs = require('fs');
 let win, setting, config;
 let index = 0;
 const directory = `${__dirname}/..`;
-const bv = [];
+let bv = [];
 const viewY = 66;
-
-// config.mncfg
-try {
-  fs.readFileSync(
-    `${app.getPath('userData')}/config.mncfg`,
-    'utf-8'
-  );
-} catch (e) {
-  // app.getPath('userData')/config.mncfg isn't found
-  fs.writeFile(
-    `${app.getPath('userData')}/config.mncfg`,
-    fs.readFileSync(`${app.getPath('userData')}/config.mncfg`),
-    (err) => {
-      if (err) throw err;
-    }
-  );
-}
-// engines.mncfg
-try {
-  fs.readFileSync(
-    `${app.getPath('userData')}/engines.mncfg`,
-    'utf-8'
-  );
-} catch (e) {
-  // app.getPath('userData')/config.mncfg isn't found
-  fs.writeFile(
-    `${app.getPath('userData')}/engines.mncfg`,
-    fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`),
-    (err) => {
-      if (err) throw err;
-    }
-  );
-}
 
 // creating new tab function
 function newtab() {
@@ -245,6 +212,38 @@ contextMenu({
 });
 
 function nw() {
+  // config.mncfg
+  try {
+    fs.readFileSync(
+      `${app.getPath('userData')}/config.mncfg`,
+      'utf-8'
+    );
+  } catch (e) {
+    // app.getPath('userData')/config.mncfg isn't found
+    fs.writeFile(
+      `${app.getPath('userData')}/config.mncfg`,
+      fs.readFileSync(`${app.getPath('userData')}/config.mncfg`),
+      (err) => {
+        if (err) throw err;
+      }
+    );
+  }
+  // engines.mncfg
+  try {
+    fs.readFileSync(
+      `${app.getPath('userData')}/engines.mncfg`,
+      'utf-8'
+    );
+  } catch (e) {
+    // app.getPath('userData')/config.mncfg isn't found
+    fs.writeFile(
+      `${app.getPath('userData')}/engines.mncfg`,
+      fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`),
+      (err) => {
+        if (err) throw err;
+      }
+    );
+  }
   // create window
   win = new BrowserWindow({
     width: 1000,
