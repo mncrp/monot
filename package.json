@@ -1,13 +1,15 @@
 {
   "name": "monot",
+  "homepage": "https://sorakime.github.io/mncr/project/monot",
   "version": "1.0.0",
-  "description": "The new web browser \"Monot\"",
+  "description": "The new web browser \"Monot\" by monochrome.",
   "main": "src/main/main.js",
+  "repository": "https://github.com/Sorakime/monot/",
   "scripts": {
     "test": "npx electron .",
     "build": "npx electron-builder"
   },
-  "author": "Sorakime",
+  "author": "monochrome Project.",
   "license": "ISC",
   "devDependencies": {
     "electron": "^16.0.5",
@@ -24,10 +26,10 @@
   "build": {
     "appId": "me.soraki.monot",
     "productName": "Monot",
+    "copyright": "Copyright © 2022 monochrome Project.",
     "files": [
       "!.git",
       "!.dist",
-      "node_modules",
       "src",
       "main.js",
       "package-lock.json",
@@ -37,7 +39,7 @@
     "win": {
       "icon": "src/image/logo.ico",
       "target": "nsis",
-      "legalTrademarks": "Copyright 2021 Sorakime."
+      "legalTrademarks": "Copyright 2021 monochrome."
     },
     "nsis": {
       "oneClick": false,
@@ -50,7 +52,7 @@
     },
     "appImage": {
       "category": "Utility",
-      "synopsis": "Monot ver1.0b6Build6"
+      "synopsis": "Monot ver1.0Build7"
     }
   }
 }
