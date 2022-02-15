@@ -5,5 +5,7 @@
         "changedfont": "",
         "adBlock": true
     },
-    "startup": false
+    "startup": false,
+    "width": "1000",
+    height: "800"
 }

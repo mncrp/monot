@@ -171,7 +171,7 @@ function newtab() {
   });
   index = bv.length;
   bv.push(browserview);
-  win.addBrowserView(browserview);
+  win.addBrowserView(bv[bv.length - 1]);
   bv[bv.length - 1].setBounds({
     x: 0,
     y: viewY,
@@ -190,8 +190,18 @@ function newtab() {
 function nw() {
   // create window
   win = new BrowserWindow({
-    width: 1000,
-    height: 700,
+    width: JSON.parse(
+      fs.readFileSync(
+        `${app.getPath('userData')}/config.mncfg`,
+        'utf-8'
+      )
+    ).width,
+    height: JSON.parse(
+      fs.readFileSync(
+        `${app.getPath('userData')}/config.mncfg`,
+        'utf-8'
+      )
+    ).height,
     minWidth: 400,
     minHeight: 400,
     frame: false,
@@ -206,42 +216,8 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
-  win.setBackgroundColor('#ffffff');
+  win.setBackgroundColor('#efefef');
   win.loadFile(`${directory}/renderer/navigation/navigation.html`);
-
-  /* config, context */
-  // config.mncfg
-  try {
-    fs.readFileSync(
-      `${app.getPath('userData')}/config.mncfg`,
-      'utf-8'
-    );
-  } catch (e) {
-    // app.getPath('userData')/config.mncfg isn't found
-    fs.writeFile(
-      `${app.getPath('userData')}/config.mncfg`,
-      fs.readFileSync(`${app.getPath('userData')}/config.mncfg`),
-      (err) => {
-        if (err) throw err;
-      }
-    );
-  }
-  // engines.mncfg
-  try {
-    fs.readFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      'utf-8'
-    );
-  } catch (e) {
-    // app.getPath('userData')/config.mncfg isn't found
-    fs.writeFile(
-      `${app.getPath('userData')}/engines.mncfg`,
-      fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`),
-      (err) => {
-        if (err) throw err;
-      }
-    );
-  }
 
   const contextMenu = require('electron-context-menu');
   contextMenu({
@@ -284,6 +260,236 @@ function nw() {
   // create tab
   newtab();
 }
+
+app.on('ready', () => {
+  nw();
+
+  // config
+  // config.mncfg
+  try {
+    fs.readFileSync(
+      `${app.getPath('userData')}/config.mncfg`,
+      'utf-8'
+    );
+  } catch (e) {
+    // app.getPath('userData')/config.mncfg isn't found
+    fs.writeFile(
+      `${app.getPath('userData')}/config.mncfg`,
+      fs.readFileSync(
+        `${directory}/default/config/config.mncfg`,
+        'utf-8'
+      ),
+      (err) => {
+        if (err) throw err;
+      }
+    );
+  }
+  // engines.mncfg
+  try {
+    fs.readFileSync(
+      `${app.getPath('userData')}/engines.mncfg`,
+      'utf-8'
+    );
+  } catch (e) {
+    // app.getPath('userData')/config.mncfg isn't found
+    fs.writeFile(
+      `${app.getPath('userData')}/engines.mncfg`,
+      fs.readFileSync(
+        `${directory}/default/config/engines.mncfg`,
+        'utf-8'
+      ),
+      (err) => {
+        if (err) throw err;
+      }
+    );
+  }
+
+  // ipc channels
+  ipcMain.handle('moveView', (e, link, ind) => {
+    const current = ind;
+    bv[current].webContents.executeJavaScript(`
+      document.addEventListener('contextmenu',()=>{
+        node.context();
+      })
+    `);
+    if (link === '') {
+      return;
+    }
+
+    try {
+      bv[current].webContents.loadURL(link);
+      setTitleUrl(bv[current].webContents.getURL());
+      /* const title = bv[current].webContents.executeJavaScript(`
+        return document.title;
+      `);
+      const description = bv[current].webContents.executeJavaScript(`
+      return document.getElementsByName('description')[0].content;
+      `);
+      const url = bv[current].webContents.executeJavaScript(`
+        return location.href;
+      `);
+      const icon = bv[current].webContents.executeJavaScript(`
+      for (let i = 0; i < document.head.getElementsByTagName('link').length; i++) {
+        if (document.head.getElementsByTagName('link')[i].getAttribute('rel') === "shortcut icon") {
+          let favicon_url = document.head.getElementsByTagName('link')[i].getAttribute('href');
+          break;
+        } else {
+          let favicon_url = '';
+          return favicon_url;
+        }
+      };
+      return favicon_url;
+      `);
+      const writeObj = {
+        pageTitle: title,
+        pageDescription: description,
+        pageUrl: url,
+        pageIcon: icon
+      };
+      const history = JSON.parse(
+        fs.readFileSync(
+          `${directory}/data/history.mndata`,
+          'utf-8'
+        )
+      );
+      history.unshift(writeObj);
+      fs.writeFileSync(
+        `${directory}/data/history.mndata`,
+        JSON.stringify(history)
+      );*/
+    } catch (e) {
+      bv[current].webContents.loadURL(
+        `file://${directory}/browser/server-notfound.html`
+      );
+      bv[current].webContents.executeJavaScript(
+        `document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';`
+      );
+    }
+  });
+  ipcMain.handle('windowClose', () => {
+    const file = fs.readFileSync(
+      `${app.getPath('userData')}/config.mncfg`,
+      'utf-8'
+    );
+    const obj = JSON.parse(file);
+    obj.width = win.getSize()[0];
+    obj.height = win.getSize()[1];
+    fs.writeFileSync(
+      `${app.getPath('userData')}/config.mncfg`,
+      JSON.stringify(obj)
+    );
+    win.close();
+  });
+  ipcMain.handle('windowMaximize', () => {
+    win.maximize();
+  });
+  ipcMain.handle('windowMinimize', () => {
+    win.minimize();
+  });
+  ipcMain.handle('windowUnmaximize', () => {
+    win.unmaximize();
+  });
+  ipcMain.handle('windowMaxMin', () => {
+    if (win.isMaximized() === true) {
+      win.unmaximize();
+    } else {
+      win.maximize();
+    }
+  });
+  ipcMain.handle('moveViewBlank', (e, index) => {
+    bv[index].webContents.loadURL(
+      `file://${directory}/browser/blank.html`
+    );
+  });
+  ipcMain.handle('reloadBrowser', (e, index) => {
+    bv[index].webContents.reload();
+  });
+  ipcMain.handle('browserBack', (e, index) => {
+    bv[index].webContents.goBack();
+
+  });
+  ipcMain.handle('browserGoes', (e, index) => {
+    bv[index].webContents.goForward();
+  });
+  ipcMain.handle('getBrowserUrl', (e, index) => {
+    return bv[index].webContents.getURL();
+  });
+  ipcMain.handle('moveToNewTab', (e, index) => {
+    const file = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
+    const obj = JSON.parse(file);
+    const engineURL = obj.values[obj.engine];
+    bv[index].webContents.loadURL(`${directory}/browser/home.html`);
+    bv[index].webContents.on('did-stop-loading', () => {
+      bv[index].webContents.executeJavaScript(`
+        url = '${engineURL}';
+      `);
+    });
+  });
+  ipcMain.handle('context', () => {
+    menu.popup();
+  });
+  ipcMain.handle('newtab', () => {
+    newtab();
+  });
+  ipcMain.handle('tabMove', (e, i) => {
+    if (i < 0)
+      i = 0;
+    win.setTopBrowserView(bv[i]);
+    index = i;
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
+    `);
+    setTitleUrl(bv[i].webContents.getURL());
+  });
+  ipcMain.handle('removeTab', (e, i) => {
+    // source: https://www.gesource.jp/weblog/?p=4112
+    try {
+      win.removeBrowserView(bv[i]);
+      bv[i].destroy();
+      bv.splice(i, 1);
+    } catch (e) {
+      return;
+    }
+  });
+  ipcMain.handle('setting.searchEngine', (e, engine) => {
+    const text = fs.readFileSync(
+      `${app.getPath('userData')}/engines.mncfg`,
+      'utf-8'
+    );
+    const obj = JSON.parse(text);
+    obj.engine = engine;
+    fs.writeFileSync(
+      `${app.getPath('userData')}/engines.mncfg`,
+      JSON.stringify(obj)
+    );
+    win.webContents.executeJavaScript(`
+      engine = ${obj.values[engine]};
+    `);
+  });
+  ipcMain.handle('setting.changeExperimental', (e, change, to) => {
+    const obj = JSON.parse(
+      fs.readFileSync(
+        `${app.getPath('userData')}/config.mncfg`,
+        'utf-8'
+      )
+    );
+    // { "experiments": { ${change}: ${to} } }
+    obj.experiments[change] = to;
+    fs.writeFileSync(
+      `${app.getPath('userData')}/config.mncfg`,
+      JSON.stringify(obj)
+    );
+  });
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin')
+    app.quit();
+});
+app.on('activate', () => {
+  if (win === null)
+    nw();
+});
 
 function showSetting() {
   setting = new BrowserWindow({
@@ -329,182 +535,6 @@ function setTitleUrl(url) {
   `);
 }
 
-app.on('ready', nw);
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin')
-    app.quit();
-});
-app.on('activate', () => {
-  if (win === null)
-    nw();
-});
-
-// ipc channels
-ipcMain.handle('moveView', (e, link, ind) => {
-  const current = ind;
-  bv[current].webContents.executeJavaScript(`
-    document.addEventListener('contextmenu',()=>{
-      node.context();
-    })
-  `);
-  if (link === '') {
-    return;
-  }
-
-  try {
-    bv[current].webContents.loadURL(link);
-    setTitleUrl(bv[current].webContents.getURL());
-    /* const title = bv[current].webContents.executeJavaScript(`
-      return document.title;
-    `);
-    const description = bv[current].webContents.executeJavaScript(`
-     return document.getElementsByName('description')[0].content;
-    `);
-    const url = bv[current].webContents.executeJavaScript(`
-      return location.href;
-    `);
-    const icon = bv[current].webContents.executeJavaScript(`
-    for (let i = 0; i < document.head.getElementsByTagName('link').length; i++) {
-      if (document.head.getElementsByTagName('link')[i].getAttribute('rel') === "shortcut icon") {
-        let favicon_url = document.head.getElementsByTagName('link')[i].getAttribute('href');
-        break;
-      } else {
-        let favicon_url = '';
-        return favicon_url;
-      }
-    };
-    return favicon_url;
-    `);
-    const writeObj = {
-      pageTitle: title,
-      pageDescription: description,
-      pageUrl: url,
-      pageIcon: icon
-    };
-    const history = JSON.parse(
-      fs.readFileSync(
-        `${directory}/data/history.mndata`,
-        'utf-8'
-      )
-    );
-    history.unshift(writeObj);
-    fs.writeFileSync(
-      `${directory}/data/history.mndata`,
-      JSON.stringify(history)
-    );*/
-  } catch (e) {
-    bv[current].webContents.loadURL(
-      `file://${directory}/browser/server-notfound.html`
-    );
-    bv[current].webContents.executeJavaScript(
-      `document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';`
-    );
-  }
-});
-ipcMain.handle('windowClose', () => {
-  win.close();
-});
-ipcMain.handle('windowMaximize', () => {
-  win.maximize();
-});
-ipcMain.handle('windowMinimize', () => {
-  win.minimize();
-});
-ipcMain.handle('windowUnmaximize', () => {
-  win.unmaximize();
-});
-ipcMain.handle('windowMaxMin', () => {
-  if (win.isMaximized() === true) {
-    win.unmaximize();
-  } else {
-    win.maximize();
-  }
-});
-ipcMain.handle('moveViewBlank', (e, index) => {
-  bv[index].webContents.loadURL(
-    `file://${directory}/browser/blank.html`
-  );
-});
-ipcMain.handle('reloadBrowser', (e, index) => {
-  bv[index].webContents.reload();
-});
-ipcMain.handle('browserBack', (e, index) => {
-  bv[index].webContents.goBack();
-
-});
-ipcMain.handle('browserGoes', (e, index) => {
-  bv[index].webContents.goForward();
-});
-ipcMain.handle('getBrowserUrl', (e, index) => {
-  return bv[index].webContents.getURL();
-});
-ipcMain.handle('moveToNewTab', (e, index) => {
-  const file = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
-  const obj = JSON.parse(file);
-  const engineURL = obj.values[obj.engine];
-  bv[index].webContents.loadURL(`${directory}/browser/home.html`);
-  bv[index].webContents.on('did-stop-loading', () => {
-    bv[index].webContents.executeJavaScript(`
-      url = '${engineURL}';
-    `);
-  });
-});
-ipcMain.handle('context', () => {
-  menu.popup();
-});
-ipcMain.handle('newtab', () => {
-  newtab();
-});
-ipcMain.handle('tabMove', (e, i) => {
-  if (i < 0)
-    i = 0;
-  win.setTopBrowserView(bv[i]);
-  index = i;
-  win.webContents.executeJavaScript(`
-    document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
-  `);
-  setTitleUrl(bv[i].webContents.getURL());
-});
-ipcMain.handle('removeTab', (e, i) => {
-  // source: https://www.gesource.jp/weblog/?p=4112
-  try {
-    win.removeBrowserView(bv[i]);
-    bv[i].destroy();
-    bv.splice(i, 1);
-  } catch (e) {
-    return;
-  }
-});
-ipcMain.handle('setting.searchEngine', (e, engine) => {
-  const text = fs.readFileSync(
-    `${app.getPath('userData')}/engines.mncfg`,
-    'utf-8'
-  );
-  const obj = JSON.parse(text);
-  obj.engine = engine;
-  fs.writeFileSync(
-    `${app.getPath('userData')}/engines.mncfg`,
-    JSON.stringify(obj)
-  );
-  win.webContents.executeJavaScript(`
-    engine = ${obj.values[engine]};
-  `);
-});
-ipcMain.handle('setting.changeExperimental', (e, change, to) => {
-  const obj = JSON.parse(
-    fs.readFileSync(
-      `${app.getPath('userData')}/config.mncfg`,
-      'utf-8'
-    )
-  );
-  // { "experiments": { ${change}: ${to} } }
-  obj.experiments[change] = to;
-  fs.writeFileSync(
-    `${app.getPath('userData')}/config.mncfg`,
-    JSON.stringify(obj)
-  );
-});
-
 const menu = Menu.buildFromTemplate([
   {
     label: '表示',
@@ -532,8 +562,21 @@ const menu = Menu.buildFromTemplate([
       },
       {
         label: '終了',
-        role: 'quit',
-        accelerator: 'CmdOrCtrl+Q'
+        accelerator: 'CmdOrCtrl+Q',
+        click: () => {
+          const file = fs.readFileSync(
+            `${app.getPath('userData')}/config.mncfg`,
+            'utf-8'
+          );
+          const obj = JSON.parse(file);
+          obj.width = win.getSize()[0];
+          obj.height = win.getSize()[1];
+          fs.writeFileSync(
+            `${app.getPath('userData')}/config.mncfg`,
+            JSON.stringify(obj)
+          );
+          app.quit();
+        }
       }
     ]
   },
