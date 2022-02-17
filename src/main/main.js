@@ -7,7 +7,6 @@ const {
   ipcMain,
   Menu
 } = require('electron');
-const fs = require('fs');
 
 // letiables
 let win, setting, config;
@@ -18,6 +17,7 @@ const viewY = 66;
 
 // creating new tab function
 function newtab() {
+  const fs = require('fs');
   const adBlockCode = fs.readFileSync(
     `${directory}/proprietary/experimental/adBlock.js`,
     'utf-8'
@@ -188,6 +188,7 @@ function newtab() {
 }
 
 function nw() {
+  const fs = require('fs');
   // create window
   win = new BrowserWindow({
     width: JSON.parse(
@@ -210,9 +211,6 @@ function nw() {
     title: 'Monot by monochrome.',
     icon: `${directory}/image/logo.png`,
     webPreferences: {
-      worldSafeExecuteJavaScript: true,
-      nodeIntegration: false,
-      contextIsolation: true,
       preload: `${directory}/preload/navigation.js`
     }
   });
@@ -253,12 +251,9 @@ function nw() {
   }
   win.webContents.on('did-finish-load', () => {
     win.webContents.executeJavaScript(`
-    engine = '${getEngine()}';
-  `);
+      engine = '${getEngine()}';
+    `);
   });
-
-  // create tab
-  newtab();
 }
 
 app.on('ready', () => {
@@ -267,11 +262,13 @@ app.on('ready', () => {
   // config
   // config.mncfg
   try {
+    const fs = require('fs');
     fs.readFileSync(
       `${app.getPath('userData')}/config.mncfg`,
       'utf-8'
     );
   } catch (e) {
+    const fs = require('fs');
     // app.getPath('userData')/config.mncfg isn't found
     fs.writeFile(
       `${app.getPath('userData')}/config.mncfg`,
@@ -286,11 +283,13 @@ app.on('ready', () => {
   }
   // engines.mncfg
   try {
+    const fs = require('fs');
     fs.readFileSync(
       `${app.getPath('userData')}/engines.mncfg`,
       'utf-8'
     );
   } catch (e) {
+    const fs = require('fs');
     // app.getPath('userData')/config.mncfg isn't found
     fs.writeFile(
       `${app.getPath('userData')}/engines.mncfg`,
@@ -303,6 +302,9 @@ app.on('ready', () => {
       }
     );
   }
+
+  // create tab
+  newtab();
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, ind) => {
@@ -367,6 +369,7 @@ app.on('ready', () => {
     }
   });
   ipcMain.handle('windowClose', () => {
+    const fs = require('fs');
     const file = fs.readFileSync(
       `${app.getPath('userData')}/config.mncfg`,
       'utf-8'
@@ -415,6 +418,7 @@ app.on('ready', () => {
     return bv[index].webContents.getURL();
   });
   ipcMain.handle('moveToNewTab', (e, index) => {
+    const fs = require('fs');
     const file = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
     const obj = JSON.parse(file);
     const engineURL = obj.values[obj.engine];
@@ -452,6 +456,7 @@ app.on('ready', () => {
     }
   });
   ipcMain.handle('setting.searchEngine', (e, engine) => {
+    const fs = require('fs');
     const text = fs.readFileSync(
       `${app.getPath('userData')}/engines.mncfg`,
       'utf-8'
@@ -467,6 +472,7 @@ app.on('ready', () => {
     `);
   });
   ipcMain.handle('setting.changeExperimental', (e, change, to) => {
+    const fs = require('fs');
     const obj = JSON.parse(
       fs.readFileSync(
         `${app.getPath('userData')}/config.mncfg`,
@@ -564,6 +570,7 @@ const menu = Menu.buildFromTemplate([
         label: '終了',
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
+          const fs = require('fs');
           const file = fs.readFileSync(
             `${app.getPath('userData')}/config.mncfg`,
             'utf-8'

@@ -31,14 +31,13 @@
       "!.git",
       "!.dist",
       "src",
-      "main.js",
       "package-lock.json",
       "package.json"
     ],
     "asar": false,
     "win": {
       "icon": "src/image/logo.ico",
-      "target": "nsis",
+      "target": "portable",
       "legalTrademarks": "Copyright 2021 monochrome."
     },
     "nsis": {
