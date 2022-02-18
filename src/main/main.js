@@ -5,7 +5,8 @@ const {
   BrowserView,
   dialog,
   ipcMain,
-  Menu
+  Menu,
+  MenuItem
 } = require('electron');
 
 // letiables
@@ -38,10 +39,6 @@ function newtab() {
     })
   `);
 
-  // context menu
-  browserview.webContents.on('context-menu', () => {
-    /* コンテキストメニューわぁ */
-  });
   // window's behavior
   win.on('closed', () => {
     win = null;
@@ -598,11 +595,15 @@ const menu = Menu.buildFromTemplate([
     }
   },
   {
+    label: '再読み込み',
+    accelerator: 'CmdOrCtrl+R',
+    click: () => {
+      bv[index].webContents.reload();
+    }
+  },
+  {
     label: '表示',
     submenu: [
-      {
-        type: 'separator'
-      },
       {
         role: 'togglefullscreen',
         accelerator: 'F11',
@@ -639,6 +640,7 @@ const menu = Menu.buildFromTemplate([
   },
   {
     label: '移動',
+    id: 'move',
     submenu: [
       {
         label: '再読み込み',
@@ -710,6 +712,19 @@ Copyright 2021 monochrome Project.`
         click: () => {
           showSetting();
         }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: '新しいタブ',
+        accelerator: 'CmdOrCtrl+T',
+        click: () => {
+          newtab();
+          win.webContents.executeJavaScript(`
+            newtab('Home')
+          `);
+        }
       }
     ]
   },
@@ -734,4 +749,12 @@ Copyright 2021 monochrome Project.`
     ]
   }
 ]);
+
+// context menu
+menu.on('menu-will-show', () => {
+  menu.getMenuItemById('move').visible = false;
+});
+menu.on('menu-will-close', () => {
+  menu.getMenuItemById('move').visible = true;
+});
 Menu.setApplicationMenu(menu);
