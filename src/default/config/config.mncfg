@@ -1,0 +1,11 @@
+{
+    "experiments": {
+        "forceDark": false,
+        "fontChange": false,
+        "changedfont": "",
+        "adBlock": true
+    },
+    "startup": false,
+    "width": "1000",
+    height: "800"
+}
