@@ -38,6 +38,10 @@ function newtab() {
     })
   `);
 
+  // context menu
+  browserview.webContents.on('context-menu', () => {
+    /* コンテキストメニューわぁ */
+  });
   // window's behavior
   win.on('closed', () => {
     win = null;
@@ -530,12 +534,14 @@ function showSetting() {
   // Apply of changes
   if (config.experiments.forceDark === true) {
     setting.webContents.executeJavaScript(`
-      document.querySelectorAll('input[type="checkbox"]')[0].checked = true;
+      document.querySelectorAll('input[type="checkbox"]')[0]
+        .checked = true;
     `);
   }
   if (config.experiments.fontChange === true) {
     setting.webContents.executeJavaScript(`
-      document.querySelectorAll('input[type="checkbox"]')[1].checked = true;
+      document.querySelectorAll('input[type="checkbox"]')[1]
+        .checked = true;
     `);
     if (config.experiments.changedfont !== '') {
       setting.webContents.executeJavaScript(`
@@ -546,7 +552,8 @@ function showSetting() {
   }
   if (config.experiments.adBlock === true) {
     setting.webContents.executeJavaScript(`
-      document.querySelectorAll('input[type="checkbox"]')[2].checked = true;
+      document.querySelectorAll('input[type="checkbox"]')[2]
+        .checked = true;
     `);
   }
 }
@@ -577,6 +584,20 @@ function setTitleUrl(url) {
 
 const menu = Menu.buildFromTemplate([
   {
+    label: '戻る',
+    accelerator: 'Alt+Left',
+    click: () => {
+      bv[index].webContents.goBack();
+    }
+  },
+  {
+    label: '進む',
+    accelerator: 'Alt+Right',
+    click: () => {
+      bv[index].webContents.goForward();
+    }
+  },
+  {
     label: '表示',
     submenu: [
       {
@@ -594,11 +615,6 @@ const menu = Menu.buildFromTemplate([
       {
         role: 'hideothers',
         label: '他を隠す'
-      },
-      {
-        role: 'reload',
-        label: 'navの再表示',
-        accelerator: 'CmdOrCtrl+Alt+R'
       },
       {
         label: '終了',
