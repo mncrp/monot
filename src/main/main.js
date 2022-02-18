@@ -207,7 +207,7 @@ function nw() {
     minHeight: 400,
     frame: false,
     transparent: false,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#efefef',
     title: 'Monot by monochrome.',
     icon: `${directory}/image/logo.png`,
     webPreferences: {
@@ -332,7 +332,7 @@ app.on('ready', () => {
       `);
       const icon = bv[current].webContents.executeJavaScript(`
       for (let i = 0; i < document.head.getElementsByTagName('link').length; i++) {
-        if (document.head.getElementsByTagName('link')[i].getAttribute('rel') === "shortcut icon") {
+        if (document.head.getElementsByTagName('link')[i].getAttribute('rel') === 'shortcut icon') {
           let favicon_url = document.head.getElementsByTagName('link')[i].getAttribute('href');
           break;
         } else {
