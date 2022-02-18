@@ -509,11 +509,45 @@ function showSetting() {
       scrollBounce: true
     }
   });
+  const config = JSON.parse(
+    require('fs').readFileSync(
+      `${app.getPath('userData')}/config.mncfg`,
+      'utf-8'
+    )
+  );
+  const engine = JSON.parse(
+    require('fs').readFileSync(
+      `${app.getPath('userData')}/engines.mncfg`,
+      'utf-8'
+    )
+  );
   setting.loadFile(`${directory}/renderer/setting/index.html`);
+
+  setting.webContents.executeJavaScript(`
+    document.querySelector('option[value="${engine.engine}"]');
+  `);
+
+  // Apply of changes
   if (config.experiments.forceDark === true) {
-    setting.webContents.executeJavaScript(
-      `document.querySelectorAll('input[type="checkbox"]')[0].checked=true;`
-    );
+    setting.webContents.executeJavaScript(`
+      document.querySelectorAll('input[type="checkbox"]')[0].checked = true;
+    `);
+  }
+  if (config.experiments.fontChange === true) {
+    setting.webContents.executeJavaScript(`
+      document.querySelectorAll('input[type="checkbox"]')[1].checked = true;
+    `);
+    if (config.experiments.changedfont !== '') {
+      setting.webContents.executeJavaScript(`
+        document.querySelectorAll('input[type="text"]')[0]
+          .value = ${config.experiments.changedfont};
+      `);
+    }
+  }
+  if (config.experiments.adBlock === true) {
+    setting.webContents.executeJavaScript(`
+      document.querySelectorAll('input[type="checkbox"]')[2].checked = true;
+    `);
   }
 }
 
