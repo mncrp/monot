@@ -20,7 +20,7 @@ try {
   // app.getPath('userData')/config.mncfg isn't found
   fs.writeFile(
     `${app.getPath('userData')}/config.mncfg`,
-    fs.readFileSync(`${app.getPath('userData')}/config.mncfg`),
+    fs.readFileSync(`${__dirname}/src/config/config.mncfg`),
     (err) => {
       if (err) throw err;
     }
@@ -36,12 +36,13 @@ try {
   // app.getPath('userData')/config.mncfg isn't found
   fs.writeFile(
     `${app.getPath('userData')}/engines.mncfg`,
-    fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`),
+    fs.readFileSync(`${__dirname}/src/config/engines.mncfg`),
     (err) => {
       if (err) throw err;
     }
   );
 }
+
 
 contextMenu({
   prepend: () => [
