@@ -80,15 +80,9 @@ function newtab() {
           id: 'selectTextSearch',
           label: `"${params.selectionText}"を検索`,
           click: () => {
-            const obj = JSON.parse(
-              fs.readFileSync(
-                `${app.getPath('userData')}/engines.mncfg`
-              )
-            );
             bv[index].webContents.loadURL(
-              obj.values[obj.engine] + params.selectionText
+              'https://duckduckgo.com/?q=' + params.selectionText
             );
-            console.log(obj.values[obj.engine]);
           }
         })
       );
@@ -774,19 +768,19 @@ Copyright 2021 monochrome Project.`
     ]
   }
 ];
-let menu;
-initMenu();
+let menu = Menu.buildFromTemplate(menuTemplate);
 function initMenu() {
   menu = Menu.buildFromTemplate(menuTemplate);
 }
 
 // context menu
 menu.on('menu-will-show', () => {
-  initMenu();
   menu.getMenuItemById('move').visible = false;
 });
 menu.on('menu-will-close', () => {
-  initMenu();
-  console.log(menuTemplate);
+  menu.getMenuItemById('move').visible = true;
+  if (menu.getMenuItemById('selectTextSearch')) {
+    initMenu();
+  }
 });
 Menu.setApplicationMenu(menu);

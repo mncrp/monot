@@ -1,7 +1,7 @@
 const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('node', {
-  context: () => {
-    ipcRenderer.invoke('context');
+  context: (text) => {
+    ipcRenderer.invoke('context', text);
   }
 });
