@@ -4,19 +4,37 @@ const {app} = require('electron');
 
 class Config {
   constructor(filepath = 'config.mncfg') {
+    this.config = new LowLevelConfig(filepath);
+  }
+  // Get config data.
+  get(key, shouldUseDots = false) {
+    this.config.update();
+    return this.config.get(key, shouldUseDots);
+  }
+
+  // Set config data.
+  set(key, value, shouldUseDots = false) {
+    this.config.update();
+    this.config.set(key, value, shouldUseDots);
+    this.config.save();
+  }
+}
+
+class LowLevelConfig {
+  constructor(filepath = 'config.mncfg') {
     this.path = path.join(app.getPath('userData'), filepath);
+    this.data = {};
   }
 
-  // Get all config data.
-  loadFile() {
+  // Update my config data.
+  update() {
     const data = fs.readFileSync(this.path, 'utf-8');
-    return JSON.parse(data);
+    this.data = JSON.parse(data);
   }
 
-  // Set all config data.
-  saveFile(obj) {
-    const data = JSON.stringify(obj);
-    fs.writeFileSync(this.path, data, 'utf-8');
+  // Save my config data.
+  save() {
+    fs.writeFileSync(this.path, this.data, 'utf-8');
   }
 
   #getObjWithDots(obj, keyPath) {
@@ -37,23 +55,24 @@ class Config {
 
   // Get config data.
   get(key, shouldUseDots = false) {
-    const config = this.loadFile();
     const result = shouldUseDots ?
-      this.#getObjWithDots(config, key) :
-      config[key];
+      this.#getObjWithDots(this.data, key) :
+      this.data[key];
     return result;
   }
 
   // Set config data.
   set(key, value, shouldUseDots = false) {
-    const config = this.loadFile();
     if (shouldUseDots) {
-      this.#setObjWithDots(config, key, value);
+      this.#setObjWithDots(this.data, key, value);
     } else {
-      config[key] = value;
+      this.data[key] = value;
     }
-    this.saveFile(config);
+    return this;
   }
 }
 
-module.exports = Config;
+module.exports = {
+  Config,
+  LowLevelConfig
+};
