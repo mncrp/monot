@@ -71,6 +71,31 @@ function newtab() {
     });
   });
 
+  // context menu
+  browserview.webContents.on('context-menu', (e, params) => {
+    if (params.selectionText) {
+      menu.insert(
+        0,
+        new MenuItem({
+          id: 'selectTextSearch',
+          label: `"${params.selectionText}"を検索`,
+          click: () => {
+            const obj = JSON.parse(
+              fs.readFileSync(
+                `${app.getPath('userData')}/engines.mncfg`
+              )
+            );
+            bv[index].webContents.loadURL(
+              obj.values[obj.engine] + params.selectionText
+            );
+            console.log(obj.values[obj.engine]);
+          }
+        })
+      );
+    }
+  });
+
+  // events
   browserview.webContents.on('did-fail-load', () => {
     const ind = index;
     bv[ind].webContents.loadURL(
@@ -579,7 +604,7 @@ function setTitleUrl(url) {
   `);
 }
 
-const menu = Menu.buildFromTemplate([
+const menuTemplate = [
   {
     label: '戻る',
     accelerator: 'Alt+Left',
@@ -748,13 +773,20 @@ Copyright 2021 monochrome Project.`
       }
     ]
   }
-]);
+];
+let menu;
+initMenu();
+function initMenu() {
+  menu = Menu.buildFromTemplate(menuTemplate);
+}
 
 // context menu
 menu.on('menu-will-show', () => {
+  initMenu();
   menu.getMenuItemById('move').visible = false;
 });
 menu.on('menu-will-close', () => {
-  menu.getMenuItemById('move').visible = true;
+  initMenu();
+  console.log(menuTemplate);
 });
 Menu.setApplicationMenu(menu);
