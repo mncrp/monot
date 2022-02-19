@@ -778,9 +778,6 @@ menu.on('menu-will-show', () => {
   menu.getMenuItemById('move').visible = false;
 });
 menu.on('menu-will-close', () => {
-  menu.getMenuItemById('move').visible = true;
-  if (menu.getMenuItemById('selectTextSearch')) {
-    initMenu();
-  }
+  initMenu();
 });
 Menu.setApplicationMenu(menu);
