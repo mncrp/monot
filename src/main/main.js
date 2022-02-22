@@ -13,7 +13,7 @@ const {
 let win, setting, config;
 let index = 0;
 const directory = `${__dirname}/..`;
-let bv = [];
+const bv = [];
 const viewY = 66;
 
 // creating new tab function
@@ -81,7 +81,7 @@ function newtab() {
           label: `"${params.selectionText}"を検索`,
           click: () => {
             bv[index].webContents.loadURL(
-              'https://duckduckgo.com/?q=' + params.selectionText
+              `https://duckduckgo.com/?q=${params.selectionText}`
             );
           }
         })
