@@ -26,15 +26,30 @@ class LowLevelConfig {
     this.data = {};
   }
 
+  // If Config's file is not exist, copy file of the defaultPath to Config's file.
+  copyFileIfNeeded(defaultPath) {
+    try {
+      fs.copyFileSync(defaultPath, this.path, fs.constants.COPYFILE_EXCL);
+    } catch (error) {
+      if (error.code === 'EEXIST') {
+        return this;
+      }
+      throw error;
+    }
+    return this;
+  }
+
   // Update my config data.
   update() {
     const data = fs.readFileSync(this.path, 'utf-8');
     this.data = JSON.parse(data);
+    return this;
   }
 
   // Save my config data.
   save() {
     fs.writeFileSync(this.path, this.data, 'utf-8');
+    return this;
   }
 
   #getObjWithDots(obj, keyPath) {
@@ -51,6 +66,7 @@ class LowLevelConfig {
       obj = obj[paths.shift()];
     }
     obj[paths[0]] = value;
+    return this;
   }
 
   // Get config data.
