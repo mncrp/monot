@@ -10,7 +10,7 @@ const {
 } = require('electron');
 
 // letiables
-let win, setting;
+let win;
 let index = 0;
 const directory = `${__dirname}/..`;
 const bv = [];
@@ -432,7 +432,7 @@ app.on('activate', () => {
 });
 
 function showSetting() {
-  setting = new BrowserWindow({
+  const setting = new BrowserWindow({
     width: 760,
     height: 480,
     minWidth: 300,
