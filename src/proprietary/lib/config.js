@@ -48,7 +48,7 @@ class LowLevelConfig {
 
   // Save my config data.
   save() {
-    fs.writeFileSync(this.path, this.data, 'utf-8');
+    fs.writeFileSync(this.path, JSON.stringify(this.data), 'utf-8');
     return this;
   }
 
