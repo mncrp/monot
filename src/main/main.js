@@ -11,7 +11,7 @@ const {
 
 // letiables
 let win;
-let index = 0;
+let currentTab = 0;
 const directory = `${__dirname}/..`;
 const bv = [];
 const viewY = 66;
@@ -85,7 +85,7 @@ function newtab() {
           id: 'selectTextSearch',
           label: `"${params.selectionText}"を検索`,
           click: () => {
-            bv[index].webContents.loadURL(
+            bv[currentTab].webContents.loadURL(
               `https://duckduckgo.com/?q=${params.selectionText}`
             );
           }
@@ -96,12 +96,11 @@ function newtab() {
 
   // events
   browserview.webContents.on('did-fail-load', () => {
-    const ind = index;
-    bv[ind].webContents.loadURL(
+    bv[currentTab].webContents.loadURL(
       `file://${directory}/browser/server-notfound.html`
     );
-    bv[ind].webContents.executeJavaScript(
-      `document.getElementsByTagName('span')[0].innerText='${bv[ind].webContents.getURL().toLowerCase()}';`
+    bv[currentTab].webContents.executeJavaScript(
+      `document.getElementsByTagName('span')[0].innerText='${bv[currentTab].webContents.getURL().toLowerCase()}';`
     );
   });
 
@@ -186,7 +185,7 @@ function newtab() {
       document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';
     `);
   });
-  index = bv.length;
+  currentTab = bv.length;
   bv.push(browserview);
   win.addBrowserView(bv[bv.length - 1]);
   bv[bv.length - 1].setBounds({
@@ -230,13 +229,13 @@ function nw() {
       {
         label: '戻る',
         click: () => {
-          bv[index].webContents.goBack();
+          bv[currentTab].webContents.goBack();
         }
       },
       {
         label: '進む',
         click: () => {
-          bv[index].webContents.goForward();
+          bv[currentTab].webContents.goForward();
         }
       },
       {
@@ -390,7 +389,7 @@ app.on('ready', () => {
     if (i < 0)
       i = 0;
     win.setTopBrowserView(bv[i]);
-    index = i;
+    currentTab = i;
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
     `);
@@ -509,21 +508,21 @@ const menuTemplate = [
     label: '戻る',
     accelerator: 'Alt+Left',
     click: () => {
-      bv[index].webContents.goBack();
+      bv[currentTab].webContents.goBack();
     }
   },
   {
     label: '進む',
     accelerator: 'Alt+Right',
     click: () => {
-      bv[index].webContents.goForward();
+      bv[currentTab].webContents.goForward();
     }
   },
   {
     label: '再読み込み',
     accelerator: 'CmdOrCtrl+R',
     click: () => {
-      bv[index].webContents.reload();
+      bv[currentTab].webContents.reload();
     }
   },
   {
@@ -563,21 +562,21 @@ const menuTemplate = [
         label: '再読み込み',
         accelerator: 'CmdOrCtrl+R',
         click: () => {
-          bv[index].webContents.reload();
+          bv[currentTab].webContents.reload();
         }
       },
       {
         label: '戻る',
         accelerator: 'Alt+Left',
         click: () => {
-          bv[index].webContents.goBack();
+          bv[currentTab].webContents.goBack();
         }
       },
       {
         label: '進む',
         accelerator: 'Alt+Right',
         click: () => {
-          bv[index].webContents.goForward();
+          bv[currentTab].webContents.goForward();
         }
       }
     ]
@@ -652,7 +651,7 @@ Copyright 2021 monochrome Project.`
         label: '開発者向けツール',
         accelerator: 'F12',
         click: () => {
-          bv[index].webContents.toggleDevTools();
+          bv[currentTab].webContents.toggleDevTools();
         }
       },
       {
@@ -660,7 +659,7 @@ Copyright 2021 monochrome Project.`
         accelerator: 'CmdOrCtrl+Shift+I',
         visible: false,
         click: () => {
-          bv[index].webContents.toggleDevTools();
+          bv[currentTab].webContents.toggleDevTools();
         }
       }
     ]
