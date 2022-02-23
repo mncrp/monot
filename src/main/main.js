@@ -10,11 +10,16 @@ const {
 } = require('electron');
 
 // letiables
-let win, setting, config;
+let win, setting;
 let index = 0;
 const directory = `${__dirname}/..`;
 const bv = [];
 const viewY = 66;
+
+// config setting
+const {LowLevelConfig} = require(`../proprietary/lib/config.js`);
+const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
+const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 
 // creating new tab function
 function newtab() {
@@ -143,25 +148,17 @@ function newtab() {
     const browserURL = new URL(browserview.webContents.getURL());
     const fileURL = new URL(`file://${directory}/browser/home.html`);
     if (browserURL.href === fileURL.href) {
-      config = JSON.parse(
-        fs.readFileSync(
-          `${app.getPath('userData')}/config.mncfg`,
-          'utf-8'
-        )
-      );
-      const enginesConfig = fs.readFileSync(
-        `${app.getPath('userData')}/engines.mncfg`,
-        'utf-8'
-      );
-      const obj = JSON.parse(enginesConfig);
-      const engineURL = obj.values[obj.engine];
+      enginesConfig.update();
+      const selectEngine = enginesConfig.get('engine');
+      const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
       browserview.webContents.executeJavaScript(`
         url = '${engineURL}';
       `);
     }
 
+    const experiments = monotConfig.update().get('experiments');
     // Force-Dark
-    if (config.experiments.forceDark === true) {
+    if (experiments.forceDark === true) {
       browserview.webContents.insertCSS(
         fs.readFileSync(
           `${directory}/proprietary/style/forcedark.css`,
@@ -170,15 +167,15 @@ function newtab() {
       );
     }
     // fontChange
-    if (config.experiments.fontChange === true) {
+    if (experiments.fontChange === true) {
       browserview.webContents.insertCSS(`
         body,body>*, *{
-          font-family: ${config.experiments.changedfont},'Noto Sans JP'!important;
+          font-family: ${experiments.changedfont},'Noto Sans JP'!important;
         }
       `);
     }
     // AD Block
-    if (config.experiments.adBlock === true) {
+    if (experiments.adBlock === true) {
       browserview.webContents.executeJavaScript(adBlockCode);
     }
   });
@@ -208,21 +205,11 @@ function newtab() {
 }
 
 function nw() {
-  const fs = require('fs');
   // create window
+  monotConfig.update();
   win = new BrowserWindow({
-    width: JSON.parse(
-      fs.readFileSync(
-        `${app.getPath('userData')}/config.mncfg`,
-        'utf-8'
-      )
-    ).width,
-    height: JSON.parse(
-      fs.readFileSync(
-        `${app.getPath('userData')}/config.mncfg`,
-        'utf-8'
-      )
-    ).height,
+    width: monotConfig.get('width'),
+    height: monotConfig.get('height'),
     minWidth: 400,
     minHeight: 400,
     frame: false,
@@ -262,12 +249,9 @@ function nw() {
   });
 
   function getEngine() {
-    const data = fs.readFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      'utf-8'
-    );
-    const obj = JSON.parse(data);
-    return obj.values[obj.engine];
+    enginesConfig.update();
+    const selectEngine = enginesConfig.get('engine');
+    return enginesConfig.get(`values.${selectEngine}`, true);
   }
   win.webContents.on('did-finish-load', () => {
     win.webContents.executeJavaScript(`
@@ -278,50 +262,6 @@ function nw() {
 
 app.on('ready', () => {
   nw();
-
-  // config
-  // config.mncfg
-  try {
-    const fs = require('fs');
-    fs.readFileSync(
-      `${app.getPath('userData')}/config.mncfg`,
-      'utf-8'
-    );
-  } catch (e) {
-    const fs = require('fs');
-    // app.getPath('userData')/config.mncfg isn't found
-    fs.writeFile(
-      `${app.getPath('userData')}/config.mncfg`,
-      fs.readFileSync(
-        `${directory}/default/config/config.mncfg`,
-        'utf-8'
-      ),
-      (err) => {
-        if (err) throw err;
-      }
-    );
-  }
-  // engines.mncfg
-  try {
-    const fs = require('fs');
-    fs.readFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      'utf-8'
-    );
-  } catch (e) {
-    const fs = require('fs');
-    // app.getPath('userData')/config.mncfg isn't found
-    fs.writeFile(
-      `${app.getPath('userData')}/engines.mncfg`,
-      fs.readFileSync(
-        `${directory}/default/config/engines.mncfg`,
-        'utf-8'
-      ),
-      (err) => {
-        if (err) throw err;
-      }
-    );
-  }
 
   // create tab
   newtab();
@@ -389,18 +329,10 @@ app.on('ready', () => {
     }
   });
   ipcMain.handle('windowClose', () => {
-    const fs = require('fs');
-    const file = fs.readFileSync(
-      `${app.getPath('userData')}/config.mncfg`,
-      'utf-8'
-    );
-    const obj = JSON.parse(file);
-    obj.width = win.getSize()[0];
-    obj.height = win.getSize()[1];
-    fs.writeFileSync(
-      `${app.getPath('userData')}/config.mncfg`,
-      JSON.stringify(obj)
-    );
+    monotConfig.update()
+      .set('width', win.getSize()[0])
+      .set('height', win.getSize()[1])
+      .save();
     win.close();
   });
   ipcMain.handle('windowMaximize', () => {
@@ -438,10 +370,9 @@ app.on('ready', () => {
     return bv[index].webContents.getURL();
   });
   ipcMain.handle('moveToNewTab', (e, index) => {
-    const fs = require('fs');
-    const file = fs.readFileSync(`${app.getPath('userData')}/engines.mncfg`, 'utf-8');
-    const obj = JSON.parse(file);
-    const engineURL = obj.values[obj.engine];
+    enginesConfig.update();
+    const selectEngine = enginesConfig.get('engine');
+    const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
     bv[index].webContents.loadURL(`${directory}/browser/home.html`);
     bv[index].webContents.on('did-stop-loading', () => {
       bv[index].webContents.executeJavaScript(`
@@ -476,35 +407,18 @@ app.on('ready', () => {
     }
   });
   ipcMain.handle('setting.searchEngine', (e, engine) => {
-    const fs = require('fs');
-    const text = fs.readFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      'utf-8'
-    );
-    const obj = JSON.parse(text);
-    obj.engine = engine;
-    fs.writeFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      JSON.stringify(obj)
-    );
+    enginesConfig.update()
+      .set('engine', engine)
+      .save();
     win.webContents.executeJavaScript(`
-      engine = ${obj.values[engine]};
+      engine = ${enginesConfig.get(`values.${engine}`, true)};
     `);
   });
   ipcMain.handle('setting.changeExperimental', (e, change, to) => {
-    const fs = require('fs');
-    const obj = JSON.parse(
-      fs.readFileSync(
-        `${app.getPath('userData')}/config.mncfg`,
-        'utf-8'
-      )
-    );
     // { "experiments": { ${change}: ${to} } }
-    obj.experiments[change] = to;
-    fs.writeFileSync(
-      `${app.getPath('userData')}/config.mncfg`,
-      JSON.stringify(obj)
-    );
+    monotConfig.update()
+      .set(`experiments.${change}`, to, true)
+      .save();
   });
 });
 
@@ -529,44 +443,36 @@ function showSetting() {
       scrollBounce: true
     }
   });
-  const config = JSON.parse(
-    require('fs').readFileSync(
-      `${app.getPath('userData')}/config.mncfg`,
-      'utf-8'
-    )
-  );
-  const engine = JSON.parse(
-    require('fs').readFileSync(
-      `${app.getPath('userData')}/engines.mncfg`,
-      'utf-8'
-    )
-  );
+  monotConfig.update();
+  enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
 
   setting.webContents.executeJavaScript(`
-    document.querySelector('option[value="${engine.engine}"]');
+    document.querySelector('option[value="${enginesConfig.get('engine')}"]');
   `);
 
   // Apply of changes
-  if (config.experiments.forceDark === true) {
+  const experiments = monotConfig.get('experiments');
+
+  if (experiments.forceDark === true) {
     setting.webContents.executeJavaScript(`
       document.querySelectorAll('input[type="checkbox"]')[0]
         .checked = true;
     `);
   }
-  if (config.experiments.fontChange === true) {
+  if (experiments.fontChange === true) {
     setting.webContents.executeJavaScript(`
       document.querySelectorAll('input[type="checkbox"]')[1]
         .checked = true;
     `);
-    if (config.experiments.changedfont !== '') {
+    if (experiments.changedfont !== '') {
       setting.webContents.executeJavaScript(`
         document.querySelectorAll('input[type="text"]')[0]
-          .value = ${config.experiments.changedfont};
+          .value = ${experiments.changedfont};
       `);
     }
   }
-  if (config.experiments.adBlock === true) {
+  if (experiments.adBlock === true) {
     setting.webContents.executeJavaScript(`
       document.querySelectorAll('input[type="checkbox"]')[2]
         .checked = true;
@@ -640,18 +546,10 @@ const menuTemplate = [
         label: '終了',
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
-          const fs = require('fs');
-          const file = fs.readFileSync(
-            `${app.getPath('userData')}/config.mncfg`,
-            'utf-8'
-          );
-          const obj = JSON.parse(file);
-          obj.width = win.getSize()[0];
-          obj.height = win.getSize()[1];
-          fs.writeFileSync(
-            `${app.getPath('userData')}/config.mncfg`,
-            JSON.stringify(obj)
-          );
+          monotConfig.update()
+            .set('width', win.getSize()[0])
+            .set('height', win.getSize()[1])
+            .save();
           app.quit();
         }
       }
