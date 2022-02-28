@@ -10,14 +10,14 @@ const {
 } = require('electron');
 
 // letiables
-let win;
+let win, windowSize;
 let currentTab = 0;
 const directory = `${__dirname}/..`;
 const bv = [];
 const viewY = 66;
 
 // config setting
-const {LowLevelConfig} = require(`../proprietary/lib/config.js`);
+const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 
@@ -28,7 +28,7 @@ function newtab() {
     `${directory}/proprietary/experimental/adBlock.js`,
     'utf-8'
   );
-  let winSize = win.getSize();
+  windowSize = win.getSize();
   // create new tab
   const browserview = new BrowserView({
     backgroundColor: '#efefef',
@@ -49,30 +49,30 @@ function newtab() {
     win = null;
   });
   win.on('maximize', () => {
-    winSize = win.getContentSize();
+    windowSize = win.getContentSize();
     browserview.setBounds({
       x: 0,
       y: viewY,
-      width: winSize[0],
-      height: winSize[1] - viewY + 3
+      width: windowSize[0],
+      height: windowSize[1] - viewY + 3
     });
   });
   win.on('unmaximize', () => {
-    winSize = win.getContentSize();
+    windowSize = win.getContentSize();
     browserview.setBounds({
       x: 0,
       y: viewY,
-      width: winSize[0],
-      height: winSize[1] - viewY
+      width: windowSize[0],
+      height: windowSize[1] - viewY
     });
   });
   win.on('enter-full-screen', () => {
-    winSize = win.getContentSize();
+    windowSize = win.getContentSize();
     browserview.setBounds({
       x: 0,
       y: viewY,
-      width: winSize[0],
-      height: winSize[1] - viewY + 2
+      width: windowSize[0],
+      height: windowSize[1] - viewY + 2
     });
   });
 
@@ -191,8 +191,8 @@ function newtab() {
   bv[bv.length - 1].setBounds({
     x: 0,
     y: viewY,
-    width: winSize[0],
-    height: winSize[1] - viewY
+    width: windowSize[0],
+    height: windowSize[1] - viewY
   });
   bv[bv.length - 1].setAutoResize({
     width: true,
@@ -328,9 +328,10 @@ app.on('ready', () => {
     }
   });
   ipcMain.handle('windowClose', () => {
+    windowSize = win.getSize();
     monotConfig.update()
-      .set('width', win.getSize()[0])
-      .set('height', win.getSize()[1])
+      .set('width', windowSize[0])
+      .set('height', windowSize[1])
       .save();
     win.close();
   });
@@ -546,8 +547,8 @@ const menuTemplate = [
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
           monotConfig.update()
-            .set('width', win.getSize()[0])
-            .set('height', win.getSize()[1])
+            .set('width', windowSize[0])
+            .set('height', windowSize[1])
             .save();
           app.quit();
         }
