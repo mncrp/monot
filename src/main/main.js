@@ -14,7 +14,7 @@ let win, windowSize;
 let currentTab = 0;
 const directory = `${__dirname}/..`;
 const bv = [];
-const viewY = 66;
+const viewY = 67;
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -280,9 +280,7 @@ app.on('ready', () => {
     try {
       bv[current].webContents.loadURL(link);
       setTitleUrl(bv[current].webContents.getURL());
-      /* const title = bv[current].webContents.executeJavaScript(`
-        return document.title;
-      `);
+      /* const title = bv[current].webContent.getTitle();
       const description = bv[current].webContents.executeJavaScript(`
       return document.getElementsByName('description')[0].content;
       `);
@@ -373,7 +371,10 @@ app.on('ready', () => {
     enginesConfig.update();
     const selectEngine = enginesConfig.get('engine');
     const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+
     bv[index].webContents.loadURL(`${directory}/browser/home.html`);
+
+    // search engine
     bv[index].webContents.on('did-stop-loading', () => {
       bv[index].webContents.executeJavaScript(`
         url = '${engineURL}';
@@ -400,8 +401,16 @@ app.on('ready', () => {
     // source: https://www.gesource.jp/weblog/?p=4112
     try {
       win.removeBrowserView(bv[i]);
-      bv[i].destroy();
+      bv[i] = null;
       bv.splice(i, 1);
+      bv[i].destroy();
+      if (bv[i] !== null) {
+        win.setTopBrowserView(bv[i]);
+        win.webContents.executeJavaScript(`
+          document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
+        `);
+      }
+
     } catch (e) {
       return;
     }
@@ -500,7 +509,7 @@ function setTitleUrl(url) {
 
   // Set URL in the URL bar.
   return win.webContents.executeJavaScript(`
-    document.getElementsByTagName('input')[0].value='${url.href}';
+    document.getElementsByTagName('input')[0].value='${url.host}${url.pathname}${url.search}${url.hash}';
   `);
 }
 
@@ -596,6 +605,10 @@ const menuTemplate = [
       {
         label: 'ペースト',
         role: 'paste'
+      },
+      {
+        label: '全て選択',
+        role: 'selectAll'
       }
     ]
   },
