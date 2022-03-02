@@ -58,6 +58,15 @@ class Tab {
     this.entity.webContents.goBack();
     this.href = this.entity.webContents.getURL();
   }
+
+  goForward() {
+    this.entity.webContents.goForward();
+    this.href = this.entity.webContents.getURL();
+  }
+
+  reload() {
+    this.entity.reload();
+  }
 }
 
 module.exports = {

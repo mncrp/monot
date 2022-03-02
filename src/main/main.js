@@ -361,20 +361,15 @@ app.on('ready', () => {
   });
   ipcMain.handle('removeTab', (e, i) => {
     // source: https://www.gesource.jp/weblog/?p=4112
-    try {
-      win.removeBrowserView(bv[i].entity);
-      bv[i] = null;
-      bv.splice(i, 1);
-      bv[i].entity.destroy();
-      if (bv[i] !== null) {
-        bv[i].setTop();
-        win.webContents.executeJavaScript(`
-          document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
-        `);
-      }
-
-    } catch (e) {
-      return;
+    win.removeBrowserView(bv[i].entity);
+    bv[i] = null;
+    bv.splice(i, 1);
+    bv[i].entity.destroy();
+    if (bv[i] !== null) {
+      bv[i].setTop();
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
+      `);
     }
   });
   ipcMain.handle('setting.searchEngine', (e, engine) => {
@@ -475,28 +470,8 @@ function setTitleUrl(url) {
   `);
 }
 
+// context menu
 const menuTemplate = [
-  {
-    label: '戻る',
-    accelerator: 'Alt+Left',
-    click: () => {
-      bv[currentTab].goBack();
-    }
-  },
-  {
-    label: '進む',
-    accelerator: 'Alt+Right',
-    click: () => {
-      bv[currentTab].goForward();
-    }
-  },
-  {
-    label: '再読み込み',
-    accelerator: 'CmdOrCtrl+R',
-    click: () => {
-      bv[currentTab].reload();
-    }
-  },
   {
     label: '表示',
     submenu: [
@@ -534,21 +509,21 @@ const menuTemplate = [
         label: '再読み込み',
         accelerator: 'CmdOrCtrl+R',
         click: () => {
-          bv[currentTab].webContents.reload();
+          bv[currentTab].reload();
         }
       },
       {
         label: '戻る',
         accelerator: 'Alt+Left',
         click: () => {
-          bv[currentTab].webContents.goBack();
+          bv[currentTab].goBack();
         }
       },
       {
         label: '進む',
         accelerator: 'Alt+Right',
         click: () => {
-          bv[currentTab].webContents.goForward();
+          bv[currentTab].goForward();
         }
       }
     ]
@@ -641,10 +616,157 @@ Copyright 2021 monochrome Project.`
     ]
   }
 ];
-const menu = Menu.buildFromTemplate(menuTemplate);
+const menuTemplateMac = [
+  {
+    label: 'Monot',
+    submenu: [
+      {
+        role: 'togglefullscreen',
+        accelerator: 'F11',
+        label: '全画面表示'
+      },
+      {
+        role: 'hide',
+        label: '隠す'
+      },
+      {
+        role: 'hideothers',
+        label: '他を隠す'
+      },
+      {
+        label: '終了',
+        accelerator: 'CmdOrCtrl+Q',
+        click: () => {
+          monotConfig.update()
+            .set('width', windowSize[0])
+            .set('height', windowSize[1])
+            .save();
+          app.quit();
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Monotについて',
+        accelerator: 'CmdOrCtrl+Alt+A',
+        click: () => {
+          dialog.showMessageBox(null, {
+            type: 'info',
+            icon: './src/image/logo.png',
+            title: 'Monotについて',
+            message: 'Monot 1.0.0 Official Versionについて',
+            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
+バージョン: 1.0.0 Official Version
+ビルド番号: 7
+開発者: monochrome Project.
 
-// context menu
-menu.on('menu-will-show', () => {
-  menu.getMenuItemById('move').visible = false;
-});
+リポジトリ: https://github.com/Sorakime/monot
+公式サイト: https://sorakime.github.io/mncr/project/monot/
+
+Copyright 2021 monochrome Project.`
+          });
+        }
+      },
+      {
+        label: '設定',
+        accelerator: 'CmdOrCtrl+Alt+S',
+        click: () => {
+          showSetting();
+        }
+      }
+    ]
+  },
+  {
+    label: '移動',
+    id: 'move',
+    submenu: [
+      {
+        label: '再読み込み',
+        accelerator: 'CmdOrCtrl+R',
+        click: () => {
+          bv[currentTab].reload();
+        }
+      },
+      {
+        label: '戻る',
+        accelerator: 'Alt+Left',
+        click: () => {
+          bv[currentTab].goBack();
+        }
+      },
+      {
+        label: '進む',
+        accelerator: 'Alt+Right',
+        click: () => {
+          bv[currentTab].goForward();
+        }
+      }
+    ]
+  },
+  {
+    label: '編集',
+    submenu: [
+      {
+        label: 'カット',
+        role: 'cut'
+      },
+      {
+        label: 'コピー',
+        role: 'copy'
+      },
+      {
+        label: 'ペースト',
+        role: 'paste'
+      },
+      {
+        label: '全て選択',
+        role: 'selectAll'
+      }
+    ]
+  },
+  {
+    label: 'ウィンドウ',
+    submenu: [
+      {
+        label: '新しいタブ',
+        accelerator: 'CmdOrCtrl+T',
+        click: () => {
+          newtab();
+          win.webContents.executeJavaScript(`
+            newtab('Home')
+          `);
+        }
+      }
+    ]
+  },
+  {
+    label: '開発',
+    submenu: [
+      {
+        label: '開発者向けツール',
+        accelerator: 'F12',
+        click: () => {
+          bv[currentTab].entity.webContents.toggleDevTools();
+        }
+      },
+      {
+        label: '開発者向けツール',
+        accelerator: 'CmdOrCtrl+Shift+I',
+        visible: false,
+        click: () => {
+          bv[currentTab].entity.webContents.toggleDevTools();
+        }
+      }
+    ]
+  }
+];
+let menu;
+
+if (!process.platform === 'darwin') {
+  menu = Menu.buildFromTemplate(menuTemplate);
+} else if (process.platform === 'darwin') {
+  menu = Menu.buildFromTemplate(menuTemplateMac);
+}
+
 Menu.setApplicationMenu(menu);
