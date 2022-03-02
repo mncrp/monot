@@ -96,13 +96,6 @@ function newtab() {
     `);
   });
   browserview.entity.webContents.on('dom-ready', () => {
-    // user-agent stylesheet
-    browserview.entity.webContents.insertCSS(
-      fs.readFileSync(
-        `${directory}/proprietary/style/ua.css`,
-        'utf-8'
-      )
-    );
     setTitleUrl(browserview.entity.webContents.getURL());
 
     const browserURL = new URL(browserview.entity.webContents.getURL());
@@ -190,13 +183,13 @@ function nw() {
       {
         label: '戻る',
         click: () => {
-          bv[currentTab].webContents.goBack();
+          bv[currentTab].entity.webContents.goBack();
         }
       },
       {
         label: '進む',
         click: () => {
-          bv[currentTab].webContents.goForward();
+          bv[currentTab].entity.webContents.goForward();
         }
       },
       {
@@ -229,7 +222,7 @@ app.on('ready', () => {
   // ipc channels
   ipcMain.handle('moveView', (e, link, ind) => {
     const current = ind;
-    bv[current].webContents.executeJavaScript(`
+    bv[current].entity.webContents.executeJavaScript(`
       document.addEventListener('contextmenu',()=>{
         node.context();
       })
@@ -242,13 +235,13 @@ app.on('ready', () => {
       bv[current].load(link);
       setTitleUrl(bv[current].webContents.getURL());
       /* const title = bv[current].webContent.getTitle();
-      const description = bv[current].webContents.executeJavaScript(`
+      const description = bv[current].entity.webContents.executeJavaScript(`
       return document.getElementsByName('description')[0].content;
       `);
-      const url = bv[current].webContents.executeJavaScript(`
+      const url = bv[current].entity.webContents.executeJavaScript(`
         return location.href;
       `);
-      const icon = bv[current].webContents.executeJavaScript(`
+      const icon = bv[current].entity.webContents.executeJavaScript(`
       for (let i = 0; i < document.head.getElementsByTagName('link').length; i++) {
         if (document.head.getElementsByTagName('link')[i].getAttribute('rel') === 'shortcut icon') {
           let favicon_url = document.head.getElementsByTagName('link')[i].getAttribute('href');
@@ -281,7 +274,7 @@ app.on('ready', () => {
       bv[current].load(
         `file://${directory}/browser/server-notfound.html`
       );
-      bv[current].webContents.executeJavaScript(
+      bv[current].entity.webContents.executeJavaScript(
         `document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';`
       );
     }
@@ -316,17 +309,17 @@ app.on('ready', () => {
     );
   });
   ipcMain.handle('reloadBrowser', (e, index) => {
-    bv[index].webContents.reload();
+    bv[index].entity.webContents.reload();
   });
   ipcMain.handle('browserBack', (e, index) => {
-    bv[index].webContents.goBack();
+    bv[index].entity.webContents.goBack();
 
   });
   ipcMain.handle('browserGoes', (e, index) => {
-    bv[index].webContents.goForward();
+    bv[index].entity.webContents.goForward();
   });
   ipcMain.handle('getBrowserUrl', (e, index) => {
-    return bv[index].webContents.getURL();
+    return bv[index].entity.webContents.getURL();
   });
   ipcMain.handle('moveToNewTab', (e, index) => {
     enginesConfig.update();
@@ -340,8 +333,8 @@ app.on('ready', () => {
     bv[index].load(`file://${directory}/browser/home.html`);
 
     // search engine
-    bv[index].webContents.on('did-stop-loading', () => {
-      bv[index].webContents.executeJavaScript(`
+    bv[index].entity.webContents.on('did-stop-loading', () => {
+      bv[index].entity.webContents.executeJavaScript(`
         url = '${engineURL}';
       `);
     });
@@ -359,25 +352,24 @@ app.on('ready', () => {
     }
     if (i < 0)
       i = 0;
-    win.setTopbrowserview.entity(bv[i]);
+    bv[i].setTop();
     currentTab = i;
     win.webContents.executeJavaScript(`
-      document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
+      document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
     `);
-    setTitleUrl(bv[i].webContents.getURL());
+    setTitleUrl(bv[i].entity.webContents.getURL());
   });
   ipcMain.handle('removeTab', (e, i) => {
     // source: https://www.gesource.jp/weblog/?p=4112
     try {
-      win.removebrowserview.entity(bv[i]);
+      win.removeBrowserView(bv[i].entity);
       bv[i] = null;
       bv.splice(i, 1);
-      bv[i].destroy();
+      bv[i].entity.destroy();
       if (bv[i] !== null) {
-        console.log(bv[i]);
-        win.setTopbrowserview.entity(bv[i]);
+        bv[i].setTop();
         win.webContents.executeJavaScript(`
-          document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
+          document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
         `);
       }
 
@@ -488,21 +480,21 @@ const menuTemplate = [
     label: '戻る',
     accelerator: 'Alt+Left',
     click: () => {
-      bv[currentTab].webContents.goBack();
+      bv[currentTab].goBack();
     }
   },
   {
     label: '進む',
     accelerator: 'Alt+Right',
     click: () => {
-      bv[currentTab].webContents.goForward();
+      bv[currentTab].goForward();
     }
   },
   {
     label: '再読み込み',
     accelerator: 'CmdOrCtrl+R',
     click: () => {
-      bv[currentTab].webContents.reload();
+      bv[currentTab].reload();
     }
   },
   {
@@ -635,7 +627,7 @@ Copyright 2021 monochrome Project.`
         label: '開発者向けツール',
         accelerator: 'F12',
         click: () => {
-          bv[currentTab].webContents.toggleDevTools();
+          bv[currentTab].entity.webContents.toggleDevTools();
         }
       },
       {
@@ -643,7 +635,7 @@ Copyright 2021 monochrome Project.`
         accelerator: 'CmdOrCtrl+Shift+I',
         visible: false,
         click: () => {
-          bv[currentTab].webContents.toggleDevTools();
+          bv[currentTab].entity.webContents.toggleDevTools();
         }
       }
     ]

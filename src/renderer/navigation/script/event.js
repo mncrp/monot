@@ -28,19 +28,12 @@ each();
 
 document.getElementsByTagName('div')[0].addEventListener('click', () => {
   if (document.getElementById('opened') === null) {
-    try {
-      // if #opened doesn't exist
-      try {
-        document.querySelector('div>span:last-child').setAttribute('id', 'opened');
-      } catch (e) {
-        return;
-      }
-
-    } catch (e) {
-      // if tab doesn't exist(error handling)
-      if (!document.getElementsByTagName('span')[0]) {
-        newtab();
-      }
+    if (document.querySelector('div > span:last-child') !== null) {
+      document.querySelector('div>span:last-child').setAttribute('id', 'opened');
+    }
+    // if tab doesn't exist(error handling)
+    if (document.getElementsByTagName('span')[0] === null) {
+      newtab();
     }
   }
 });
