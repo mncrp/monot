@@ -2,7 +2,6 @@
 const {
   app,
   BrowserWindow,
-  BrowserView,
   dialog,
   ipcMain,
   Menu,
@@ -30,19 +29,8 @@ function newtab() {
   );
   windowSize = win.getSize();
   // create new tab
-  const browserview = new BrowserView({
-    backgroundColor: '#efefef',
-    webPreferences: {
-      scrollBounce: true,
-      preload: `${directory}/preload/pages.js`
-    }
-  });
-
-  browserview.webContents.executeJavaScript(`
-    document.addEventListener('contextmenu',()=>{
-      node.context();
-    })
-  `);
+  const {Tab} = require('./tab');
+  const browserview = new Tab();
 
   // window's behavior
   win.on('closed', () => {
@@ -50,7 +38,7 @@ function newtab() {
   });
   win.on('maximize', () => {
     windowSize = win.getContentSize();
-    browserview.setBounds({
+    browserview.entity.setBounds({
       x: 0,
       y: viewY,
       width: windowSize[0],
@@ -59,7 +47,7 @@ function newtab() {
   });
   win.on('unmaximize', () => {
     windowSize = win.getContentSize();
-    browserview.setBounds({
+    browserview.entity.setBounds({
       x: 0,
       y: viewY,
       width: windowSize[0],
@@ -68,7 +56,7 @@ function newtab() {
   });
   win.on('enter-full-screen', () => {
     windowSize = win.getContentSize();
-    browserview.setBounds({
+    browserview.entity.setBounds({
       x: 0,
       y: viewY,
       width: windowSize[0],
@@ -76,36 +64,9 @@ function newtab() {
     });
   });
 
-  // context menu
-  browserview.webContents.on('context-menu', (e, params) => {
-    if (params.selectionText) {
-      menu.insert(
-        0,
-        new MenuItem({
-          id: 'selectTextSearch',
-          label: `"${params.selectionText}"を検索`,
-          click: () => {
-            bv[currentTab].webContents.loadURL(
-              `https://duckduckgo.com/?q=${params.selectionText}`
-            );
-          }
-        })
-      );
-    }
-  });
-
   // events
-  browserview.webContents.on('did-fail-load', () => {
-    bv[currentTab].webContents.loadURL(
-      `file://${directory}/browser/server-notfound.html`
-    );
-    bv[currentTab].webContents.executeJavaScript(
-      `document.getElementsByTagName('span')[0].innerText='${bv[currentTab].webContents.getURL().toLowerCase()}';`
-    );
-  });
-
-  browserview.webContents.on('did-start-loading', () => {
-    browserview.webContents.executeJavaScript(`
+  browserview.entity.webContents.on('did-start-loading', () => {
+    browserview.entity.webContents.executeJavaScript(`
       document.addEventListener('contextmenu',()=>{
         node.context();
       })
@@ -115,42 +76,42 @@ function newtab() {
         .setAttribute('id','loading');
     `);
   });
-  browserview.webContents.on('did-finish-load', () => {
-    browserview.setBackgroundColor('#efefef');
+  browserview.entity.webContents.on('did-finish-load', () => {
+    browserview.entity.setBackgroundColor('#efefef');
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')
     `);
     win.webContents.executeJavaScript(`
-      document.getElementsByTagName('title')[0].innerText='${browserview.webContents.getTitle()} - Monot';
+      document.getElementsByTagName('title')[0].innerText='${browserview.entity.webContents.getTitle()} - Monot';
       document.getElementById('opened')
         .getElementsByTagName('a')[0]
-        .innerText='${browserview.webContents.getTitle()}';
+        .innerText='${browserview.entity.webContents.getTitle()}';
     `);
   });
-  browserview.webContents.on('did-stop-loading', () => {
+  browserview.entity.webContents.on('did-stop-loading', () => {
     // changes the progress
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
         .removeAttribute('id');
     `);
   });
-  browserview.webContents.on('dom-ready', () => {
+  browserview.entity.webContents.on('dom-ready', () => {
     // user-agent stylesheet
-    browserview.webContents.insertCSS(
+    browserview.entity.webContents.insertCSS(
       fs.readFileSync(
         `${directory}/proprietary/style/ua.css`,
         'utf-8'
       )
     );
-    setTitleUrl(browserview.webContents.getURL());
+    setTitleUrl(browserview.entity.webContents.getURL());
 
-    const browserURL = new URL(browserview.webContents.getURL());
+    const browserURL = new URL(browserview.entity.webContents.getURL());
     const fileURL = new URL(`file://${directory}/browser/home.html`);
     if (browserURL.href === fileURL.href) {
       enginesConfig.update();
       const selectEngine = enginesConfig.get('engine');
       const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
-      browserview.webContents.executeJavaScript(`
+      browserview.entity.webContents.executeJavaScript(`
         url = '${engineURL}';
       `);
     }
@@ -158,7 +119,7 @@ function newtab() {
     const experiments = monotConfig.update().get('experiments');
     // Force-Dark
     if (experiments.forceDark === true) {
-      browserview.webContents.insertCSS(
+      browserview.entity.webContents.insertCSS(
         fs.readFileSync(
           `${directory}/proprietary/style/forcedark.css`,
           'utf-8'
@@ -167,7 +128,7 @@ function newtab() {
     }
     // fontChange
     if (experiments.fontChange === true) {
-      browserview.webContents.insertCSS(`
+      browserview.entity.webContents.insertCSS(`
         body,body>*, *{
           font-family: ${experiments.changedfont},'Noto Sans JP'!important;
         }
@@ -175,11 +136,11 @@ function newtab() {
     }
     // AD Block
     if (experiments.adBlock === true) {
-      browserview.webContents.executeJavaScript(adBlockCode);
+      browserview.entity.webContents.executeJavaScript(adBlockCode);
     }
   });
   // when the page title is updated (update the window title and tab title) config.mncfg
-  browserview.webContents.on('page-title-updated', (e, t) => {
+  browserview.entity.webContents.on('page-title-updated', (e, t) => {
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('title')[0].innerText='${t} - Monot';
       document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';
@@ -187,18 +148,18 @@ function newtab() {
   });
   currentTab = bv.length;
   bv.push(browserview);
-  win.addBrowserView(bv[bv.length - 1]);
-  bv[bv.length - 1].setBounds({
+  win.addBrowserView(bv[bv.length - 1].entity);
+  bv[bv.length - 1].entity.setBounds({
     x: 0,
     y: viewY,
     width: windowSize[0],
     height: windowSize[1] - viewY
   });
-  bv[bv.length - 1].setAutoResize({
+  bv[bv.length - 1].entity.setAutoResize({
     width: true,
     height: true
   });
-  bv[bv.length - 1].webContents.loadURL(
+  browserview.load(
     `file://${directory}/browser/home.html`
   );
 }
@@ -278,7 +239,7 @@ app.on('ready', () => {
     }
 
     try {
-      bv[current].webContents.loadURL(link);
+      bv[current].load(link);
       setTitleUrl(bv[current].webContents.getURL());
       /* const title = bv[current].webContent.getTitle();
       const description = bv[current].webContents.executeJavaScript(`
@@ -317,7 +278,7 @@ app.on('ready', () => {
         JSON.stringify(history)
       );*/
     } catch (e) {
-      bv[current].webContents.loadURL(
+      bv[current].load(
         `file://${directory}/browser/server-notfound.html`
       );
       bv[current].webContents.executeJavaScript(
@@ -350,7 +311,7 @@ app.on('ready', () => {
     }
   });
   ipcMain.handle('moveViewBlank', (e, index) => {
-    bv[index].webContents.loadURL(
+    bv[index].load(
       `file://${directory}/browser/blank.html`
     );
   });
@@ -372,7 +333,11 @@ app.on('ready', () => {
     const selectEngine = enginesConfig.get('engine');
     const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
 
-    bv[index].webContents.loadURL(`${directory}/browser/home.html`);
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
+    `);
+
+    bv[index].load(`file://${directory}/browser/home.html`);
 
     // search engine
     bv[index].webContents.on('did-stop-loading', () => {
@@ -388,9 +353,13 @@ app.on('ready', () => {
     newtab();
   });
   ipcMain.handle('tabMove', (e, i) => {
+    if (bv[i] === null) {
+      newtab();
+      return;
+    }
     if (i < 0)
       i = 0;
-    win.setTopBrowserView(bv[i]);
+    win.setTopbrowserview.entity(bv[i]);
     currentTab = i;
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
@@ -400,12 +369,13 @@ app.on('ready', () => {
   ipcMain.handle('removeTab', (e, i) => {
     // source: https://www.gesource.jp/weblog/?p=4112
     try {
-      win.removeBrowserView(bv[i]);
+      win.removebrowserview.entity(bv[i]);
       bv[i] = null;
       bv.splice(i, 1);
       bv[i].destroy();
       if (bv[i] !== null) {
-        win.setTopBrowserView(bv[i]);
+        console.log(bv[i]);
+        win.setTopbrowserview.entity(bv[i]);
         win.webContents.executeJavaScript(`
           document.getElementsByTagName('title')[0].innerText = '${bv[i].webContents.getTitle()} - Monot';
         `);
@@ -679,16 +649,10 @@ Copyright 2021 monochrome Project.`
     ]
   }
 ];
-let menu = Menu.buildFromTemplate(menuTemplate);
-function initMenu() {
-  menu = Menu.buildFromTemplate(menuTemplate);
-}
+const menu = Menu.buildFromTemplate(menuTemplate);
 
 // context menu
 menu.on('menu-will-show', () => {
   menu.getMenuItemById('move').visible = false;
-});
-menu.on('menu-will-close', () => {
-  initMenu();
 });
 Menu.setApplicationMenu(menu);

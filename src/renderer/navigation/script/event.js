@@ -19,11 +19,15 @@ function each() {
       node.tabMove(getCurrent());
     });
   });
+
+  if (document.getElementById('opened') === null) {
+    newtab('Home');
+  }
 }
 each();
 
 document.getElementsByTagName('div')[0].addEventListener('click', () => {
-  if (!document.getElementById('opened')) {
+  if (document.getElementById('opened') === null) {
     try {
       // if #opened doesn't exist
       try {
@@ -42,14 +46,14 @@ document.getElementsByTagName('div')[0].addEventListener('click', () => {
 });
 
 function newtab(title) {
-  if (document.getElementById('opened')) {
+  if (document.getElementById('opened') !== null) {
     document.getElementById('opened').removeAttribute('id');
   }
   document.getElementsByTagName('div')[0].innerHTML = `
     ${document.getElementsByTagName('div')[0].innerHTML}
     <span id="opened">
-      <a href="javascript:void(0)">${title}</a>
-      <a href="javascript:void(0)"></a>
+      <a href="#">${title}</a>
+      <a href="#"></a>
     </span>
   `;
   each();
