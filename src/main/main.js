@@ -96,8 +96,6 @@ function newtab() {
     `);
   });
   browserview.entity.webContents.on('dom-ready', () => {
-    setTitleUrl(browserview.entity.webContents.getURL());
-
     const browserURL = new URL(browserview.entity.webContents.getURL());
     const fileURL = new URL(`file://${directory}/browser/home.html`);
     if (browserURL.href === fileURL.href) {
@@ -233,7 +231,6 @@ app.on('ready', () => {
 
     try {
       bv[current].load(link);
-      setTitleUrl(bv[current].webContents.getURL());
       /* const title = bv[current].webContent.getTitle();
       const description = bv[current].entity.webContents.executeJavaScript(`
       return document.getElementsByName('description')[0].content;
@@ -357,7 +354,6 @@ app.on('ready', () => {
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
     `);
-    setTitleUrl(bv[i].entity.webContents.getURL());
   });
   ipcMain.handle('removeTab', (e, i) => {
     // source: https://www.gesource.jp/weblog/?p=4112
@@ -444,30 +440,6 @@ function showSetting() {
         .checked = true;
     `);
   }
-}
-
-// This function sets URL to the URL bar of the title bar.
-function setTitleUrl(url) {
-  if (!(url instanceof URL)) {
-    url = new URL(url);
-  }
-  // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
-  const resourceIndex = new URL(`file://${__dirname}/`);
-  const partOfUrl = url.href.substring(0, resourceIndex.href.length - 5);
-  const partOfResourceIndex = resourceIndex.href.substring(0, resourceIndex.href.length - 5);
-  const isSame = partOfUrl === partOfResourceIndex;
-  if (url.href === `${partOfResourceIndex}browser/home.html`) {
-    return win.webContents.executeJavaScript(`
-      document.getElementsByTagName('input')[0].value='';
-    `);
-  } else if (isSame) {
-    return Promise.resolve();
-  }
-
-  // Set URL in the URL bar.
-  return win.webContents.executeJavaScript(`
-    document.getElementsByTagName('input')[0].value='${url.host}${url.pathname}${url.search}${url.hash}';
-  `);
 }
 
 // context menu

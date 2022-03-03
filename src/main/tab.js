@@ -46,6 +46,29 @@ class Tab {
       )
     );
     // BrowserWindow.fromBrowserView(this.entity));
+    this.setTitleUrl(url);
+  }
+
+  setTitleUrl(url) {
+    url = new URL(url);
+    // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
+    const win = BrowserWindow.fromBrowserView(this.entity);
+    const resourceIndex = new URL(`file://${__dirname}/`);
+    const partOfUrl = url.href.substring(0, resourceIndex.href.length - 5);
+    const partOfResourceIndex = resourceIndex.href.substring(0, resourceIndex.href.length - 5);
+    const isSame = partOfUrl === partOfResourceIndex;
+    if (url.href === `${partOfResourceIndex}browser/home.html`) {
+      return win.webContents.executeJavaScript(`
+        document.getElementsByTagName('input')[0].value='';
+      `);
+    } else if (isSame) {
+      return Promise.resolve();
+    }
+
+    // Set URL in the URL bar.
+    return win.webContents.executeJavaScript(`
+      document.getElementsByTagName('input')[0].value='${url.host}${url.pathname}${url.search}${url.hash}';
+    `);
   }
 
   setTop() {
