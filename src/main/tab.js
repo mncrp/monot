@@ -46,12 +46,13 @@ class Tab {
       )
     );
     // BrowserWindow.fromBrowserView(this.entity));
-    this.setTitleUrl(url);
+    this.setTitleUrl();
   }
 
   // This function sets URL to the URL bar of the title bar.
-  setTitleUrl(url = this.entity.webContents.getURL()) {
-    url = new URL(url);
+  setTitleUrl() {
+    const url = new URL(this.href);
+    console.log(this.href);
     // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
     const win = BrowserWindow.fromBrowserView(this.entity);
     const resourceIndex = new URL(`file://${__dirname}/`);

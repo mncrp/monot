@@ -13,7 +13,7 @@ let win, windowSize;
 let currentTab = 0;
 const directory = `${__dirname}/..`;
 const bv = [];
-const viewY = 67;
+const viewY = 66;
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -94,10 +94,13 @@ function newtab() {
       document.getElementsByTagName('yomikomi-bar')[0]
         .removeAttribute('id');
     `);
+    browserview.setTitleUrl();
   });
+
   browserview.entity.webContents.on('dom-ready', () => {
     const browserURL = new URL(browserview.href);
     const fileURL = new URL(`file://${directory}/browser/home.html`);
+    browserview.href = browserview.entity.webContents.getURL();
     if (browserURL.href === fileURL.href) {
       enginesConfig.update();
       const selectEngine = enginesConfig.get('engine');
@@ -106,7 +109,6 @@ function newtab() {
         url = '${engineURL}';
       `);
     }
-
     const experiments = monotConfig.update().get('experiments');
     // Force-Dark
     if (experiments.forceDark === true) {
