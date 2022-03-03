@@ -96,7 +96,7 @@ function newtab() {
     `);
   });
   browserview.entity.webContents.on('dom-ready', () => {
-    const browserURL = new URL(browserview.entity.webContents.getURL());
+    const browserURL = new URL(browserview.href);
     const fileURL = new URL(`file://${directory}/browser/home.html`);
     if (browserURL.href === fileURL.href) {
       enginesConfig.update();

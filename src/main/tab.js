@@ -49,7 +49,8 @@ class Tab {
     this.setTitleUrl(url);
   }
 
-  setTitleUrl(url) {
+  // This function sets URL to the URL bar of the title bar.
+  setTitleUrl(url = this.entity.webContents.getURL()) {
     url = new URL(url);
     // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
     const win = BrowserWindow.fromBrowserView(this.entity);
@@ -80,11 +81,13 @@ class Tab {
   goBack() {
     this.entity.webContents.goBack();
     this.href = this.entity.webContents.getURL();
+    this.setTitleUrl();
   }
 
   goForward() {
     this.entity.webContents.goForward();
     this.href = this.entity.webContents.getURL();
+    this.setTitleUrl();
   }
 
   reload() {
