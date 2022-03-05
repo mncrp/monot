@@ -205,11 +205,7 @@ app.on('ready', () => {
     win.unmaximize();
   });
   ipcMain.handle('windowMaxMin', () => {
-    if (win.isMaximized() === true) {
-      win.unmaximize();
-    } else {
-      win.maximize();
-    }
+    win.isMaximized() ? win.unmaximize() : win.maximize();
   });
   ipcMain.handle('windowMaxMinMac', () => {
     win.fullScreen ? win.fullScreen = false : win.fullScreen = true;
