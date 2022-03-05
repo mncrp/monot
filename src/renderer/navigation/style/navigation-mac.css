@@ -1,0 +1,6 @@
+body nav a:first-child{
+  margin-left: 4px;
+}
+body nav a:last-child{
+  margin-right: 30px;
+}
