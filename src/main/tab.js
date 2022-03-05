@@ -3,13 +3,11 @@ const {
   BrowserView
 } = require('electron');
 const fs = require('fs');
-const viewY = 67;
 const directory = `${__dirname}/..`;
 const adBlockCode = fs.readFileSync(
   `${directory}/proprietary/experimental/adBlock.js`,
   'utf-8'
 );
-const isMac = process.platform === 'darwin';
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
