@@ -55,7 +55,9 @@ body input{
   font-size: 11px;
   background-color: #bbb3;
 }
-body nav *:hover, div>span:hover,tab-el>a:hover{
+body nav *:hover,
+div > span:hover,
+tab-el > a:hover{
   box-shadow: 1px 1px 5px #bfbfbf55;
   background-color: #eee;
   border: 1px solid #ddde;
