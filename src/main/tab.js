@@ -102,10 +102,13 @@ class Tab {
     });
     this.entity.webContents.on('did-finish-load', () => {
       this.entity.setBackgroundColor('#efefef');
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')
+      this.entity.webContents.executeJavaScript(`
+        document.addEventListener('contextmenu',()=>{
+          node.context();
+        })
       `);
       win.webContents.executeJavaScript(`
+        document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')
         document.getElementsByTagName('title')[0].innerText='${this.entity.webContents.getTitle()} - Monot';
         document.getElementById('opened')
           .getElementsByTagName('a')[0]

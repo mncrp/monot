@@ -8,7 +8,7 @@ const {
 } = require('electron');
 
 // letiables
-let win, windowSize;
+let win, windowSize, menu;
 let currentTab = 0;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
@@ -667,7 +667,6 @@ Copyright 2021 monochrome Project.`
     ]
   }
 ];
-let menu;
 
 if (!isMac) {
   menu = Menu.buildFromTemplate(menuTemplate);
