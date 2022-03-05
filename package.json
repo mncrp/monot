@@ -12,7 +12,7 @@
   "author": "monochrome Project.",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^16.0.10",
+    "electron": "^17.1.0",
     "electron-builder": "^22.14.5",
     "eslint": "^8.5.0",
     "eslint-plugin-node": "^11.1.0"
