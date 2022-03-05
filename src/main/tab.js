@@ -33,12 +33,12 @@ class Tab {
 
     // events
     browserview.webContents.on('did-fail-load', () => {
-      this.webContents.loadURL(
+      browserview.webContents.loadURL(
         `file://${directory}/browser/server-notfound.html`
       );
-      this.webContents.executeJavaScript(
-        `document.getElementsByTagName('span')[0].innerText='${this.webContents.getURL().toLowerCase()}';`
-      );
+      browserview.webContents.executeJavaScript(`
+        document.getElementsByTagName('span')[0].innerText='${this.webContents.getURL().toLowerCase()}';
+      `);
     });
 
     this.entity = browserview;
@@ -91,13 +91,45 @@ class Tab {
         this.entity.webContents.executeJavaScript(adBlockCode);
       }
     });
-    const windowSize = win.getContentSize();
-    this.entity.setBounds({
-      x: 0,
-      y: viewY,
-      width: windowSize[0],
-      height: windowSize[1] - viewY + 3
+    this.entity.webContents.on('did-start-loading', () => {
+      this.entity.webContents.executeJavaScript(`
+        document.addEventListener('contextmenu',()=>{
+          node.context();
+        })
+      `);
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('yomikomi-bar')[0]
+          .setAttribute('id','loading');
+      `);
     });
+    this.entity.webContents.on('did-finish-load', () => {
+      this.entity.setBackgroundColor('#efefef');
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')
+      `);
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('title')[0].innerText='${this.entity.webContents.getTitle()} - Monot';
+        document.getElementById('opened')
+          .getElementsByTagName('a')[0]
+          .innerText='${this.entity.webContents.getTitle()}';
+      `);
+    });
+    this.entity.webContents.on('did-stop-loading', () => {
+      // changes the progress
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('yomikomi-bar')[0]
+          .removeAttribute('id');
+      `);
+      this.setTitleUrl();
+    });
+    // when the page title is updated (update the window title and tab title) config.mncfg
+    this.entity.webContents.on('page-title-updated', (e, t) => {
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('title')[0].innerText='${t} - Monot';
+        document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';
+      `);
+    });
+
     // BrowserWindow.fromBrowserView(this.entity));
     this.setTitleUrl();
   }

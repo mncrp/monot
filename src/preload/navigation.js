@@ -21,6 +21,9 @@ contextBridge.exposeInMainWorld('node', {
     // Maximize or Minimize Window
     ipcRenderer.invoke('windowMaxMin');
   },
+  maxMinMac: () => {
+    ipcRenderer.invoke('windowMaxMinMac');
+  },
   moveBrowser: (url, index) => {
     // Page navigation
     ipcRenderer.invoke('moveView', url, index);

@@ -34,57 +34,14 @@ function newtab() {
   });
   win.on('unmaximize', () => {
   });
-  win.on('enter-full-screen', () => {
-  });
   win.on('resize', () => {
     windowSize = win.getContentSize();
     browserview.entity.setBounds({
       x: 0,
       y: viewY,
       width: windowSize[0],
-      height: windowSize[1] - viewY + 3
+      height: windowSize[1] - viewY
     });
-  });
-
-  // events
-  browserview.entity.webContents.on('did-start-loading', () => {
-    browserview.entity.webContents.executeJavaScript(`
-      document.addEventListener('contextmenu',()=>{
-        node.context();
-      })
-    `);
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('yomikomi-bar')[0]
-        .setAttribute('id','loading');
-    `);
-    console.log('ashkj');
-  });
-  browserview.entity.webContents.on('did-finish-load', () => {
-    browserview.entity.setBackgroundColor('#efefef');
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')
-    `);
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('title')[0].innerText='${browserview.entity.webContents.getTitle()} - Monot';
-      document.getElementById('opened')
-        .getElementsByTagName('a')[0]
-        .innerText='${browserview.entity.webContents.getTitle()}';
-    `);
-  });
-  browserview.entity.webContents.on('did-stop-loading', () => {
-    // changes the progress
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('yomikomi-bar')[0]
-        .removeAttribute('id');
-    `);
-    browserview.setTitleUrl();
-  });
-  // when the page title is updated (update the window title and tab title) config.mncfg
-  browserview.entity.webContents.on('page-title-updated', (e, t) => {
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('title')[0].innerText='${t} - Monot';
-      document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';
-    `);
   });
   currentTab = bv.length;
   windowSize = win.getSize();
@@ -253,6 +210,9 @@ app.on('ready', () => {
     } else {
       win.maximize();
     }
+  });
+  ipcMain.handle('windowMaxMinMac', () => {
+    win.fullScreen ? win.fullScreen = false : win.fullScreen = true;
   });
   ipcMain.handle('moveViewBlank', (e, index) => {
     bv[index].load(
