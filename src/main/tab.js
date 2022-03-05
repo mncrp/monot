@@ -1,10 +1,15 @@
-const {BrowserWindow, BrowserView} = require('electron');
+const {
+  BrowserWindow,
+  BrowserView
+} = require('electron');
 const fs = require('fs');
+const viewY = 67;
 const directory = `${__dirname}/..`;
 const adBlockCode = fs.readFileSync(
   `${directory}/proprietary/experimental/adBlock.js`,
   'utf-8'
 );
+const isMac = process.platform === 'darwin';
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
@@ -35,18 +40,17 @@ class Tab {
         `document.getElementsByTagName('span')[0].innerText='${this.webContents.getURL().toLowerCase()}';`
       );
     });
-    browserview.webContents.on('dom-ready', () => {
 
-    });
     this.entity = browserview;
   }
 
   load(url = `file://${directory}/browser/index.html`) {
     this.entity.webContents.loadURL(url);
     this.href = url;
+    const win = BrowserWindow.fromBrowserView(this.entity);
 
-    // proprietary stylesheet
     this.entity.webContents.on('dom-ready', () => {
+      // proprietary stylesheet
       this.entity.webContents.insertCSS(
         fs.readFileSync(
           `${directory}/proprietary/style/ua.css`,
@@ -87,6 +91,13 @@ class Tab {
         this.entity.webContents.executeJavaScript(adBlockCode);
       }
     });
+    const windowSize = win.getContentSize();
+    this.entity.setBounds({
+      x: 0,
+      y: viewY,
+      width: windowSize[0],
+      height: windowSize[1] - viewY + 3
+    });
     // BrowserWindow.fromBrowserView(this.entity));
     this.setTitleUrl();
   }
@@ -94,7 +105,6 @@ class Tab {
   // This function sets URL to the URL bar of the title bar.
   setTitleUrl() {
     const url = new URL(this.href);
-    console.log(this.href);
     // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
     const win = BrowserWindow.fromBrowserView(this.entity);
     const resourceIndex = new URL(`file://${__dirname}/`);

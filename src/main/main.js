@@ -5,7 +5,6 @@ const {
   dialog,
   ipcMain,
   Menu,
-  MenuItem
 } = require('electron');
 
 // letiables
@@ -14,7 +13,7 @@ let currentTab = 0;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const bv = [];
-const viewY = 66;
+const viewY = 67;
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -23,7 +22,6 @@ const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${di
 
 // creating new tab function
 function newtab() {
-  windowSize = win.getSize();
   // create new tab
   const {Tab} = require('./tab');
   const browserview = new Tab();
@@ -33,30 +31,18 @@ function newtab() {
     win = null;
   });
   win.on('maximize', () => {
+  });
+  win.on('unmaximize', () => {
+  });
+  win.on('enter-full-screen', () => {
+  });
+  win.on('resize', () => {
     windowSize = win.getContentSize();
     browserview.entity.setBounds({
       x: 0,
       y: viewY,
       width: windowSize[0],
       height: windowSize[1] - viewY + 3
-    });
-  });
-  win.on('unmaximize', () => {
-    windowSize = win.getContentSize();
-    browserview.entity.setBounds({
-      x: 0,
-      y: viewY,
-      width: windowSize[0],
-      height: windowSize[1] - viewY
-    });
-  });
-  win.on('enter-full-screen', () => {
-    windowSize = win.getContentSize();
-    browserview.entity.setBounds({
-      x: 0,
-      y: viewY,
-      width: windowSize[0],
-      height: windowSize[1] - viewY + 2
     });
   });
 
@@ -101,6 +87,7 @@ function newtab() {
     `);
   });
   currentTab = bv.length;
+  windowSize = win.getSize();
   bv.push(browserview);
   win.addBrowserView(bv[bv.length - 1].entity);
   bv[bv.length - 1].entity.setBounds({
@@ -136,7 +123,11 @@ function nw() {
     }
   });
   win.setBackgroundColor('#efefef');
-  win.loadFile(`${directory}/renderer/navigation/navigation.html`);
+  win.loadFile(
+    process.platform === 'darwin' ?
+      `${directory}/renderer/navigation/navigation-mac.html` :
+      `${directory}/renderer/navigation/navigation.html`
+  );
 
   const contextMenu = require('electron-context-menu');
   contextMenu({
@@ -234,9 +225,9 @@ app.on('ready', () => {
       bv[current].load(
         `file://${directory}/browser/server-notfound.html`
       );
-      bv[current].entity.webContents.executeJavaScript(
-        `document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';`
-      );
+      bv[current].entity.webContents.executeJavaScript(`
+        document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';
+      `);
     }
   });
   ipcMain.handle('windowClose', () => {
@@ -310,13 +301,20 @@ app.on('ready', () => {
       newtab();
       return;
     }
-    if (i < 0 || !(i instanceof Number))
+    if (i < 0)
       i = 0;
-    bv[i].setTop();
+
+    if (bv[i] !== undefined) {
+      bv[i].setTop();
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
+      `);
+    } else {
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
+      `);
+    }
     currentTab = i;
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
-    `);
   });
   ipcMain.handle('removeTab', (e, i) => {
     // source: https://www.gesource.jp/weblog/?p=4112
@@ -326,7 +324,9 @@ app.on('ready', () => {
     bv[i].entity.webContents.destroy();
     bv[i] = null;
     bv.splice(i, 1);
-    if (bv[i] !== null || !(bv[i])) {
+    const {Tab} = require('./tab');
+    if (bv[i] !== null && bv[i] instanceof Tab) {
+      console.log(bv[i] instanceof Tab);
       bv[i].setTop();
       win.webContents.executeJavaScript(`
         document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
