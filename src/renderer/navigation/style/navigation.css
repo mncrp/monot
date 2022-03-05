@@ -109,12 +109,12 @@ nav a:active{
   background-image: url('../../../image/close.png');
 }
 
-div>span>a:first-child{
+div > span > a:first-child{
   color: #333;
   font-weight: 100;
   cursor: default;
 }
-div>span>a:last-child{
+div > span > a:last-child{
   display: inline-block;
   cursor: default;
   position: absolute;
@@ -131,10 +131,10 @@ div>span>a:last-child{
   background-image: url('../../../image/close.png');
   transition: all 0.2s ease-in-out;
 }
-div>span>a:last-child:hover{
+div > span > a:last-child:hover{
   background-color: #fff4;
 }
-div>span#opened{
+div > span#opened{
   background-color: #bbb3;
 }
 tab-el{
@@ -143,12 +143,12 @@ tab-el{
   display: flex;
   overflow: hidden;
 }
-tab-el>div{
+tab-el > div{
   width: 100%;
   overflow: auto;
   display: flex;
 }
-tab-el>div>span{
+tab-el > div > span{
   min-width: 70px;
   overflow: hidden;
 	text-overflow: ellipsis;
@@ -169,7 +169,7 @@ tab-el>div>span{
   cursor: default;
   -webkit-app-region: none;
 }
-tab-el>a{
+tab-el > a{
   display: block;
   height: 24px;
   width: 24px;
@@ -226,7 +226,9 @@ yomikomi-bar#frame-finished{
     background-color: #fff1;
     color: #fff;
   }
-  body nav *:hover, div>span:hover, tab-el>a:hover{
+  body nav *:hover, 
+  div > span:hover,
+  tab-el > a:hover{
     box-shadow: 1px 1px 5px #bfbfbf55;
     background-color: #444;
     border: 1px solid #666e;
@@ -265,19 +267,19 @@ yomikomi-bar#frame-finished{
   #close{
     background-image: url('../../../image/close-white.png');
   }
-  div>span:hover{
+  div > span:hover{
     background-color: #444;
   }
-  div>span#opened{
+  div > span#opened{
     background-color: #fff1;
   }
-  div>span>a:first-child{
+  div > span > a:first-child{
     color: #bbb;
   }
-  div>span>a:last-child{
+  div > span > a:last-child{
     background-image: url('../../../image/close-white.png');
   }
-  tab-el>a{
+  tab-el > a{
     background-image: url('../../../image/plus-white.png');
   }
 }
