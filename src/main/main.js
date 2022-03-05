@@ -652,6 +652,19 @@ Copyright 2021 monochrome Project.`
         }
       }
     ]
+  },
+  {
+    label: 'ヘルプ',
+    submenu: [
+      {
+        label: '公式サイト',
+        click: () => {
+          if (bv[currentTab] !== null) {
+            bv[currentTab].load('https://sorakime.github.io/mncr/project/monot');
+          }
+        }
+      }
+    ]
   }
 ];
 let menu;
