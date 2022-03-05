@@ -11,6 +11,7 @@ const {
 // letiables
 let win, windowSize;
 let currentTab = 0;
+const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const bv = [];
 const viewY = 66;
@@ -22,11 +23,6 @@ const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${di
 
 // creating new tab function
 function newtab() {
-  const fs = require('fs');
-  const adBlockCode = fs.readFileSync(
-    `${directory}/proprietary/experimental/adBlock.js`,
-    'utf-8'
-  );
   windowSize = win.getSize();
   // create new tab
   const {Tab} = require('./tab');
@@ -75,6 +71,7 @@ function newtab() {
       document.getElementsByTagName('yomikomi-bar')[0]
         .setAttribute('id','loading');
     `);
+    console.log('ashkj');
   });
   browserview.entity.webContents.on('did-finish-load', () => {
     browserview.entity.setBackgroundColor('#efefef');
@@ -95,42 +92,6 @@ function newtab() {
         .removeAttribute('id');
     `);
     browserview.setTitleUrl();
-  });
-
-  browserview.entity.webContents.on('dom-ready', () => {
-    const browserURL = new URL(browserview.href);
-    const fileURL = new URL(`file://${directory}/browser/home.html`);
-    browserview.href = browserview.entity.webContents.getURL();
-    if (browserURL.href === fileURL.href) {
-      enginesConfig.update();
-      const selectEngine = enginesConfig.get('engine');
-      const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
-      browserview.entity.webContents.executeJavaScript(`
-        url = '${engineURL}';
-      `);
-    }
-    const experiments = monotConfig.update().get('experiments');
-    // Force-Dark
-    if (experiments.forceDark === true) {
-      browserview.entity.webContents.insertCSS(
-        fs.readFileSync(
-          `${directory}/proprietary/style/forcedark.css`,
-          'utf-8'
-        )
-      );
-    }
-    // fontChange
-    if (experiments.fontChange === true) {
-      browserview.entity.webContents.insertCSS(`
-        body,body>*, *{
-          font-family: ${experiments.changedfont},'Noto Sans JP'!important;
-        }
-      `);
-    }
-    // AD Block
-    if (experiments.adBlock === true) {
-      browserview.entity.webContents.executeJavaScript(adBlockCode);
-    }
   });
   // when the page title is updated (update the window title and tab title) config.mncfg
   browserview.entity.webContents.on('page-title-updated', (e, t) => {
@@ -349,7 +310,7 @@ app.on('ready', () => {
       newtab();
       return;
     }
-    if (i < 0)
+    if (i < 0 || !(i instanceof Number))
       i = 0;
     bv[i].setTop();
     currentTab = i;
@@ -359,11 +320,13 @@ app.on('ready', () => {
   });
   ipcMain.handle('removeTab', (e, i) => {
     // source: https://www.gesource.jp/weblog/?p=4112
+    if (i < 0 || !(i instanceof Number))
+      i = 0;
     win.removeBrowserView(bv[i].entity);
+    bv[i].entity.webContents.destroy();
     bv[i] = null;
     bv.splice(i, 1);
-    bv[i].entity.destroy();
-    if (bv[i] !== null) {
+    if (bv[i] !== null || !(bv[i])) {
       bv[i].setTop();
       win.webContents.executeJavaScript(`
         document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
@@ -387,7 +350,7 @@ app.on('ready', () => {
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin')
+  if (!isMac)
     app.quit();
 });
 app.on('activate', () => {
@@ -737,9 +700,9 @@ Copyright 2021 monochrome Project.`
 ];
 let menu;
 
-if (!process.platform === 'darwin') {
+if (!isMac) {
   menu = Menu.buildFromTemplate(menuTemplate);
-} else if (process.platform === 'darwin') {
+} else if (isMac) {
   menu = Menu.buildFromTemplate(menuTemplateMac);
 }
 

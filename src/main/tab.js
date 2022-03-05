@@ -1,6 +1,13 @@
-const {BrowserView, BrowserWindow} = require('electron');
+const {BrowserWindow, BrowserView} = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
+const adBlockCode = fs.readFileSync(
+  `${directory}/proprietary/experimental/adBlock.js`,
+  'utf-8'
+);
+const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
+const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
+const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 
 class Tab {
   constructor(
@@ -21,11 +28,11 @@ class Tab {
 
     // events
     browserview.webContents.on('did-fail-load', () => {
-      browserview.webContents.loadURL(
+      this.webContents.loadURL(
         `file://${directory}/browser/server-notfound.html`
       );
-      browserview.webContents.executeJavaScript(
-        `document.getElementsByTagName('span')[0].innerText='${browserview.webContents.getURL().toLowerCase()}';`
+      this.webContents.executeJavaScript(
+        `document.getElementsByTagName('span')[0].innerText='${this.webContents.getURL().toLowerCase()}';`
       );
     });
     browserview.webContents.on('dom-ready', () => {
@@ -39,12 +46,47 @@ class Tab {
     this.href = url;
 
     // proprietary stylesheet
-    this.entity.webContents.insertCSS(
-      fs.readFileSync(
-        `${directory}/proprietary/style/ua.css`,
-        'utf-8'
-      )
-    );
+    this.entity.webContents.on('dom-ready', () => {
+      this.entity.webContents.insertCSS(
+        fs.readFileSync(
+          `${directory}/proprietary/style/ua.css`,
+          'utf-8'
+        )
+      );
+      const browserURL = new URL(this.href);
+      const fileURL = new URL(`file://${directory}/browser/home.html`);
+      this.href = this.entity.webContents.getURL();
+      if (browserURL.href === fileURL.href) {
+        enginesConfig.update();
+        const selectEngine = enginesConfig.get('engine');
+        const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+        this.entity.webContents.executeJavaScript(`
+          url = '${engineURL}';
+        `);
+      }
+      const experiments = monotConfig.update().get('experiments');
+      // Force-Dark
+      if (experiments.forceDark === true) {
+        this.entity.webContents.insertCSS(
+          fs.readFileSync(
+            `${directory}/proprietary/style/forcedark.css`,
+            'utf-8'
+          )
+        );
+      }
+      // fontChange
+      if (experiments.fontChange === true) {
+        this.entity.webContents.insertCSS(`
+          body,body>*, *{
+            font-family: ${experiments.changedfont},'Noto Sans JP'!important;
+          }
+        `);
+      }
+      // AD Block
+      if (experiments.adBlock === true) {
+        this.entity.webContents.executeJavaScript(adBlockCode);
+      }
+    });
     // BrowserWindow.fromBrowserView(this.entity));
     this.setTitleUrl();
   }
@@ -92,7 +134,7 @@ class Tab {
   }
 
   reload() {
-    this.entity.reload();
+    this.entity.webContents.reload();
   }
 }
 
