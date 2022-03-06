@@ -6,6 +6,7 @@ class Config {
   constructor(filepath = 'config.mncfg') {
     this.config = new LowLevelConfig(filepath);
   }
+
   // Get config data.
   get(key, shouldUseDots = false) {
     this.config.update();
@@ -71,10 +72,9 @@ class LowLevelConfig {
 
   // Get config data.
   get(key, shouldUseDots = false) {
-    const result = shouldUseDots ?
-      this.#getObjWithDots(this.data, key) :
+    return shouldUseDots ?
+      LowLevelConfig.#getObjWithDots(this.data, key) :
       this.data[key];
-    return result;
   }
 
   // Set config data.
