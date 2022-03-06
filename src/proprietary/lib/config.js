@@ -52,7 +52,7 @@ class LowLevelConfig {
     return this;
   }
 
-  #getObjWithDots(obj, keyPath) {
+  static #getObjWithDots(obj, keyPath) {
     const paths = keyPath.split('.');
     while (paths.length) {
       obj = obj[paths.shift()];
@@ -60,7 +60,7 @@ class LowLevelConfig {
     return obj;
   }
 
-  #setObjWithDots(obj, keyPath, value) {
+  static #setObjWithDots(obj, keyPath, value) {
     const paths = keyPath.split('.');
     while (paths.length > 1) {
       obj = obj[paths.shift()];
@@ -72,7 +72,7 @@ class LowLevelConfig {
   // Get config data.
   get(key, shouldUseDots = false) {
     const result = shouldUseDots ?
-      this.#getObjWithDots(this.data, key) :
+      LowLevelConfig.#getObjWithDots(this.data, key) :
       this.data[key];
     return result;
   }
@@ -80,7 +80,7 @@ class LowLevelConfig {
   // Set config data.
   set(key, value, shouldUseDots = false) {
     if (shouldUseDots) {
-      this.#setObjWithDots(this.data, key, value);
+      LowLevelConfig.#setObjWithDots(this.data, key, value);
     } else {
       this.data[key] = value;
     }
