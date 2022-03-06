@@ -8,7 +8,7 @@ const {
 } = require('electron');
 
 // letiables
-let win, windowSize, menu;
+let win, windowSize, menu, context;
 let currentTab = 0;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
@@ -115,10 +115,6 @@ function nw() {
 
 app.on('ready', () => {
   nw();
-
-  // create tab
-  newtab();
-
   // ipc channels
   ipcMain.handle('moveView', (e, link, ind) => {
     const current = ind;
@@ -238,7 +234,7 @@ app.on('ready', () => {
     });
   });
   ipcMain.handle('context', () => {
-    menu.popup();
+    context.popup();
   });
   ipcMain.handle('newtab', () => {
     newtab();
@@ -294,11 +290,14 @@ app.on('ready', () => {
       .set(`experiments.${change}`, to, true)
       .save();
   });
+
+  // create tab
+  newtab();
+
 });
 
 app.on('window-all-closed', () => {
-  if (!isMac)
-    app.quit();
+  if (!isMac) app.quit();
 });
 app.on('activate', () => {
   if (win === null)
@@ -661,6 +660,7 @@ Copyright 2021 monochrome Project.`
 
 if (!isMac) {
   menu = Menu.buildFromTemplate(menuTemplate);
+  context = menu;
 } else if (isMac) {
   menu = Menu.buildFromTemplate(menuTemplateMac);
 }

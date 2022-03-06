@@ -51,7 +51,16 @@
     },
     "appImage": {
       "category": "Utility",
-      "synopsis": "Monot ver1.0Build7"
+      "synopsis": "Monot v1.0.0Build7"
+    },
+    "mac": {
+      "icon": "src/image/logo.icns",
+      "category": "public.app-category.reference",
+      "target": "dmg"
+    },
+    "dmg": {
+      "backgroundColor": "#efefef",
+      "title": "Monot v1.0.0Build7"
     }
   }
 }

@@ -1,6 +1,8 @@
 const {
   BrowserWindow,
-  BrowserView
+  BrowserView,
+  Menu,
+  ipcMain
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
@@ -12,7 +14,6 @@ const adBlockCode = fs.readFileSync(
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
-
 let windowSize;
 
 class Tab {
@@ -40,6 +41,44 @@ class Tab {
       browserview.webContents.executeJavaScript(`
         document.getElementsByTagName('span')[0].innerText='${browserview.webContents.getURL().toLowerCase()}';
       `);
+    });
+
+    const contextMenu = [
+      {
+        label: '戻る',
+        click: () => {
+          this.goBack();
+        }
+      },
+      {
+        label: '進む',
+        click: () => {
+          this.goForward();
+        }
+      },
+      {
+        label: '再読み込み',
+        click: () => {
+          this.reload();
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: '開発者向けツール',
+        click: () => {
+          this.entity.webContents.toggleDevTools();
+        }
+      }
+    ];
+    const context = Menu.buildFromTemplate(contextMenu);
+    ipcMain.removeHandler('context');
+    ipcMain.handle('context', () => {
+      context.popup();
+    });
+    browserview.webContents.on('context-menu', (e, params) => {
+      console.log(e);
     });
 
     this.entity = browserview;
