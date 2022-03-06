@@ -25,15 +25,12 @@ function newtab() {
   // create new tab
   const {Tab} = require('./tab');
   const browserview = new Tab();
-
-  // window's behavior
-  win.on('closed', () => {
-    win = null;
-  });
   currentTab = bv.length;
   windowSize = win.getSize();
+
   bv.push(browserview);
   win.addBrowserView(bv[bv.length - 1].entity);
+
   bv[bv.length - 1].entity.setBounds({
     x: 0,
     y: viewY,
@@ -44,6 +41,7 @@ function newtab() {
     width: true,
     height: true
   });
+
   browserview.load(
     `file://${directory}/browser/home.html`
   );
@@ -102,11 +100,17 @@ function nw() {
     const selectEngine = enginesConfig.get('engine');
     return enginesConfig.get(`values.${selectEngine}`, true);
   }
+
+  // window's behavior
+  win.on('closed', () => {
+    win = null;
+  });
   win.webContents.on('did-finish-load', () => {
     win.webContents.executeJavaScript(`
       engine = '${getEngine()}';
     `);
   });
+
 }
 
 app.on('ready', () => {
