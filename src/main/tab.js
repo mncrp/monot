@@ -21,7 +21,6 @@ class Tab {
     url = new URL(`file://${directory}/browser/index.html`)
   ) {
     this.href = url;
-
     if (!(url instanceof URL)) {
       url = new URL(url);
     }
@@ -102,13 +101,13 @@ class Tab {
       this.href = this.entity.webContents.getURL();
       if (browserURL.href === fileURL.href) {
         enginesConfig.update();
-        const selectEngine = enginesConfig.get('engine');
-        const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+        const selectEngine = enginesConfig.#get('engine');
+        const engineURL = enginesConfig.#get(`values.${selectEngine}`);
         this.entity.webContents.executeJavaScript(`
           url = '${engineURL}';
         `);
       }
-      const experiments = monotConfig.update().get('experiments');
+      const experiments = monotConfig.update().#get('experiments');
       // Force-Dark
       if (experiments.forceDark === true) {
         this.entity.webContents.insertCSS(
