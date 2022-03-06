@@ -30,19 +30,6 @@ function newtab() {
   win.on('closed', () => {
     win = null;
   });
-  win.on('maximize', () => {
-  });
-  win.on('unmaximize', () => {
-  });
-  win.on('resize', () => {
-    windowSize = win.getContentSize();
-    browserview.entity.setBounds({
-      x: 0,
-      y: viewY,
-      width: windowSize[0],
-      height: windowSize[1] - viewY
-    });
-  });
   currentTab = bv.length;
   windowSize = win.getSize();
   bv.push(browserview);

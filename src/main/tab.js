@@ -4,6 +4,7 @@ const {
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
+const viewY = 67;
 const adBlockCode = fs.readFileSync(
   `${directory}/proprietary/experimental/adBlock.js`,
   'utf-8'
@@ -11,6 +12,8 @@ const adBlockCode = fs.readFileSync(
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
+
+let windowSize;
 
 class Tab {
   constructor(
@@ -31,11 +34,11 @@ class Tab {
 
     // events
     browserview.webContents.on('did-fail-load', () => {
-      browserview.webContents.loadURL(
+      this.load(
         `file://${directory}/browser/server-notfound.html`
       );
       browserview.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[0].innerText='${this.webContents.getURL().toLowerCase()}';
+        document.getElementsByTagName('span')[0].innerText='${browserview.webContents.getURL().toLowerCase()}';
       `);
     });
 
@@ -129,6 +132,15 @@ class Tab {
         document.getElementsByTagName('title')[0].innerText='${t} - Monot';
         document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';
       `);
+    });
+    win.on('resize', () => {
+      windowSize = win.getContentSize();
+      this.entity.setBounds({
+        x: 0,
+        y: viewY,
+        width: windowSize[0],
+        height: windowSize[1] - viewY
+      });
     });
 
     // BrowserWindow.fromBrowserView(this.entity));
