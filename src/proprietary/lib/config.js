@@ -71,10 +71,9 @@ class LowLevelConfig {
 
   // Get config data.
   get(key, shouldUseDots = false) {
-    const result = shouldUseDots ?
+    return shouldUseDots ?
       LowLevelConfig.#getObjWithDots(this.data, key) :
       this.data[key];
-    return result;
   }
 
   // Set config data.
