@@ -51,8 +51,8 @@ function nw() {
   // create window
   monotConfig.update();
   win = new BrowserWindow({
-    width: monotConfig.get('width'),
-    height: monotConfig.get('height'),
+    width: monotConfig.#get('width'),
+    height: monotConfig.#get('height'),
     minWidth: 400,
     minHeight: 400,
     frame: false,
@@ -97,8 +97,8 @@ function nw() {
 
   function getEngine() {
     enginesConfig.update();
-    const selectEngine = enginesConfig.get('engine');
-    return enginesConfig.get(`values.${selectEngine}`, true);
+    const selectEngine = enginesConfig.#get('engine');
+    return enginesConfig.#get(`values.${selectEngine}`);
   }
 
   // window's behavior
@@ -217,8 +217,8 @@ app.on('ready', () => {
   });
   ipcMain.handle('moveToNewTab', (e, index) => {
     enginesConfig.update();
-    const selectEngine = enginesConfig.get('engine');
-    const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+    const selectEngine = enginesConfig.#get('engine');
+    const engineURL = enginesConfig.#get(`values.${selectEngine}`);
 
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
@@ -281,7 +281,7 @@ app.on('ready', () => {
       .set('engine', engine)
       .save();
     win.webContents.executeJavaScript(`
-      engine = ${enginesConfig.get(`values.${engine}`, true)};
+      engine = ${enginesConfig.#get(`values.${engine}`)};
     `);
   });
   ipcMain.handle('setting.changeExperimental', (e, change, to) => {
@@ -321,11 +321,11 @@ function showSetting() {
   setting.loadFile(`${directory}/renderer/setting/index.html`);
 
   setting.webContents.executeJavaScript(`
-    document.querySelector('option[value="${enginesConfig.get('engine')}"]');
+    document.querySelector('option[value="${enginesConfig.#get('engine')}"]');
   `);
 
   // Apply of changes
-  const experiments = monotConfig.get('experiments');
+  const experiments = monotConfig.#get('experiments');
 
   if (experiments.forceDark === true) {
     setting.webContents.executeJavaScript(`
