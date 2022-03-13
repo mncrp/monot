@@ -27,6 +27,7 @@ function newtab() {
   const browserview = new Tab();
   currentTab = bv.length;
   windowSize = win.getSize();
+  browserview.entity.webContents.setZoomLevel(1);
 
   bv.push(browserview);
   win.addBrowserView(bv[bv.length - 1].entity);
@@ -42,7 +43,7 @@ function newtab() {
     height: true
   });
 
-  browserview.load(
+  bv[bv.length - 1].load(
     `file://${directory}/browser/home.html`
   );
 }

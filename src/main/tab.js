@@ -32,7 +32,9 @@ class Tab {
         preload: `${directory}/preload/pages.js`
       }
     });
-    browserview.webContents.setVisualZoomLevelLimits(1, 5);
+    browserview.webContents.setVisualZoomLevelLimits(1, 1);
+
+    console.log(browserview.webContents.getZoomFactor());
 
     // events
     browserview.webContents.on('did-fail-load', () => {
@@ -67,12 +69,37 @@ class Tab {
         type: 'separator'
       },
       {
+        label: '縮小',
+        click: () => {
+          this.entity.webContents.setZoomLevel(
+            this.entity.webContents.getZoomLevel() - 1
+          );
+        }
+      },
+      {
+        label: '実際のサイズ',
+        click: () => {
+          this.entity.webContents.setZoomLevel(
+            1
+          );
+        }
+      },
+      {
+        label: '拡大',
+        click: () => {
+          this.entity.webContents.setZoomLevel(
+            this.entity.webContents.getZoomLevel() + 1
+          );
+        }
+      },
+      {
         label: '開発者向けツール',
         click: () => {
           this.entity.webContents.toggleDevTools();
         }
       }
     ];
+
     const context = Menu.buildFromTemplate(contextMenu);
     ipcMain.removeHandler('context');
     ipcMain.handle('context', () => {
