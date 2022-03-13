@@ -5,6 +5,7 @@ const {
   dialog,
   ipcMain,
   Menu,
+  BrowserView,
 } = require('electron');
 
 // letiables
@@ -13,7 +14,7 @@ let currentTab = 0;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const bv = [];
-const viewY = 65;
+const viewY = 66;
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -102,6 +103,16 @@ function nw() {
     return enginesConfig.get(`values.${selectEngine}`, true);
   }
 
+  const view = new BrowserView();
+  view.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
+  win.addBrowserView(view);
+  view.setBounds({
+    x: viewY,
+    y: 10,
+    width: 300,
+    height: 600
+  });
+
   // window's behavior
   win.on('closed', () => {
     win = null;
@@ -112,10 +123,11 @@ function nw() {
     `);
   });
 
+  // create tab
+  newtab();
 }
 
 app.on('ready', () => {
-  nw();
   // ipc channels
   ipcMain.handle('moveView', (e, link, ind) => {
     const current = ind;
@@ -292,9 +304,7 @@ app.on('ready', () => {
       .save();
   });
 
-  // create tab
-  newtab();
-
+  nw();
 });
 
 app.on('window-all-closed', () => {

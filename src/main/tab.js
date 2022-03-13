@@ -33,7 +33,6 @@ class Tab {
       }
     });
     browserview.webContents.setVisualZoomLevelLimits(1, 1);
-    browserview.webContents.setZoomLevel(1);
 
     console.log(browserview.webContents.getZoomFactor());
 
