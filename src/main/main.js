@@ -13,7 +13,7 @@ let currentTab = 0;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const bv = [];
-const viewY = 67;
+const viewY = 65;
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);

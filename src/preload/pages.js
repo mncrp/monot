@@ -1,4 +1,6 @@
-const {contextBridge, ipcRenderer} = require('electron');
+const {webFrame, contextBridge, ipcRenderer} = require('electron');
+
+webFrame.setZoomFactor(1);
 
 contextBridge.exposeInMainWorld('node', {
   context: (text) => {

@@ -1,16 +1,16 @@
 const {
   BrowserWindow,
   BrowserView,
-  Menu,
-  ipcMain
+  Menu
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
-const viewY = 67;
+const viewY = 66;
 const adBlockCode = fs.readFileSync(
   `${directory}/proprietary/experimental/adBlock.js`,
   'utf-8'
 );
+const isMac = process.platform === 'darwin';
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
@@ -33,6 +33,7 @@ class Tab {
       }
     });
     browserview.webContents.setVisualZoomLevelLimits(1, 1);
+    browserview.webContents.setZoomLevel(1);
 
     console.log(browserview.webContents.getZoomFactor());
 
@@ -46,68 +47,71 @@ class Tab {
       `);
     });
 
-    const contextMenu = [
-      {
-        label: '戻る',
-        click: () => {
-          this.goBack();
+    if (isMac) {
+      const {ipcMain} = require('electron');
+      const contextMenu = [
+        {
+          label: '戻る',
+          click: () => {
+            this.goBack();
+          }
+        },
+        {
+          label: '進む',
+          click: () => {
+            this.goForward();
+          }
+        },
+        {
+          label: '再読み込み',
+          click: () => {
+            this.reload();
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: '縮小',
+          click: () => {
+            this.entity.webContents.setZoomLevel(
+              this.entity.webContents.getZoomLevel() - 1
+            );
+          }
+        },
+        {
+          label: '実際のサイズ',
+          click: () => {
+            this.entity.webContents.setZoomLevel(
+              1
+            );
+          }
+        },
+        {
+          label: '拡大',
+          click: () => {
+            this.entity.webContents.setZoomLevel(
+              this.entity.webContents.getZoomLevel() + 1
+            );
+          }
+        },
+        {
+          label: '開発者向けツール',
+          click: () => {
+            this.entity.webContents.toggleDevTools();
+          }
         }
-      },
-      {
-        label: '進む',
-        click: () => {
-          this.goForward();
-        }
-      },
-      {
-        label: '再読み込み',
-        click: () => {
-          this.reload();
-        }
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: '縮小',
-        click: () => {
-          this.entity.webContents.setZoomLevel(
-            this.entity.webContents.getZoomLevel() - 1
-          );
-        }
-      },
-      {
-        label: '実際のサイズ',
-        click: () => {
-          this.entity.webContents.setZoomLevel(
-            1
-          );
-        }
-      },
-      {
-        label: '拡大',
-        click: () => {
-          this.entity.webContents.setZoomLevel(
-            this.entity.webContents.getZoomLevel() + 1
-          );
-        }
-      },
-      {
-        label: '開発者向けツール',
-        click: () => {
-          this.entity.webContents.toggleDevTools();
-        }
-      }
-    ];
+      ];
 
-    const context = Menu.buildFromTemplate(contextMenu);
-    ipcMain.removeHandler('context');
-    ipcMain.handle('context', () => {
-      context.popup();
-    });
-    browserview.webContents.on('context-menu', (e, params) => {
-      console.log(e);
-    });
+      const context = Menu.buildFromTemplate(contextMenu);
+      ipcMain.removeHandler('context');
+      ipcMain.handle('context', () => {
+        context.popup();
+      });
+      browserview.webContents.on('context-menu', (e, params) => {
+        console.log(e);
+      });
+    }
 
     this.entity = browserview;
   }
