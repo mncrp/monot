@@ -32,6 +32,7 @@ class Tab {
         preload: `${directory}/preload/pages.js`
       }
     });
+    browserview.webContents.setVisualZoomLevelLimits(1, 5);
 
     // events
     browserview.webContents.on('did-fail-load', () => {
@@ -90,6 +91,7 @@ class Tab {
     const win = BrowserWindow.fromBrowserView(this.entity);
 
     this.entity.webContents.on('dom-ready', () => {
+      this.entity.webContents.setVisualZoomLevelLimits(1, 5);
       // proprietary stylesheet
       this.entity.webContents.insertCSS(
         fs.readFileSync(
