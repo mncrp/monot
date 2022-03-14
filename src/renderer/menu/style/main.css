@@ -1,0 +1,18 @@
+* {
+  margin: 0;
+}
+
+main {
+  background-color: #efefef;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 5px 5px 17px #bfbfbf55;
+}
+
+@media (prefers-color-scheme: dark) {
+  main {
+    background-color: #202020;
+  }
+}
