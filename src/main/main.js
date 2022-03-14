@@ -103,13 +103,16 @@ function nw() {
     return enginesConfig.get(`values.${selectEngine}`, true);
   }
 
-  const view = new BrowserView();
+  const view = new BrowserView({
+    transparent: true,
+    frame: false
+  });
   view.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   win.addBrowserView(view);
   view.setBounds({
     x: viewY,
-    y: 10,
-    width: 300,
+    y: 20,
+    width: 500,
     height: 600
   });
 
@@ -125,6 +128,8 @@ function nw() {
 
   // create tab
   newtab();
+
+  win.setTopBrowserView(view);
 }
 
 app.on('ready', () => {
