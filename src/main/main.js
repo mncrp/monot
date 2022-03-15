@@ -57,6 +57,7 @@ function nw() {
     height: monotConfig.get('height'),
     minWidth: 400,
     minHeight: 400,
+    show: false,
     frame: false,
     transparent: false,
     backgroundColor: '#efefef',
@@ -124,6 +125,9 @@ function nw() {
     win.webContents.executeJavaScript(`
       engine = '${getEngine()}';
     `);
+  });
+  win.on('ready-to-show', () => {
+    win.show();
   });
 
   // create tab
