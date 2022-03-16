@@ -17,14 +17,15 @@ const bv = [];
 const viewY = 66;
 
 // config setting
-const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
+const { LowLevelConfig } = require(`${directory}/proprietary/lib/config.js`);
+const { History } = require(`${directory}/proprietary/lib/history.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 
 // creating new tab function
 function newtab() {
   // create new tab
-  const {Tab} = require('./tab');
+  const { Tab } = require('./tab');
   const browserview = new Tab();
   currentTab = bv.length;
   windowSize = win.getSize();
@@ -151,42 +152,6 @@ app.on('ready', () => {
 
     try {
       bv[current].load(link);
-      /* const title = bv[current].webContent.getTitle();
-      const description = bv[current].entity.webContents.executeJavaScript(`
-      return document.getElementsByName('description')[0].content;
-      `);
-      const url = bv[current].entity.webContents.executeJavaScript(`
-        return location.href;
-      `);
-      const icon = bv[current].entity.webContents.executeJavaScript(`
-      for (let i = 0; i < document.head.getElementsByTagName('link').length; i++) {
-        if (document.head.getElementsByTagName('link')[i].getAttribute('rel') === 'shortcut icon') {
-          let favicon_url = document.head.getElementsByTagName('link')[i].getAttribute('href');
-          break;
-        } else {
-          let favicon_url = '';
-          return favicon_url;
-        }
-      };
-      return favicon_url;
-      `);
-      const writeObj = {
-        pageTitle: title,
-        pageDescription: description,
-        pageUrl: url,
-        pageIcon: icon
-      };
-      const history = JSON.parse(
-        fs.readFileSync(
-          `${directory}/data/history.mndata`,
-          'utf-8'
-        )
-      );
-      history.unshift(writeObj);
-      fs.writeFileSync(
-        `${directory}/data/history.mndata`,
-        JSON.stringify(history)
-      );*/
     } catch (e) {
       bv[current].load(
         `file://${directory}/browser/server-notfound.html`
@@ -289,7 +254,7 @@ app.on('ready', () => {
     bv[i].entity.webContents.destroy();
     bv[i] = null;
     bv.splice(i, 1);
-    const {Tab} = require('./tab');
+    const { Tab } = require('./tab');
     if (bv[i] !== null && bv[i] instanceof Tab) {
       console.log(bv[i] instanceof Tab);
       bv[i].setTop();
