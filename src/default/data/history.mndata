@@ -1,1 +1,8 @@
-[{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}},{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}},{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}},{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}},{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}},{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}},{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}},{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}},{"pageTitle":{},"pageDescription":{},"pageUrl":{},"pageIcon":{}}]
+[
+  {
+    "pageTitle": "title",
+    "pageDescription": "description",
+    "pageUrl": "https://example.com",
+    "pageIcon": "https://iconUrl"
+  }
+]
