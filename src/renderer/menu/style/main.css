@@ -9,7 +9,7 @@ main {
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  box-shadow: 5px 5px 17px #bfbfbf55;
+  box-shadow: 5px 5px 10px #bfbfbf55;
 }
 a {
   color: inherit;
@@ -20,5 +20,7 @@ a {
 @media (prefers-color-scheme: dark) {
   main {
     background-color: #202020;
+    border-color: #666e;
+    color: #fff;
   }
 }
