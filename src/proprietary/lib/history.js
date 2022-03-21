@@ -18,12 +18,12 @@ class History {
     if (history.update(), 0 === arrayStart) {
       data = history.slice();
     } else {
-      try{
-        data = history.slice(arrayStart)
+      try {
+        data = history.slice(arrayStart);
       } catch(e) {
-        return console.error(`historyに${arrayStart}番目の要素はありません`),-1
+        return console.error(`historyに${arrayStart}番目の要素はありません`),-1;
       }
-      return data
+      return data;
     }
   }
 
