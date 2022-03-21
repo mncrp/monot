@@ -110,10 +110,10 @@ function nw() {
   view.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   win.addBrowserView(view);
   view.setBounds({
-    x: viewY,
-    y: 20,
-    width: 500,
-    height: 600
+    x: win.getSize()[0] - 320,
+    y: viewY - 35,
+    width: 300,
+    height: 125
   });
 
   // window's behavior
