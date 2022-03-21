@@ -15,7 +15,9 @@ a {
   color: inherit;
   text-decoration: none;
   display: block;
-  margin: 5px 0;
+}
+main > *:not(#menu-last) {
+  margin-bottom: 5px;
 }
 
 @media (prefers-color-scheme: dark) {
