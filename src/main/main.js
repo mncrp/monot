@@ -17,15 +17,15 @@ const bv = [];
 const viewY = 66;
 
 // config setting
-const { LowLevelConfig } = require(`${directory}/proprietary/lib/config.js`);
-const { History } = require(`${directory}/proprietary/lib/history.js`);
+const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
+const {History} = require(`${directory}/proprietary/lib/history.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 
 // creating new tab function
 function newtab() {
   // create new tab
-  const { Tab } = require('./tab');
+  const {Tab} = require('./tab');
   const browserview = new Tab();
   currentTab = bv.length;
   windowSize = win.getSize();
@@ -254,7 +254,7 @@ app.on('ready', () => {
     bv[i].entity.webContents.destroy();
     bv[i] = null;
     bv.splice(i, 1);
-    const { Tab } = require('./tab');
+    const {Tab} = require('./tab');
     if (bv[i] !== null && bv[i] instanceof Tab) {
       console.log(bv[i] instanceof Tab);
       bv[i].setTop();
