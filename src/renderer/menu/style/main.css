@@ -2,6 +2,11 @@
   margin: 0;
 }
 
+hr {
+  border: 1px solid #666;
+  border-radius: 1px;
+}
+
 main {
   background-color: #efefef;
   margin-left: 5px;

@@ -115,7 +115,7 @@ function nw() {
     x: win.getSize()[0] - 320,
     y: viewY - 35,
     width: 300,
-    height: 125
+    height: 128
   });
 
   // window's behavior
