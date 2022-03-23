@@ -1,5 +1,11 @@
+@import url('../../../proprietary/style/font.css');
+
 * {
   margin: 0;
+}
+
+h3 {
+  font-weight: 400;
 }
 
 hr {
@@ -23,6 +29,13 @@ a {
 }
 main > *:not(#menu-last) {
   margin-bottom: 5px;
+}
+
+#contents > * {
+  display: none;
+}
+#contents > *.displaying {
+  display: block;
 }
 
 @media (prefers-color-scheme: dark) {

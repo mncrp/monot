@@ -117,6 +117,14 @@ function nw() {
     width: 300,
     height: 128
   });
+  win.on('resize', () => {
+    view.setBounds({
+      x: win.getSize()[0] - 320,
+      y: viewY - 35,
+      width: 300,
+      height: 128
+    });
+  });
 
   // window's behavior
   win.on('closed', () => {
@@ -133,8 +141,6 @@ function nw() {
 
   // create tab
   newtab();
-
-  win.setTopBrowserView(view);
 }
 
 app.on('ready', () => {
