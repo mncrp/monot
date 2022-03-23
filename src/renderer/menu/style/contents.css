@@ -1,0 +1,40 @@
+main > div {
+  margin-bottom: 0!important;
+}
+
+header {
+  display: flex;
+  height: 30px;
+}
+#prev {
+  display: inline-block;
+  background-image: url('../../../image/go.png');
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100%;
+  aspect-ratio: 1/1;
+  transform: rotate(180deg);
+}
+
+#histories > div {
+  background-color: #8888883f;
+  padding: 5px;
+  margin-top: 5px;
+  border-radius: 7px;
+  box-shadow: 5px 5px 5px #bbb3;
+  height: 50px;
+  display: flex;
+}
+.history-favicon {
+  height: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 2px;
+  background-color: #fff;
+  box-shadow: 2px 2px 5px #5554;
+}
+.history-details {
+  width: 100%;
+  height: 100%;
+  padding-left: 15px;
+}

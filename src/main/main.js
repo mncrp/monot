@@ -141,6 +141,7 @@ function nw() {
 
   // create tab
   newtab();
+  win.setTopBrowserView(view);
 }
 
 app.on('ready', () => {
