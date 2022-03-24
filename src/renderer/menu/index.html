@@ -8,13 +8,14 @@
 <body>
   <main>
     <div id="top">
-      <a href="./history.html" target="frame">履歴</a>
-      <a href="./bookmark.html" target="frame">ブックマーク</a>
+      <a href="javascript:move('history')">履歴</a>
+      <a href="javascript:move('bookmark')">ブックマーク</a>
       <hr>
       <a href="#" id="menu-last">メモ帳</a>
     </div>
     <div id="iframe">
-      <iframe src="#" name="frame" frameborder="0"></iframe>
+      <a href="javascript:prev()" id="prev"></a>
+      <iframe src="" frameborder="0" id="iframeEntity"></iframe>
     </div>
   </main>
   <script src="./script/menu.js"></script>

@@ -1,22 +1,31 @@
+main {
+  border-bottom: 0px solid #fff;
+  height: 100vh;
+}
 main > div {
   margin-bottom: 0!important;
 }
 
 header {
-  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 30px;
+  padding-left: 45px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  backdrop-filter: blur(15px);
+  z-index: 9990;
+  background-color: #fff5;
 }
-#prev {
-  display: inline-block;
-  background-image: url('../../../image/go.png');
-  background-size: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100%;
-  aspect-ratio: 1/1;
-  transform: rotate(180deg);
+header h3 {
+  z-index: +1;
 }
 
+#histories {
+  margin-top: 40px;
+}
 #histories > div {
   background-color: #8888883f;
   padding: 5px;

@@ -115,14 +115,14 @@ function nw() {
     x: win.getSize()[0] - 320,
     y: viewY - 35,
     width: 300,
-    height: 128
+    height: 500
   });
   win.on('resize', () => {
     view.setBounds({
       x: win.getSize()[0] - 320,
       y: viewY - 35,
       width: 300,
-      height: 128
+      height: 500
     });
   });
 
@@ -142,6 +142,7 @@ function nw() {
   // create tab
   newtab();
   win.setTopBrowserView(view);
+  view.webContents.toggleDevTools();
 }
 
 app.on('ready', () => {
