@@ -20,29 +20,32 @@ class History {
     } else {
       try {
         data = history.slice(arrayStart);
-      } catch(e) {
-        return console.error(`historyに${arrayStart}番目の要素はありません`),-1;
+      } catch (e) {
+        return console.error(`historyに${arrayStart}番目の要素はありません`), -1;
       }
       return data;
     }
   }
 
-  get(arrayStart, arrayEnd){
+  get(arrayStart, arrayEnd) {
     let data;
     history.update();
-    try{
-      data = history.slice(arrayStart,arrayEnd)
-    } catch(e) {
+    try {
+      data = history.slice(arrayStart, arrayEnd);
+    } catch (e) {
       return console.error(
-        `historyに${arrayEnd}番目の要素はありません。\nhistoryの最後の要素は${history.length-1}です。`),-1
+        `historyに${arrayEnd}番目の要素はありません。
+        historyの最後の要素は${history.length - 1}です。`
+      ), -1;
     }
-    return data
+    return data;
   }
+
   set(data) {
-    history.update().unshift(data).save()
+    history.update().unshift(data).save();
   }
 }
- 
+
 module.exports = {
-  History:History
+  History
 };

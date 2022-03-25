@@ -1,5 +1,6 @@
 const frame = document.getElementById('iframeEntity');
 const frameTop = document.getElementById('iframe');
+
 function prev() {
   frameTop.className = '';
 }
