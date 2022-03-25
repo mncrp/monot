@@ -23,10 +23,13 @@ header h3 {
   z-index: +1;
 }
 
-#histories {
+#histories,
+#bookmarks {
   margin-top: 40px;
 }
-#histories > div {
+
+#histories > div ,
+#bookmarks > div {
   background-color: #8888883f;
   padding: 5px;
   margin-top: 5px;
@@ -35,15 +38,26 @@ header h3 {
   height: 50px;
   display: flex;
 }
-.history-favicon {
+
+.history-favicon,
+.bookmark-favicon {
   height: 100%;
   aspect-ratio: 1/1;
   border-radius: 2px;
   background-color: #fff;
   box-shadow: 2px 2px 5px #5554;
 }
-.history-details {
+
+.history-details,
+.bookmark-details {
   width: 100%;
   height: 100%;
   padding-left: 15px;
+}
+
+#bookmarks > div {
+  height: 25px;
+}
+.bookmark-details {
+  padding-left: 4px;
 }
