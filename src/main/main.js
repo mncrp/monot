@@ -337,12 +337,6 @@ function showSetting() {
       `);
     }
   }
-  if (experiments.adBlock === true) {
-    setting.webContents.executeJavaScript(`
-      document.querySelectorAll('input[type="checkbox"]')[2]
-        .checked = true;
-    `);
-  }
 }
 
 // context menu

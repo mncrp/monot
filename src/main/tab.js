@@ -6,10 +6,6 @@ const {
 const fs = require('fs');
 const directory = `${__dirname}/..`;
 const viewY = 66;
-const adBlockCode = fs.readFileSync(
-  `${directory}/proprietary/experimental/adBlock.js`,
-  'utf-8'
-);
 const isMac = process.platform === 'darwin';
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
