@@ -158,10 +158,6 @@ class Tab {
           }
         `);
       }
-      // AD Block
-      if (experiments.adBlock === true) {
-        this.entity.webContents.executeJavaScript(adBlockCode);
-      }
     });
     this.entity.webContents.on('did-start-loading', () => {
       this.entity.webContents.executeJavaScript(`
