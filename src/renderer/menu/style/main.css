@@ -47,10 +47,12 @@ main > *:not(#menu-last) {
   left: 100%;
   width: 100vw;
   height: 100%;
-  transition: all 0.5s ease-in-out;
+  transition: all .5s ease-in-out;
+  box-shadow: 0 0 0px #0006;
 }
 #iframe.displaying {
   left: -6px;
+  box-shadow: 0 0 15px #0006;
 }
 #iframe > iframe {
   display: inline-block;

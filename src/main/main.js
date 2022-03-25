@@ -142,7 +142,6 @@ function nw() {
   // create tab
   newtab();
   win.setTopBrowserView(view);
-  view.webContents.toggleDevTools();
 }
 
 app.on('ready', () => {
