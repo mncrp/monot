@@ -47,7 +47,7 @@ contextBridge.exposeInMainWorld('node', {
   dirName: () => {
     return __dirname;
   },
-  optionsWindow: () => {
+  showMenu: () => {
     // open options (settings) window
     ipcRenderer.invoke('options');
   },

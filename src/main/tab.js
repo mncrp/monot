@@ -30,8 +30,6 @@ class Tab {
     });
     browserview.webContents.setVisualZoomLevelLimits(1, 1);
 
-    console.log(browserview.webContents.getZoomFactor());
-
     // events
     browserview.webContents.on('did-fail-load', () => {
       this.load(

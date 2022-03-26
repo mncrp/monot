@@ -110,21 +110,6 @@ function nw() {
     frame: false
   });
   view.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
-  win.addBrowserView(view);
-  view.setBounds({
-    x: win.getSize()[0] - 320,
-    y: viewY - 35,
-    width: 300,
-    height: 500
-  });
-  win.on('resize', () => {
-    view.setBounds({
-      x: win.getSize()[0] - 320,
-      y: viewY - 35,
-      width: 300,
-      height: 500
-    });
-  });
 
   // window's behavior
   win.on('closed', () => {
@@ -139,9 +124,31 @@ function nw() {
     win.show();
   });
 
+  ipcMain.handle('options', () => {
+    if (BrowserWindow.fromBrowserView(view)) {
+      win.removeBrowserView(view);
+    } else {
+      win.addBrowserView(view);
+      view.setBounds({
+        x: win.getSize()[0] - 320,
+        y: viewY - 35,
+        width: 300,
+        height: 500
+      });
+      win.on('resize', () => {
+        view.setBounds({
+          x: win.getSize()[0] - 320,
+          y: viewY - 35,
+          width: 300,
+          height: 500
+        });
+      });
+      win.setTopBrowserView(view);
+    }
+  });
+
   // create tab
   newtab();
-  win.setTopBrowserView(view);
 }
 
 app.on('ready', () => {
@@ -644,11 +651,11 @@ Copyright 2021 monochrome Project.`
   }
 ];
 
-if (!isMac) {
+if (isMac) {
+  menu = Menu.buildFromTemplate(menuTemplateMac);
+} else {
   menu = Menu.buildFromTemplate(menuTemplate);
   context = menu;
-} else if (isMac) {
-  menu = Menu.buildFromTemplate(menuTemplateMac);
 }
 
 Menu.setApplicationMenu(menu);
