@@ -63,7 +63,7 @@ function nw() {
     transparent: false,
     backgroundColor: '#efefef',
     title: 'Monot by monochrome.',
-    icon: `${directory}/image/logo.png`,
+    icon: isMac ? `${directory}/image/logo.icns` : `${directory}/image/logo.png`,
     webPreferences: {
       preload: `${directory}/preload/navigation.js`
     }
@@ -105,12 +105,6 @@ function nw() {
     return enginesConfig.get(`values.${selectEngine}`, true);
   }
 
-  const view = new BrowserView({
-    transparent: true,
-    frame: false
-  });
-  view.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
-
   // window's behavior
   win.on('closed', () => {
     win = null;
@@ -124,34 +118,26 @@ function nw() {
     win.show();
   });
 
-  ipcMain.handle('options', () => {
-    if (BrowserWindow.fromBrowserView(view)) {
-      win.removeBrowserView(view);
-    } else {
-      win.addBrowserView(view);
-      view.setBounds({
-        x: win.getSize()[0] - 320,
-        y: viewY - 35,
-        width: 300,
-        height: 500
-      });
-      win.on('resize', () => {
-        view.setBounds({
-          x: win.getSize()[0] - 320,
-          y: viewY - 35,
-          width: 300,
-          height: 500
-        });
-      });
-      win.setTopBrowserView(view);
-    }
-  });
-
   // create tab
   newtab();
 }
 
+function windowClose() {
+  windowSize = win.getSize();
+  monotConfig.update()
+    .set('width', windowSize[0])
+    .set('height', windowSize[1])
+    .save();
+  win.close();
+}
+
 app.on('ready', () => {
+  const view = new BrowserView({
+    transparent: true,
+    frame: false
+  });
+  view.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
+
   // ipc channels
   ipcMain.handle('moveView', (e, link, ind) => {
     const current = ind;
@@ -176,12 +162,7 @@ app.on('ready', () => {
     }
   });
   ipcMain.handle('windowClose', () => {
-    windowSize = win.getSize();
-    monotConfig.update()
-      .set('width', windowSize[0])
-      .set('height', windowSize[1])
-      .save();
-    win.close();
+    windowClose();
   });
   ipcMain.handle('windowMaximize', () => {
     win.maximize();
@@ -293,14 +274,35 @@ app.on('ready', () => {
   });
 
   nw();
+  ipcMain.handle('options', () => {
+    if (BrowserWindow.fromBrowserView(view)) {
+      win.removeBrowserView(view);
+    } else {
+      win.addBrowserView(view);
+      view.setBounds({
+        x: win.getSize()[0] - 320,
+        y: viewY - 35,
+        width: 300,
+        height: 500
+      });
+      win.on('resize', () => {
+        view.setBounds({
+          x: win.getSize()[0] - 320,
+          y: viewY - 35,
+          width: 300,
+          height: 500
+        });
+      });
+      win.setTopBrowserView(view);
+    }
+  });
 });
 
 app.on('window-all-closed', () => {
   if (!isMac) app.quit();
 });
 app.on('activate', () => {
-  if (win === null)
-    nw();
+  if (win === null) nw();
 });
 
 function showSetting() {
@@ -368,11 +370,7 @@ const menuTemplate = [
         label: '終了',
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
-          monotConfig.update()
-            .set('width', windowSize[0])
-            .set('height', windowSize[1])
-            .save();
-          app.quit();
+          windowClose();
         }
       }
     ]
@@ -497,6 +495,30 @@ const menuTemplateMac = [
     label: 'Monot',
     submenu: [
       {
+        label: 'Monotについて',
+        accelerator: 'CmdOrCtrl+Alt+A',
+        click: () => {
+          dialog.showMessageBox(null, {
+            type: 'info',
+            icon: './src/image/logo-mac.png',
+            title: 'Monotについて',
+            message: 'Monotについて',
+            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
+バージョン: 1.0.0 Official Version
+ビルド番号: 7
+開発元: monochrome Project.
+
+リポジトリ: https://github.com/Sorakime/monot
+公式サイト: https://sorakime.github.io/mncr/project/monot/
+
+Copyright 2021-2022 monochrome Project.`
+          });
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
         role: 'togglefullscreen',
         accelerator: 'F11',
         label: '全画面表示'
@@ -513,42 +535,8 @@ const menuTemplateMac = [
         label: '終了',
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
-          monotConfig.update()
-            .set('width', windowSize[0])
-            .set('height', windowSize[1])
-            .save();
+          windowClose();
           app.quit();
-        }
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Monotについて',
-        accelerator: 'CmdOrCtrl+Alt+A',
-        click: () => {
-          dialog.showMessageBox(null, {
-            type: 'info',
-            icon: './src/image/logo.png',
-            title: 'Monotについて',
-            message: 'Monot 1.0.0 Official Versionについて',
-            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
-バージョン: 1.0.0 Official Version
-ビルド番号: 7
-開発者: monochrome Project.
-
-リポジトリ: https://github.com/Sorakime/monot
-公式サイト: https://sorakime.github.io/mncr/project/monot/
-
-Copyright 2021 monochrome Project.`
-          });
-        }
-      },
-      {
-        label: '設定',
-        accelerator: 'CmdOrCtrl+Alt+S',
-        click: () => {
-          showSetting();
         }
       }
     ]
@@ -612,6 +600,13 @@ Copyright 2021 monochrome Project.`
           win.webContents.executeJavaScript(`
             newtab('Home')
           `);
+        }
+      },
+      {
+        label: '設定',
+        accelerator: 'CmdOrCtrl+Alt+S',
+        click: () => {
+          showSetting();
         }
       }
     ]

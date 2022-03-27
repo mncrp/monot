@@ -80,4 +80,7 @@ main > *:not(#menu-last) {
     border-color: #666e;
     color: #fff;
   }
+  #prev {
+    background-image: url('../../../image/go-white.png');
+  }
 }

@@ -8,7 +8,7 @@ body{
  }	
 input{		
   user-select: text;		
-  -webkit-app-region: none;		
+  -webkit-app-region: no-drag;		
 }		
 body>div:nth-child(2){		
   display: inline-block;		
