@@ -18,7 +18,6 @@ const viewY = 66;
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
-const {History} = require(`${directory}/proprietary/lib/history.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 

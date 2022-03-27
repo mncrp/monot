@@ -28,7 +28,7 @@ function moveBrowser() {
 }
 
 document.getElementsByTagName('input')[0]
-  .addEventListener('keyup', (e) => {
+  .addEventListener('keypress', (e) => {
     const word = document.getElementsByTagName('input')[0].value;
     // press enter
     if (e.keyCode === 13 && word != null) {

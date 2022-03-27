@@ -102,7 +102,7 @@ class Tab {
         context.popup();
       });
       browserview.webContents.on('context-menu', (e, params) => {
-        console.log(e);
+        console.log(params);
       });
     }
 
