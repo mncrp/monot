@@ -10,7 +10,7 @@ document.getElementById('searchButton').addEventListener('click', () => {
   searchBrowser();
 });
 
-document.getElementById('search').addEventListener('keydown', (e) => {
+document.getElementById('search').addEventListener('keypress', (e) => {
   if (!e.isComposing && e.code === 'Enter') {
     searchBrowser();
   }
