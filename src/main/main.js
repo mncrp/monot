@@ -131,11 +131,11 @@ function windowClose() {
 }
 
 app.on('ready', () => {
-  const view = new BrowserView({
+  const optionView = new BrowserView({
     transparent: true,
     frame: false
   });
-  view.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
+  optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, ind) => {
@@ -273,26 +273,27 @@ app.on('ready', () => {
   });
 
   nw();
+
   ipcMain.handle('options', () => {
-    if (BrowserWindow.fromBrowserView(view)) {
-      win.removeBrowserView(view);
+    if (BrowserWindow.fromBrowserView(optionView)) {
+      win.removeBrowserView(optionView);
     } else {
-      win.addBrowserView(view);
-      view.setBounds({
+      win.addBrowserView(optionView);
+      optionView.setBounds({
         x: win.getSize()[0] - 320,
         y: viewY - 35,
         width: 300,
         height: 500
       });
       win.on('resize', () => {
-        view.setBounds({
+        optionView.setBounds({
           x: win.getSize()[0] - 320,
           y: viewY - 35,
           width: 300,
           height: 500
         });
       });
-      win.setTopBrowserView(view);
+      win.setTopBrowserView(optionView);
     }
   });
 });

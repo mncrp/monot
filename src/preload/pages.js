@@ -2,12 +2,6 @@ const {webFrame, contextBridge, ipcRenderer} = require('electron');
 
 webFrame.setZoomFactor(1);
 
-contextBridge.exposeInMainWorld('node', {
-  context: (text) => {
-    ipcRenderer.invoke('context', text);
-  }
-});
-
 // 拡大
 ipcRenderer.on('zoom', () => {
   webFrame.setZoomFactor(
@@ -23,4 +17,10 @@ ipcRenderer.on('shrink', () => {
 // 等倍
 ipcRenderer.on('actual', () => {
   webFrame.setZoomFactor(1);
+});
+
+contextBridge.exposeInMainWorld('node', {
+  context: (text) => {
+    ipcRenderer.invoke('context', text);
+  }
 });
