@@ -541,8 +541,8 @@ Copyright 2021-2022 monochrome Project.`
     ]
   },
   {
-    label: '移動',
-    id: 'move',
+    label: '表示',
+    id: 'view',
     submenu: [
       {
         label: '再読み込み',
@@ -563,6 +563,38 @@ Copyright 2021-2022 monochrome Project.`
         accelerator: 'Alt+Right',
         click: () => {
           bv[currentTab].goForward();
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: '拡大',
+        accelerator: 'CmdOrCtrl+^',
+        click: () => {
+          bv[currentTab].entity.webContents.send('zoom');
+        }
+      },
+      {
+        label: '縮小',
+        accelerator: 'CmdOrCtrl+-',
+        click: () => {
+          bv[currentTab].entity.webContents.send('shrink');
+        }
+      },
+      {
+        label: '等倍',
+        accelerator: 'CmdOrCtrl+0',
+        click: () => {
+          bv[currentTab].entity.webContents.send('actual');
+        }
+      },
+      {
+        label: '拡大',
+        accelerator: 'CmdOrCtrl+Shift+Plus',
+        visible: false,
+        click: () => {
+          bv[currentTab].entity.webContents.send('zoom');
         }
       }
     ]
