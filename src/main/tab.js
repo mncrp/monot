@@ -10,6 +10,7 @@ const isMac = process.platform === 'darwin';
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
+const {History} = require(`${directory}/proprietary/lib/history.js`);
 let windowSize;
 
 class Tab {
@@ -110,19 +111,21 @@ class Tab {
   }
 
   load(url = `file://${directory}/browser/index.html`) {
+    let faviconUrl;
     this.entity.webContents.loadURL(url);
     this.href = url;
     const win = BrowserWindow.fromBrowserView(this.entity);
 
     this.entity.webContents.on('dom-ready', () => {
+
+      /*
+       * これはレンダラプロセスモジュール以外使ってないから動かない理由がわからない
+       * でも動かない😟
+       * ちなみにメインプロセスモジュール(browserviewとか)はpreloadでは使えないみたい。
+       */
       this.entity.webContents.setVisualZoomLevelLimits(1, 5);
-      // proprietary stylesheet
-      this.entity.webContents.insertCSS(
-        fs.readFileSync(
-          `${directory}/proprietary/style/ua.css`,
-          'utf-8'
-        )
-      );
+
+      // 新タブと同じURLなのかどうか
       const browserURL = new URL(this.href);
       const fileURL = new URL(`file://${directory}/browser/home.html`);
       this.href = this.entity.webContents.getURL();
@@ -134,6 +137,7 @@ class Tab {
           url = '${engineURL}';
         `);
       }
+
       const experiments = monotConfig.update().get('experiments');
       // Force-Dark
       if (experiments.forceDark === true) {
@@ -153,6 +157,8 @@ class Tab {
         `);
       }
     });
+
+    // こいつらはタイミング指定しているのでpreloadにしない
     this.entity.webContents.on('did-start-loading', () => {
       this.entity.webContents.executeJavaScript(`
         document.addEventListener('contextmenu',()=>{
@@ -164,21 +170,19 @@ class Tab {
           .setAttribute('id','loading');
       `);
     });
+
     this.entity.webContents.on('did-finish-load', () => {
       this.entity.setBackgroundColor('#efefef');
-      this.entity.webContents.executeJavaScript(`
-        document.addEventListener('contextmenu',()=>{
-          node.context();
-        })
-      `);
       win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id','loaded')
-        document.getElementsByTagName('title')[0].innerText='${this.entity.webContents.getTitle()} - Monot';
+        document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id', 'loaded')
+        document.getElementsByTagName('title')[0].innerText =
+          '${this.entity.webContents.getTitle()} - Monot';
         document.getElementById('opened')
           .getElementsByTagName('a')[0]
           .innerText='${this.entity.webContents.getTitle()}';
       `);
     });
+
     this.entity.webContents.on('did-stop-loading', () => {
       // changes the progress
       win.webContents.executeJavaScript(`
@@ -187,13 +191,29 @@ class Tab {
       `);
       this.setTitleUrl();
     });
+
     // when the page title is updated (update the window title and tab title) config.mncfg
     this.entity.webContents.on('page-title-updated', (e, t) => {
       win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText='${t} - Monot';
-        document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText='${t}';
+        document.getElementsByTagName('title')[0].innerText =
+          '${t} - Monot';
+        document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText =
+          '${t}';
       `);
     });
+
+    this.entity.webContents.on('page-favicon-updated', (e, url) => {
+      faviconUrl = url;
+    });
+
+    this.entity.webContents.on('did-frame-finish-load', () => {
+      console.log({
+        pageTitle: this.entity.webContents.getTitle(),
+        pageUrl: this.entity.webContents.getURL(),
+        pageIcon: faviconUrl,
+      });
+    });
+
     win.on('resize', () => {
       windowSize = win.getContentSize();
       this.entity.setBounds({
@@ -219,7 +239,7 @@ class Tab {
     const isSame = partOfUrl === partOfResourceIndex;
     if (url.href === `${partOfResourceIndex}browser/home.html`) {
       return win.webContents.executeJavaScript(`
-        document.getElementsByTagName('input')[0].value='';
+        document.getElementsByTagName('input')[0].value = '';
       `);
     } else if (isSame) {
       return Promise.resolve();
@@ -227,7 +247,8 @@ class Tab {
 
     // Set URL in the URL bar.
     return win.webContents.executeJavaScript(`
-      document.getElementsByTagName('input')[0].value='${url.host}${url.pathname}${url.search}${url.hash}';
+      document.getElementsByTagName('input')[0].value =
+        '${url.host}${url.pathname}${url.search}${url.hash}';
     `);
   }
 
