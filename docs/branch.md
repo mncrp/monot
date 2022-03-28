@@ -29,14 +29,14 @@ mainブランチにmergeする場合は、必ず代表者に許可をもらっ�
 まず、注意点として**このブランチはリモートで管理しないでください**
 新しくfeatureブランチを作るときには以下のように行います。
 ```git
-git checkout -b myfeature develop
+git checkout -b feature/hoge develop
 ```
 featureブランチで機能を作って完成させた場合、以下の手順でgit pushを行ってください。
 
 ```git
 git checkout develop
-git merge --no-ff myfeature
-git branch -d myfeature
+git merge --no-ff feature/hoge
+git branch -d feature/hoge
 git push origin develop
 ```
 
@@ -53,16 +53,16 @@ releaseブランチがmainブランチにmergeできる状態になったら、�
 
 ```git
 git checkout main
-git merge --no-ff release-1.1
-git tag -a 1.1
+git merge --no-ff release/v1.1.0
+git tag -a 1.1.0
 git checkout develop
-git merge --no-ff release-1.1
-git branch -d release-1.1
+git merge --no-ff release/v1.1.0
+git branch -d release/v1.1.0
 ```
 
 ## hotfix
 
-命名規則：`hotfix/*`
+命名規則：`hotfix/vX.X.X`
 
 hotfixブランチは、mainブランチに存在する、すでに提供されている物にすぐに修正すべきことが見つかったときに作られるブランチです。このブランチをmainにmergeする場合、代表者に許可を取ってください。
 
@@ -71,11 +71,11 @@ hotfixブランチがmainブランチにmergeできる状態になったら、�
 
 ```git
 git checkout main
-git merge --no-ff hotfix-1.1.1
+git merge --no-ff hotfix/v1.1.1
 git tag -a 1.1.1
 git checkout develop
-git merge --no-ff hotfix-1.1.1
-git branch -d hotfix-1.1.1
+git merge --no-ff hotfix/v1.1.1
+git branch -d hotfix/v1.1.1
 ```
 
 ## 終わりに
