@@ -76,6 +76,7 @@ git branch -d hotfix-1.1.1
 
 これは、以下を参考にして書かれました。そのため、さらに詳しく知りたい人はこれらも見るといいかもしれません。
 
+https://zenn.dev/yuki0410/articles/3360a6078d8e8c
 https://nvie.com/posts/a-successful-git-branching-model/
 https://qiita.com/homhom44/items/9f13c646fa2619ae63d0
 https://backlog.com/ja/git-tutorial/stepup/05/
