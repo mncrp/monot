@@ -80,7 +80,7 @@ git branch -d hotfix/v1.1.1
 
 ## 終わりに
 
-これは、以下を参考にして書かれました。そのため、さらに詳しく知りたい人はこれらも見るといいかもしれません。
+これは、以下を参考にして書かれました。そのため、さらに詳しく知りたい方や分かりにくかったと思う方はこれらも見るといいかもしれません。
 
 https://zenn.dev/yuki0410/articles/3360a6078d8e8c
 https://nvie.com/posts/a-successful-git-branching-model/
