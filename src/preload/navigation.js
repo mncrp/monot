@@ -62,5 +62,8 @@ contextBridge.exposeInMainWorld('node', {
   removeTab: (index) => {
     // remove tab
     ipcRenderer.invoke('removeTab', index);
+  },
+  popupMenu: () => {
+    ipcRenderer.invoke('popupNavigationMenu');
   }
 });
