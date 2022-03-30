@@ -1,4 +1,5 @@
 {
   "editor.tabSize": 2,
-  "cSpell.words": ["mndata"]
+  "cSpell.words": ["mndata"],
+  "editor.formatOnSave": false
 }
