@@ -52,3 +52,8 @@ function newtab(title) {
   each();
   node.newtab();
 }
+
+window.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  node.popupMenu();
+});

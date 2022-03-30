@@ -15,6 +15,26 @@ const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const bv = [];
 const viewY = 66;
+const navigationContextMenu = Menu.buildFromTemplate([
+  {
+    label: '戻る',
+    click: () => {
+      bv[currentTab].entity.webContents.goBack();
+    }
+  },
+  {
+    label: '進む',
+    click: () => {
+      bv[currentTab].entity.webContents.goForward();
+    }
+  },
+  {
+    label: '設定',
+    click: () => {
+      showSetting();
+    }
+  }
+]);
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -73,30 +93,6 @@ function nw() {
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
-
-  const contextMenu = require('electron-context-menu');
-  contextMenu({
-    prepend: () => [
-      {
-        label: '戻る',
-        click: () => {
-          bv[currentTab].entity.webContents.goBack();
-        }
-      },
-      {
-        label: '進む',
-        click: () => {
-          bv[currentTab].entity.webContents.goForward();
-        }
-      },
-      {
-        label: '設定',
-        click: () => {
-          showSetting();
-        }
-      }
-    ]
-  });
 
   function getEngine() {
     enginesConfig.update();
@@ -256,6 +252,9 @@ app.on('ready', () => {
         document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
       `);
     }
+  });
+  ipcMain.handle('popupNavigationMenu', () => {
+    navigationContextMenu.popup();
   });
   ipcMain.handle('setting.searchEngine', (e, engine) => {
     enginesConfig.update()
