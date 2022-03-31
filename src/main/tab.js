@@ -252,10 +252,13 @@ class Tab {
     `);
   }
 
-  setTop() {
+  setCurrent() {
     const win = BrowserWindow.fromBrowserView(this.entity);
     win.setTopBrowserView(this.entity);
     this.entity.setBackgroundColor('#efefef');
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('title')[0].innerText = '${this.entity.webContents.getTitle()} - Monot';
+    `);
   }
 
   goBack() {

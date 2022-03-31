@@ -225,10 +225,7 @@ app.on('ready', () => {
       i = 0;
 
     if (bv[i] !== undefined) {
-      bv[i].setTop();
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
-      `);
+      bv[i].setCurrent();
     } else {
       win.webContents.executeJavaScript(`
         document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
@@ -247,10 +244,7 @@ app.on('ready', () => {
     const {Tab} = require('./tab');
     if (bv[i] !== null && bv[i] instanceof Tab) {
       console.log(bv[i] instanceof Tab);
-      bv[i].setTop();
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
-      `);
+      bv[i].setCurrent();
     }
   });
   ipcMain.handle('popupNavigationMenu', () => {
