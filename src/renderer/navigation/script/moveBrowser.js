@@ -11,25 +11,22 @@ function getCurrent() {
 function moveBrowser() {
   const word = document.getElementsByTagName('input')[0].value;
   document.activeElement.blur();
+
   try {
-    try {
-      const url = new URL(word);
-      node.moveBrowser(url.href, getCurrent());
-    } catch (e) {
-      if (word.match(/\S+\.\S+/)) {
-        node.moveBrowser(`http://${word}`, getCurrent());
-      } else {
-        node.moveBrowser(engine + word, getCurrent());
-      }
-    }
+    const url = new URL(word);
+    node.moveBrowser(url.href, getCurrent());
   } catch (e) {
-    node.moveBrowser(engine + word, getCurrent());
+    if (word.match(/\S+\.\S+/)) {
+      node.moveBrowser(`http://${word}`, getCurrent());
+    } else {
+      node.moveBrowser(engine + word, getCurrent());
+    }
   }
+
 }
 
 document.getElementsByTagName('input')[0]
   .addEventListener('keydown', (e) => {
-    console.log(e);
     const word = document.getElementsByTagName('input')[0].value;
     // press enter
     if (!e.isComposing && e.key === 'Enter' && word != null) {
