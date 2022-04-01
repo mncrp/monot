@@ -22,7 +22,6 @@ function moveBrowser() {
       node.moveBrowser(engine + word, getCurrent());
     }
   }
-
 }
 
 document.getElementsByTagName('input')[0]

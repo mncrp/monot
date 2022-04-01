@@ -1,22 +1,22 @@
-/* globals getCurrent */
 function each() {
   // when close button clicked
-  document.querySelectorAll('div>span>a:last-child').forEach((i) => {
-    i.addEventListener('click', () => {
-      i.parentNode.remove();
-      node.removeTab(getCurrent());
+  document.querySelectorAll('div>span>a:last-child').forEach((element, index) => {
+    element.addEventListener('click', () => {
+      element.parentNode.remove();
+      node.removeTab(index);
     });
   });
-  document.querySelectorAll('div>span').forEach((i) => {
+  document.querySelectorAll('div>span').forEach((element, index) => {
     // when tab-bar clicked
-    i.addEventListener('click', () => {
+    element.addEventListener('click', () => {
       // remove #opened's id(Opened)
-      if (document.getElementById('opened')) {
-        document.getElementById('opened').removeAttribute('id');
+      const openedTab = document.getElementById('opened');
+      if (openedTab) {
+        openedTab.removeAttribute('id');
       }
       // clicked tab
-      i.setAttribute('id', 'opened');
-      node.tabMove(getCurrent());
+      element.setAttribute('id', 'opened');
+      node.tabMove(index);
     });
   });
 
