@@ -28,10 +28,11 @@ function moveBrowser() {
 }
 
 document.getElementsByTagName('input')[0]
-  .addEventListener('keypress', (e) => {
+  .addEventListener('keydown', (e) => {
+    console.log(e);
     const word = document.getElementsByTagName('input')[0].value;
     // press enter
-    if (e.keyCode === 13 && word != null) {
+    if (!e.isComposing && e.key === 'Enter' && word != null) {
       // <span#opened>
       moveBrowser();
     }
