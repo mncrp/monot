@@ -59,9 +59,9 @@ contextBridge.exposeInMainWorld('node', {
     // move tab
     ipcRenderer.invoke('tabMove', index);
   },
-  removeTab: (index) => {
+  removeTab: async(index) => {
     // remove tab
-    ipcRenderer.invoke('removeTab', index);
+    return ipcRenderer.invoke('removeTab', index);
   },
   popupMenu: () => {
     ipcRenderer.invoke('popupNavigationMenu');

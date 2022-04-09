@@ -13,6 +13,47 @@ const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${di
 const {History} = require(`${directory}/proprietary/lib/history.js`);
 let windowSize;
 
+class TabManager {
+  constructor() {
+    this.tabs = [];
+    this.current = 0;
+  }
+
+  setCurrent(win, index) {
+    win.webContents.executeJavaScript(`
+      document.getElementById('opened')?.removeAttribute('id');
+      document.querySelectorAll('div>span')[${index}].setAttribute('id', 'opened');
+    `);
+    this.tabs[index].setCurrent(win);
+    this.current = index;
+  }
+
+  push(data) {
+    this.tabs.push(data);
+  }
+
+  length() {
+    return this.tabs.length;
+  }
+
+  get(index = this.current) {
+    return this.tabs[index];
+  }
+
+  removeTab(win, index = this.current) {
+    win.removeBrowserView(this.tabs[index].entity);
+    this.tabs[index].entity.webContents.destroy();
+    this.tabs[index] = null;
+    this.tabs.splice(index, 1);
+
+    if (index >= this.tabs.length) {
+      index -= 1;
+    }
+
+    this.setCurrent(win, index);
+  }
+}
+
 class Tab {
   constructor(
     url = new URL(`file://${directory}/browser/index.html`)
@@ -252,8 +293,7 @@ class Tab {
     `);
   }
 
-  setCurrent() {
-    const win = BrowserWindow.fromBrowserView(this.entity);
+  setCurrent(win) {
     win.setTopBrowserView(this.entity);
     this.entity.setBackgroundColor('#efefef');
     win.webContents.executeJavaScript(`
@@ -279,5 +319,6 @@ class Tab {
 }
 
 module.exports = {
-  Tab
+  Tab,
+  TabManager
 };
