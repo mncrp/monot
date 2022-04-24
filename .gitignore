@@ -4,3 +4,4 @@ temp/
 .*
 !.gitignore
 !.eslintrc.json
+!.prettierrc

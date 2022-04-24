@@ -7,7 +7,8 @@
   "repository": "https://github.com/Sorakime/monot/",
   "scripts": {
     "test": "npx electron .",
-    "build": "npx electron-builder"
+    "build": "npx electron-builder",
+    "format": "npx eslint --fix ."
   },
   "author": "monochrome Project.",
   "license": "ISC",
