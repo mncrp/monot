@@ -63,7 +63,6 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
-  win.webContents.openDevTools();
   win.setBackgroundColor('#efefef');
   win.loadFile(
     process.platform === 'darwin' ?
