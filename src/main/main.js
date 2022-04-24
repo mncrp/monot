@@ -8,24 +8,28 @@ const {
   BrowserView,
 } = require('electron');
 
+const {
+  Tab,
+  TabManager
+} = require('./tab');
+
 // letiables
 let win, windowSize, menu, context;
-let currentTab = 0;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
-const bv = [];
+const tabs = new TabManager();
 const viewY = 66;
 const navigationContextMenu = Menu.buildFromTemplate([
   {
     label: '戻る',
     click: () => {
-      bv[currentTab].entity.webContents.goBack();
+      tabs.get().goBack();
     }
   },
   {
     label: '進む',
     click: () => {
-      bv[currentTab].entity.webContents.goForward();
+      tabs.get().goForward();
     }
   },
   {
@@ -40,34 +44,6 @@ const navigationContextMenu = Menu.buildFromTemplate([
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
-
-// creating new tab function
-function newtab() {
-  // create new tab
-  const {Tab} = require('./tab');
-  const browserview = new Tab();
-  currentTab = bv.length;
-  windowSize = win.getSize();
-  browserview.entity.webContents.setZoomLevel(1);
-
-  bv.push(browserview);
-  win.addBrowserView(bv[bv.length - 1].entity);
-
-  bv[bv.length - 1].entity.setBounds({
-    x: 0,
-    y: viewY,
-    width: windowSize[0],
-    height: windowSize[1] - viewY
-  });
-  bv[bv.length - 1].entity.setAutoResize({
-    width: true,
-    height: true
-  });
-
-  bv[bv.length - 1].load(
-    `file://${directory}/browser/home.html`
-  );
-}
 
 function nw() {
   // create window
@@ -87,6 +63,7 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
+  win.webContents.openDevTools();
   win.setBackgroundColor('#efefef');
   win.loadFile(
     process.platform === 'darwin' ?
@@ -114,7 +91,7 @@ function nw() {
   });
 
   // create tab
-  newtab();
+  tabs.newTab(win);
 }
 
 function windowClose() {
@@ -134,27 +111,8 @@ app.on('ready', () => {
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
 
   // ipc channels
-  ipcMain.handle('moveView', (e, link, ind) => {
-    const current = ind;
-    bv[current].entity.webContents.executeJavaScript(`
-      document.addEventListener('contextmenu',()=>{
-        node.context();
-      })
-    `);
-    if (link === '') {
-      return;
-    }
-
-    try {
-      bv[current].load(link);
-    } catch (e) {
-      bv[current].load(
-        `file://${directory}/browser/server-notfound.html`
-      );
-      bv[current].entity.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';
-      `);
-    }
+  ipcMain.handle('moveView', (e, link, index) => {
+    tabs.get(index).load(link);
   });
   ipcMain.handle('windowClose', () => {
     windowClose();
@@ -175,83 +133,36 @@ app.on('ready', () => {
     win.fullScreen ? win.fullScreen = false : win.fullScreen = true;
   });
   ipcMain.handle('moveViewBlank', (e, index) => {
-    bv[index].load(
+    tabs.get(index).load(
       `file://${directory}/browser/blank.html`
     );
   });
   ipcMain.handle('reloadBrowser', (e, index) => {
-    bv[index].entity.webContents.reload();
+    tabs.get(index).entity.webContents.reload();
   });
   ipcMain.handle('browserBack', (e, index) => {
-    bv[index].entity.webContents.goBack();
-
+    tabs.get(index).entity.webContents.goBack();
   });
   ipcMain.handle('browserGoes', (e, index) => {
-    bv[index].entity.webContents.goForward();
+    tabs.get(index).entity.webContents.goForward();
   });
   ipcMain.handle('getBrowserUrl', (e, index) => {
-    return bv[index].entity.webContents.getURL();
+    return tabs.get(index).entity.webContents.getURL();
   });
   ipcMain.handle('moveToNewTab', (e, index) => {
-    enginesConfig.update();
-    const selectEngine = enginesConfig.get('engine');
-    const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
-
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
-    `);
-
-    bv[index].load(`file://${directory}/browser/home.html`);
-
-    // search engine
-    bv[index].entity.webContents.on('did-stop-loading', () => {
-      bv[index].entity.webContents.executeJavaScript(`
-        url = '${engineURL}';
-      `);
-    });
+    tabs.get(index).load(`file://${directory}/browser/home.html`);
   });
   ipcMain.handle('context', () => {
     context.popup();
   });
   ipcMain.handle('newtab', () => {
-    newtab();
+    tabs.newTab(win);
   });
-  ipcMain.handle('tabMove', (e, i) => {
-    if (bv[i] === null) {
-      newtab();
-      return;
-    }
-    if (i < 0)
-      i = 0;
-
-    if (bv[i] !== undefined) {
-      bv[i].setTop();
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
-      `);
-    } else {
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
-      `);
-    }
-    currentTab = i;
+  ipcMain.handle('tabMove', (e, index) => {
+    tabs.setCurrent(win, index);
   });
-  ipcMain.handle('removeTab', (e, i) => {
-    // source: https://www.gesource.jp/weblog/?p=4112
-    if (i < 0 || !(i instanceof Number))
-      i = 0;
-    win.removeBrowserView(bv[i].entity);
-    bv[i].entity.webContents.destroy();
-    bv[i] = null;
-    bv.splice(i, 1);
-    const {Tab} = require('./tab');
-    if (bv[i] !== null && bv[i] instanceof Tab) {
-      console.log(bv[i] instanceof Tab);
-      bv[i].setTop();
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText = '${bv[i].entity.webContents.getTitle()} - Monot';
-      `);
-    }
+  ipcMain.handle('removeTab', (e, index) => {
+    tabs.removeTab(win, index);
   });
   ipcMain.handle('popupNavigationMenu', () => {
     navigationContextMenu.popup();
@@ -382,21 +293,21 @@ const menuTemplate = [
         label: '再読み込み',
         accelerator: 'CmdOrCtrl+R',
         click: () => {
-          bv[currentTab].reload();
+          tabs.get().reload();
         }
       },
       {
         label: '戻る',
         accelerator: 'Alt+Left',
         click: () => {
-          bv[currentTab].goBack();
+          tabs.get().goBack();
         }
       },
       {
         label: '進む',
         accelerator: 'Alt+Right',
         click: () => {
-          bv[currentTab].goForward();
+          tabs.get().goForward();
         }
       }
     ]
@@ -460,7 +371,6 @@ Copyright 2021 monochrome Project.`
         label: '新しいタブ',
         accelerator: 'CmdOrCtrl+T',
         click: () => {
-          newtab();
           win.webContents.executeJavaScript(`
             newtab('Home')
           `);
@@ -475,7 +385,7 @@ Copyright 2021 monochrome Project.`
         label: '開発者向けツール',
         accelerator: 'F12',
         click: () => {
-          bv[currentTab].entity.webContents.toggleDevTools();
+          tabs.get().entity.webContents.toggleDevTools();
         }
       },
       {
@@ -483,7 +393,7 @@ Copyright 2021 monochrome Project.`
         accelerator: 'CmdOrCtrl+Shift+I',
         visible: false,
         click: () => {
-          bv[currentTab].entity.webContents.toggleDevTools();
+          tabs.get().entity.webContents.toggleDevTools();
         }
       }
     ]
@@ -548,21 +458,21 @@ Copyright 2021-2022 monochrome Project.`
         label: '再読み込み',
         accelerator: 'CmdOrCtrl+R',
         click: () => {
-          bv[currentTab].reload();
+          tabs.get().reload();
         }
       },
       {
         label: '戻る',
         accelerator: 'Alt+Left',
         click: () => {
-          bv[currentTab].goBack();
+          tabs.get().goBack();
         }
       },
       {
         label: '進む',
         accelerator: 'Alt+Right',
         click: () => {
-          bv[currentTab].goForward();
+          tabs.get().goForward();
         }
       },
       {
@@ -572,21 +482,21 @@ Copyright 2021-2022 monochrome Project.`
         label: '拡大',
         accelerator: 'CmdOrCtrl+^',
         click: () => {
-          bv[currentTab].entity.webContents.send('zoom');
+          tabs.get().entity.webContents.send('zoom');
         }
       },
       {
         label: '縮小',
         accelerator: 'CmdOrCtrl+-',
         click: () => {
-          bv[currentTab].entity.webContents.send('shrink');
+          tabs.get().entity.webContents.send('shrink');
         }
       },
       {
         label: '等倍',
         accelerator: 'CmdOrCtrl+0',
         click: () => {
-          bv[currentTab].entity.webContents.send('actual');
+          tabs.get().entity.webContents.send('actual');
         }
       },
       {
@@ -594,7 +504,7 @@ Copyright 2021-2022 monochrome Project.`
         accelerator: 'CmdOrCtrl+Shift+Plus',
         visible: false,
         click: () => {
-          bv[currentTab].entity.webContents.send('zoom');
+          tabs.get().entity.webContents.send('zoom');
         }
       }
     ]
@@ -627,7 +537,6 @@ Copyright 2021-2022 monochrome Project.`
         label: '新しいタブ',
         accelerator: 'CmdOrCtrl+T',
         click: () => {
-          newtab();
           win.webContents.executeJavaScript(`
             newtab('Home')
           `);
@@ -649,7 +558,7 @@ Copyright 2021-2022 monochrome Project.`
         label: '開発者向けツール',
         accelerator: 'F12',
         click: () => {
-          bv[currentTab].entity.webContents.toggleDevTools();
+          tabs.get().entity.webContents.toggleDevTools();
         }
       },
       {
@@ -657,7 +566,7 @@ Copyright 2021-2022 monochrome Project.`
         accelerator: 'CmdOrCtrl+Shift+I',
         visible: false,
         click: () => {
-          bv[currentTab].entity.webContents.toggleDevTools();
+          tabs.get().entity.webContents.toggleDevTools();
         }
       }
     ]
@@ -668,8 +577,8 @@ Copyright 2021-2022 monochrome Project.`
       {
         label: '公式サイト',
         click: () => {
-          if (bv[currentTab] !== null) {
-            bv[currentTab].load('https://sorakime.github.io/mncr/project/monot');
+          if (tabs.get() !== null) {
+            tabs.get().load('https://sorakime.github.io/mncr/project/monot');
           }
         }
       }

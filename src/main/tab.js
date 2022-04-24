@@ -13,34 +13,183 @@ const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${di
 const {History} = require(`${directory}/proprietary/lib/history.js`);
 let windowSize;
 
+class TabManager {
+  constructor() {
+    this.tabs = [];
+    this.current = 0;
+  }
+
+  setCurrent(win, index) {
+    win.webContents.executeJavaScript(`
+      document.getElementById('opened')?.removeAttribute('id');
+      document.querySelectorAll('div>span')[${index}].setAttribute('id', 'opened');
+    `);
+
+    win.setTopBrowserView(this.tabs[index].entity);
+    this.tabs[index].entity.setBackgroundColor('#efefef');
+    this.tabs[index].setWindowTitle();
+    this.current = index;
+  }
+
+  push(win, data) {
+    this.tabs.push(data);
+  }
+
+  length() {
+    return this.tabs.length;
+  }
+
+  get(index = this.current) {
+    return this.tabs[index];
+  }
+
+  removeTab(win, index = this.current) {
+    win.removeBrowserView(this.tabs[index].entity);
+    this.tabs[index].entity.webContents.destroy();
+    this.tabs[index] = null;
+    this.tabs.splice(index, 1);
+
+    if (index >= this.tabs.length) {
+      index -= 1;
+    }
+
+    this.setCurrent(win, index);
+  }
+
+  newTab(win, shouldMoveCurrent = true, url) {
+    const tab = new Tab(win, url);
+    this.push(win, tab);
+    if (shouldMoveCurrent) {
+      this.setCurrent(win, this.length() - 1);
+    }
+  }
+}
+
 class Tab {
-  constructor(
-    url = new URL(`file://${directory}/browser/index.html`)
-  ) {
-    this.href = url;
+  constructor(win, url = new URL(`file://${directory}/browser/home.html`)) {
 
     if (!(url instanceof URL)) {
       url = new URL(url);
     }
-    const browserview = new BrowserView({
+    this.url = url;
+    this.faviconUrl;
+
+    const browserView = new BrowserView({
       backgroundColor: '#efefef',
       webPreferences: {
         scrollBounce: true,
         preload: `${directory}/preload/pages.js`
       }
     });
-    browserview.webContents.setVisualZoomLevelLimits(1, 1);
+    browserView.webContents.setVisualZoomLevelLimits(1, 1);
 
     // events
-    browserview.webContents.on('did-fail-load', () => {
+    // did-fail-load
+    browserView.webContents.on('did-fail-load', () => {
       this.load(
         `file://${directory}/browser/server-notfound.html`
       );
-      browserview.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[0].innerText='${browserview.webContents.getURL().toLowerCase()}';
+      browserView.webContents.executeJavaScript(`
+        document.getElementsByTagName('span')[0].innerText='${browserView.webContents.getURL().toLowerCase()}';
       `);
     });
+    // dom-ready
+    browserView.webContents.on('dom-ready', () => {
+      /*
+       * これはレンダラプロセスモジュール以外使ってないから動かない理由がわからない
+       * でも動かない😟
+       * ちなみにメインプロセスモジュール(browserviewとか)はpreloadでは使えないみたい。
+       */
+      browserView.webContents.setVisualZoomLevelLimits(1, 5);
 
+      this.url = new URL(browserView.webContents.getURL());
+      // 新タブと同じURLなのかどうか
+      const fileURL = new URL(`file://${directory}/browser/home.html`);
+      if (this.url.href === fileURL.href) {
+        enginesConfig.update();
+        const selectEngine = enginesConfig.get('engine');
+        const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+        browserView.webContents.executeJavaScript(`
+          url = '${engineURL}';
+        `);
+      }
+      const experiments = monotConfig.update().get('experiments');
+      // Force-Dark
+      if (experiments.forceDark === true) {
+        browserView.webContents.insertCSS(
+          fs.readFileSync(
+            `${directory}/proprietary/style/forcedark.css`,
+            'utf-8'
+          )
+        );
+      }
+      // fontChange
+      if (experiments.fontChange === true) {
+        browserView.webContents.insertCSS(`
+          body,body>*, *{
+            font-family: ${experiments.changedfont},'Noto Sans JP'!important;
+          }
+        `);
+      }
+    });
+    // did-start-loading
+    // こいつらはタイミング指定しているのでpreloadにしない
+    browserView.webContents.on('did-start-loading', () => {
+      browserView.webContents.executeJavaScript(`
+        document.addEventListener('contextmenu',()=>{
+          node.context();
+        })
+      `);
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('yomikomi-bar')[0]
+          .setAttribute('id','loading');
+      `);
+    });
+    // did-finish-load
+    browserView.webContents.on('did-finish-load', () => {
+      browserView.setBackgroundColor('#efefef');
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id', 'loaded');
+      `);
+      this.setTabTitle();
+      this.setWindowTitle();
+      console.log({
+        pageTitle: browserView.webContents.getTitle(),
+        pageUrl: browserView.webContents.getURL(),
+        pageIcon: this.faviconUrl,
+      });
+    });
+    // did-stop-loading
+    browserView.webContents.on('did-stop-loading', () => {
+      // changes the progress
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('yomikomi-bar')[0]
+          .removeAttribute('id');
+      `);
+      this.setTitleUrl();
+    });
+    // page-favicon-updated
+    browserView.webContents.on('page-favicon-updated', (e, url) => {
+      this.faviconUrl = url;
+    });
+    // page-title-updated
+    // when the page title is updated (update the window title and tab title) config.mncfg
+    browserView.webContents.on('page-title-updated', (e) => {
+      this.setTabTitle();
+      this.setWindowTitle();
+    });
+    // resize
+    win.on('resize', () => {
+      windowSize = win.getContentSize();
+      browserView.setBounds({
+        x: 0,
+        y: viewY,
+        width: windowSize[0],
+        height: windowSize[1] - viewY
+      });
+    });
+
+    // mac's contextmenu.
     if (isMac) {
       const {ipcMain} = require('electron');
       const contextMenu = [
@@ -102,146 +251,53 @@ class Tab {
       ipcMain.handle('context', () => {
         context.popup();
       });
-      browserview.webContents.on('context-menu', (e, params) => {
+      browserView.webContents.on('context-menu', (e, params) => {
         console.log(params);
       });
     }
 
-    this.entity = browserview;
+    // last init
+    win.addBrowserView(browserView);
+    browserView.webContents.setZoomLevel(1);
+
+    windowSize = win.getSize();
+    browserView.setBounds({
+      x: 0,
+      y: viewY,
+      width: windowSize[0],
+      height: windowSize[1] - viewY
+    });
+    browserView.setAutoResize({
+      width: true,
+      height: true
+    });
+
+    this.entity = browserView;
+    this.load(url.href);
   }
 
-  load(url = `file://${directory}/browser/index.html`) {
-    let faviconUrl;
-    this.entity.webContents.loadURL(url);
-    this.href = url;
-    const win = BrowserWindow.fromBrowserView(this.entity);
-
-    this.entity.webContents.on('dom-ready', () => {
-
-      /*
-       * これはレンダラプロセスモジュール以外使ってないから動かない理由がわからない
-       * でも動かない😟
-       * ちなみにメインプロセスモジュール(browserviewとか)はpreloadでは使えないみたい。
-       */
-      this.entity.webContents.setVisualZoomLevelLimits(1, 5);
-
-      // 新タブと同じURLなのかどうか
-      const browserURL = new URL(this.href);
-      const fileURL = new URL(`file://${directory}/browser/home.html`);
-      this.href = this.entity.webContents.getURL();
-      if (browserURL.href === fileURL.href) {
-        enginesConfig.update();
-        const selectEngine = enginesConfig.get('engine');
-        const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
-        this.entity.webContents.executeJavaScript(`
-          url = '${engineURL}';
-        `);
-      }
-
-      const experiments = monotConfig.update().get('experiments');
-      // Force-Dark
-      if (experiments.forceDark === true) {
-        this.entity.webContents.insertCSS(
-          fs.readFileSync(
-            `${directory}/proprietary/style/forcedark.css`,
-            'utf-8'
-          )
-        );
-      }
-      // fontChange
-      if (experiments.fontChange === true) {
-        this.entity.webContents.insertCSS(`
-          body,body>*, *{
-            font-family: ${experiments.changedfont},'Noto Sans JP'!important;
-          }
-        `);
-      }
-    });
-
-    // こいつらはタイミング指定しているのでpreloadにしない
-    this.entity.webContents.on('did-start-loading', () => {
-      this.entity.webContents.executeJavaScript(`
-        document.addEventListener('contextmenu',()=>{
-          node.context();
-        })
-      `);
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0]
-          .setAttribute('id','loading');
-      `);
-    });
-
-    this.entity.webContents.on('did-finish-load', () => {
-      this.entity.setBackgroundColor('#efefef');
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id', 'loaded')
-        document.getElementsByTagName('title')[0].innerText =
-          '${this.entity.webContents.getTitle()} - Monot';
-        document.getElementById('opened')
-          .getElementsByTagName('a')[0]
-          .innerText='${this.entity.webContents.getTitle()}';
-      `);
-    });
-
-    this.entity.webContents.on('did-stop-loading', () => {
-      // changes the progress
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0]
-          .removeAttribute('id');
-      `);
-      this.setTitleUrl();
-    });
-
-    // when the page title is updated (update the window title and tab title) config.mncfg
-    this.entity.webContents.on('page-title-updated', (e, t) => {
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText =
-          '${t} - Monot';
-        document.getElementsByTagName('span')[getCurrent()].getElementsByTagName('a')[0].innerText =
-          '${t}';
-      `);
-    });
-
-    this.entity.webContents.on('page-favicon-updated', (e, url) => {
-      faviconUrl = url;
-    });
-
-    this.entity.webContents.on('did-frame-finish-load', () => {
-      console.log({
-        pageTitle: this.entity.webContents.getTitle(),
-        pageUrl: this.entity.webContents.getURL(),
-        pageIcon: faviconUrl,
-      });
-    });
-
-    win.on('resize', () => {
-      windowSize = win.getContentSize();
-      this.entity.setBounds({
-        x: 0,
-        y: viewY,
-        width: windowSize[0],
-        height: windowSize[1] - viewY
-      });
-    });
-
-    // BrowserWindow.fromBrowserView(this.entity));
-    this.setTitleUrl();
+  load(url = new URL(`file://${directory}/browser/home.html`)) {
+    if (!(url instanceof URL)) {
+      url = new URL(url);
+    }
+    this.entity.webContents.loadURL(url.href);
   }
 
   // This function sets URL to the URL bar of the title bar.
   setTitleUrl() {
-    const url = new URL(this.href);
+    const url = this.url;
     // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
+    // It gets win variable from myself not to make bugs.
     const win = BrowserWindow.fromBrowserView(this.entity);
-    const resourceIndex = new URL(`file://${__dirname}/`);
-    const partOfUrl = url.href.substring(0, resourceIndex.href.length - 5);
-    const partOfResourceIndex = resourceIndex.href.substring(0, resourceIndex.href.length - 5);
-    const isSame = partOfUrl === partOfResourceIndex;
-    if (url.href === `${partOfResourceIndex}browser/home.html`) {
+    const srcPath = new URL(`file://${__dirname}/../`);
+
+    switch (url.href) {
+    case `${srcPath}browser/home.html`:
       return win.webContents.executeJavaScript(`
         document.getElementsByTagName('input')[0].value = '';
       `);
-    } else if (isSame) {
+    case `${srcPath}browser/server-notfound.html`:
+    case `${srcPath}browser/blank.html`:
       return Promise.resolve();
     }
 
@@ -252,22 +308,37 @@ class Tab {
     `);
   }
 
-  setTop() {
+  // set tab's title.
+  setTabTitle() {
     const win = BrowserWindow.fromBrowserView(this.entity);
-    win.setTopBrowserView(this.entity);
-    this.entity.setBackgroundColor('#efefef');
+    win.webContents.executeJavaScript(`
+      document.getElementById('opened')
+        .getElementsByTagName('a')[0]
+        .innerText='${this.entity.webContents.getTitle()}';
+    `);
+  }
+
+  // set window's title.
+  setWindowTitle() {
+    const win = BrowserWindow.fromBrowserView(this.entity);
+    const srcPath = new URL(`file://${__dirname}/../`);
+    if (this.url.href === `${srcPath}browser/home.html`) {
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
+      `);
+    } else {
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('title')[0].innerText = '${this.entity.webContents.getTitle()} - Monot';
+      `);
+    }
   }
 
   goBack() {
     this.entity.webContents.goBack();
-    this.href = this.entity.webContents.getURL();
-    this.setTitleUrl();
   }
 
   goForward() {
     this.entity.webContents.goForward();
-    this.href = this.entity.webContents.getURL();
-    this.setTitleUrl();
   }
 
   reload() {
@@ -276,5 +347,6 @@ class Tab {
 }
 
 module.exports = {
-  Tab
+  Tab,
+  TabManager
 };
