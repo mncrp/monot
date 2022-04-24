@@ -23,13 +23,13 @@ const navigationContextMenu = Menu.buildFromTemplate([
   {
     label: '戻る',
     click: () => {
-      tabs.get().entity.webContents.goBack();
+      tabs.get().goBack();
     }
   },
   {
     label: '進む',
     click: () => {
-      tabs.get().entity.webContents.goForward();
+      tabs.get().goForward();
     }
   },
   {
@@ -44,36 +44,6 @@ const navigationContextMenu = Menu.buildFromTemplate([
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
-
-// creating new tab function
-function newtab() {
-  // create new tab
-  const tab = new Tab();
-
-  // init tab
-  win.addBrowserView(tab.entity);
-  tab.entity.webContents.setZoomLevel(1);
-
-  windowSize = win.getSize();
-  tab.entity.setBounds({
-    x: 0,
-    y: viewY,
-    width: windowSize[0],
-    height: windowSize[1] - viewY
-  });
-  tab.entity.setAutoResize({
-    width: true,
-    height: true
-  });
-  tab.load(
-    `file://${directory}/browser/home.html`
-  );
-
-  // set tabs
-  // tabs.current = tabs.length();
-  tabs.push(tab);
-  tabs.setCurrent(win, tabs.length() - 1);
-}
 
 function nw() {
   // create window
@@ -121,7 +91,7 @@ function nw() {
   });
 
   // create tab
-  newtab();
+  tabs.newTab(win);
 }
 
 function windowClose() {
@@ -141,26 +111,8 @@ app.on('ready', () => {
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
 
   // ipc channels
-  ipcMain.handle('moveView', (e, link, index = tabs.current) => {
-    tabs.get(index).entity.webContents.executeJavaScript(`
-      document.addEventListener('contextmenu',()=>{
-        node.context();
-      })
-    `);
-    if (link === '') {
-      return;
-    }
-
-    try {
-      tabs.get(index).load(link);
-    } catch (e) {
-      tabs.get(index).load(
-        `file://${directory}/browser/server-notfound.html`
-      );
-      tabs.get(index).entity.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[0].innerText='${link.toLowerCase()}';
-      `);
-    }
+  ipcMain.handle('moveView', (e, link, index) => {
+    tabs.get(index).load(link);
   });
   ipcMain.handle('windowClose', () => {
     windowClose();
@@ -180,46 +132,31 @@ app.on('ready', () => {
   ipcMain.handle('windowMaxMinMac', () => {
     win.fullScreen ? win.fullScreen = false : win.fullScreen = true;
   });
-  ipcMain.handle('moveViewBlank', (e, index = tabs.current) => {
+  ipcMain.handle('moveViewBlank', (e, index) => {
     tabs.get(index).load(
       `file://${directory}/browser/blank.html`
     );
   });
-  ipcMain.handle('reloadBrowser', (e, index = tabs.current) => {
+  ipcMain.handle('reloadBrowser', (e, index) => {
     tabs.get(index).entity.webContents.reload();
   });
-  ipcMain.handle('browserBack', (e, index = tabs.current) => {
+  ipcMain.handle('browserBack', (e, index) => {
     tabs.get(index).entity.webContents.goBack();
   });
-  ipcMain.handle('browserGoes', (e, index = tabs.current) => {
+  ipcMain.handle('browserGoes', (e, index) => {
     tabs.get(index).entity.webContents.goForward();
   });
-  ipcMain.handle('getBrowserUrl', (e, index = tabs.current) => {
+  ipcMain.handle('getBrowserUrl', (e, index) => {
     return tabs.get(index).entity.webContents.getURL();
   });
-  ipcMain.handle('moveToNewTab', (e, index = tabs.current) => {
-    enginesConfig.update();
-    const selectEngine = enginesConfig.get('engine');
-    const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
-
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
-    `);
-
+  ipcMain.handle('moveToNewTab', (e, index) => {
     tabs.get(index).load(`file://${directory}/browser/home.html`);
-
-    // search engine
-    tabs.get(index).entity.webContents.on('did-stop-loading', () => {
-      tabs.get(index).entity.webContents.executeJavaScript(`
-        url = '${engineURL}';
-      `);
-    });
   });
   ipcMain.handle('context', () => {
     context.popup();
   });
   ipcMain.handle('newtab', () => {
-    newtab();
+    tabs.newTab(win);
   });
   ipcMain.handle('tabMove', (e, index) => {
     tabs.setCurrent(win, index);
@@ -600,7 +537,6 @@ Copyright 2021-2022 monochrome Project.`
         label: '新しいタブ',
         accelerator: 'CmdOrCtrl+T',
         click: () => {
-          newtab();
           win.webContents.executeJavaScript(`
             newtab('Home')
           `);
