@@ -3,9 +3,29 @@ const fs = require('fs');
 const directory = `${__dirname}/..`;
 
 webFrame.executeJavaScript(`
+  // context menu
   document.addEventListener('contextmenu', () => {
     node.context();
   });
+
+  // history
+  window.onload = () => {
+    const getFavicon = function(){
+      let favicon = '';
+      try {
+        favicon = document.querySelector('link[rel="shortcut icon"]').href;
+      } catch(e) {
+        favicon = document.querySelector('meta[property="og:image"]').content;
+      }
+      return favicon;
+    }();
+    
+    node.addHistory(
+      document.head.getElementsByTagName('title')[0].innerText,
+      location.href,
+      getFavicon
+    );
+  }
 `);
 
 webFrame.setZoomFactor(1);
@@ -37,5 +57,10 @@ ipcRenderer.on('actual', () => {
 contextBridge.exposeInMainWorld('node', {
   context: (text) => {
     ipcRenderer.invoke('context', text);
+  },
+  addHistory: (title, url, icon) => {
+    console.log(title);
+    console.log(url);
+    console.log(icon);
   }
 });

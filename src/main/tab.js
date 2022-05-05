@@ -1,7 +1,8 @@
 const {
   BrowserWindow,
   BrowserView,
-  Menu
+  Menu,
+  ipcRenderer
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
@@ -10,7 +11,6 @@ const isMac = process.platform === 'darwin';
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
-const {History} = require(`${directory}/proprietary/lib/history.js`);
 let windowSize;
 
 class TabManager {
@@ -153,11 +153,6 @@ class Tab {
       `);
       this.setTabTitle();
       this.setWindowTitle();
-      console.log({
-        pageTitle: browserView.webContents.getTitle(),
-        pageUrl: browserView.webContents.getURL(),
-        pageIcon: this.faviconUrl,
-      });
     });
     // did-stop-loading
     browserView.webContents.on('did-stop-loading', () => {
@@ -168,13 +163,8 @@ class Tab {
       `);
       this.setTitleUrl();
     });
-    // page-favicon-updated
-    browserView.webContents.on('page-favicon-updated', (e, url) => {
-      this.faviconUrl = url;
-    });
-    // page-title-updated
     // when the page title is updated (update the window title and tab title) config.mncfg
-    browserView.webContents.on('page-title-updated', (e) => {
+    browserView.webContents.on('page-title-updated', () => {
       this.setTabTitle();
       this.setWindowTitle();
     });
@@ -252,7 +242,7 @@ class Tab {
         context.popup();
       });
       browserView.webContents.on('context-menu', (e, params) => {
-        console.log(params);
+        console.log('Context menu', params);
       });
     }
 
