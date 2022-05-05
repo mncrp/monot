@@ -21,13 +21,6 @@ function each() {
     // when tab-bar clicked
     element.addEventListener('click', () => {
       if (!canMove) return;
-      // remove #opened's id(Opened)
-      // const openedTab = document.getElementById('opened');
-      // if (openedTab) {
-      //   openedTab.removeAttribute('id');
-      // }
-      // clicked tab
-      // element.setAttribute('id', 'opened');
       node.tabMove(index);
     });
   });
@@ -36,9 +29,6 @@ each();
 
 // eslint-disable-next-line no-unused-vars
 function newtab(title) {
-  // if (document.getElementById('opened') !== null) {
-  //   document.getElementById('opened').removeAttribute('id');
-  // }
   document.getElementsByTagName('div')[0].innerHTML = `
     ${document.getElementsByTagName('div')[0].innerHTML}
     <span>

@@ -9,7 +9,6 @@ const {
 } = require('electron');
 
 const {
-  Tab,
   TabManager
 } = require('./tab');
 
@@ -161,7 +160,13 @@ app.on('ready', () => {
     tabs.setCurrent(win, index);
   });
   ipcMain.handle('removeTab', (e, index) => {
-    tabs.removeTab(win, index);
+    try {
+      tabs.removeTab(win, index);
+    } catch (e) {
+      if (tabs.length() === 0) {
+        windowClose();
+      }
+    }
   });
   ipcMain.handle('popupNavigationMenu', () => {
     navigationContextMenu.popup();
