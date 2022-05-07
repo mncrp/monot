@@ -1,12 +1,16 @@
 const directory = `${__dirname}/../..`;
 const {
-  LowLevelConfig: LowLevelConfig,
-} = require(`${directory}/proprietary/lib/config.js`);
+  LowLevelConfig
+} = require(`${directory}/proprietary/lib/config`);
 const history = new LowLevelConfig('history.mndata').copyFileIfNeeded(
   `${directory}/default/data/history.mndata`,
 );
 
 class History {
+  constructor() {
+    this.history = [];
+  }
+
   getAll() {
     return history.update(), history.slice();
   }
@@ -20,7 +24,7 @@ class History {
       return (
         console.error(
           `historyに${arrayBegin}番目の要素はありません。
-        historyの最後の要素は${history.length - 1}です。`,
+          historyの最後の要素は${history.length - 1}です。`
         ),
         -1
       );
@@ -29,10 +33,13 @@ class History {
   }
 
   set(data) {
-    history.update().unshift(data).save();
+    history.update();
+    // .data.push(data).save();
+    console.log(history.data.unshift(data));
+    history.save();
   }
 }
 
 module.exports = {
-  History,
+  History
 };

@@ -2,6 +2,8 @@ const {webFrame, contextBridge, ipcRenderer} = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
 
+webFrame.setZoomFactor(1);
+
 webFrame.executeJavaScript(`
   // context menu
   document.addEventListener('contextmenu', () => {
@@ -10,25 +12,38 @@ webFrame.executeJavaScript(`
 
   // history
   window.onload = () => {
-    const getFavicon = function(){
+    const description = function(){
+      let description = '';
+      try {
+        description = document.querySelector('meta[name="description" i]').content;
+      } catch(e) {
+        try {
+          description = document.querySelector('meta[property="og:description" i]').content;
+        } catch(e) {}
+      }
+      return description;
+    }();
+    const favicon = function(){
       let favicon = '';
       try {
-        favicon = document.querySelector('link[rel="shortcut icon"]').href;
+        favicon = document.querySelector('link[rel="shortcut icon" i]').href;
       } catch(e) {
-        favicon = document.querySelector('meta[property="og:image"]').content;
+        try {
+          favicon = document.querySelector('meta[property="og:image" i]').content;
+        } catch(e) {}
       }
       return favicon;
     }();
     
     node.addHistory(
+      ${webFrame.routingId},
       document.head.getElementsByTagName('title')[0].innerText,
+      description,
       location.href,
-      getFavicon
+      favicon
     );
   }
 `);
-
-webFrame.setZoomFactor(1);
 
 webFrame.insertCSS(
   fs.readFileSync(
@@ -58,9 +73,14 @@ contextBridge.exposeInMainWorld('node', {
   context: (text) => {
     ipcRenderer.invoke('context', text);
   },
-  addHistory: (title, url, icon) => {
-    console.log(title);
-    console.log(url);
-    console.log(icon);
+  addHistory: (routingId, title, description, url, icon) => {
+    if (routingId === webFrame.routingId) {
+      ipcRenderer.invoke('addHistory', {
+        pageTitle: title,
+        pageDescription: description,
+        pageUrl: url,
+        pageIcon: icon
+      });
+    }
   }
 });

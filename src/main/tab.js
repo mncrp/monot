@@ -78,6 +78,7 @@ class Tab {
       backgroundColor: '#efefef',
       webPreferences: {
         scrollBounce: true,
+        nodeIntegrationInSubFrames: true,
         preload: `${directory}/preload/pages.js`
       }
     });

@@ -5,7 +5,7 @@ const {
   dialog,
   ipcMain,
   Menu,
-  BrowserView,
+  BrowserView
 } = require('electron');
 
 const {
@@ -16,6 +16,8 @@ const {
 let win, windowSize, menu, context;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
+const {History} = require(`${directory}/proprietary/lib/history`);
+const history = new History();
 const tabs = new TabManager();
 const viewY = 66;
 const navigationContextMenu = Menu.buildFromTemplate([
@@ -184,6 +186,9 @@ app.on('ready', () => {
     monotConfig.update()
       .set(`experiments.${change}`, to, true)
       .save();
+  });
+  ipcMain.handle('addHistory', (e, data) => {
+    history.set(data);
   });
 
   nw();
