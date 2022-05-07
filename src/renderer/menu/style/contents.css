@@ -34,8 +34,8 @@ header h3 {
   padding: 5px;
   margin-top: 5px;
   border-radius: 7px;
-  box-shadow: 5px 5px 5px #bfbfbf55;
-  height: 50px;
+  box-shadow: 5px 5px 5px #bfbfbf00;
+  height: 25px;
   display: flex;
 }
 
@@ -55,9 +55,6 @@ header h3 {
   padding-left: 15px;
 }
 
-#bookmarks > div {
-  height: 25px;
-}
 .bookmark-details {
   padding-left: 4px;
 }
@@ -70,6 +67,6 @@ header h3 {
   #histories > div,
   #bookmarks > div {
     background-color: #fff1;
-    box-shadow: 5px 5px 5px #bbb5;
+    box-shadow: 5px 5px 5px #9990;
   }
 }

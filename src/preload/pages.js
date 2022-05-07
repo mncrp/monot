@@ -75,6 +75,7 @@ contextBridge.exposeInMainWorld('node', {
   },
   addHistory: (routingId, title, description, url, icon) => {
     if (routingId === webFrame.routingId) {
+      // 最高
       ipcRenderer.invoke('addHistory', {
         pageTitle: title,
         pageDescription: description,

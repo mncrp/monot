@@ -1,13 +1,10 @@
 const {
   BrowserWindow,
-  BrowserView,
-  Menu,
-  ipcRenderer
+  BrowserView
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
 const viewY = 66;
-const isMac = process.platform === 'darwin';
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
@@ -82,7 +79,7 @@ class Tab {
         preload: `${directory}/preload/pages.js`
       }
     });
-    browserView.webContents.setVisualZoomLevelLimits(1, 1);
+    browserView.webContents.setVisualZoomLevelLimits(1, 5);
 
     // events
     // did-fail-load
@@ -101,7 +98,6 @@ class Tab {
        * でも動かない😟
        * ちなみにメインプロセスモジュール(browserviewとか)はpreloadでは使えないみたい。
        */
-      browserView.webContents.setVisualZoomLevelLimits(1, 5);
 
       this.url = new URL(browserView.webContents.getURL());
       // 新タブと同じURLなのかどうか
@@ -136,21 +132,21 @@ class Tab {
     // did-start-loading
     // こいつらはタイミング指定しているのでpreloadにしない
     browserView.webContents.on('did-start-loading', () => {
-      browserView.webContents.executeJavaScript(`
-        document.addEventListener('contextmenu',()=>{
-          node.context();
-        })
-      `);
       win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0]
-          .setAttribute('id','loading');
+        document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
+          'id',
+          'loading'
+        );
       `);
     });
     // did-finish-load
     browserView.webContents.on('did-finish-load', () => {
       browserView.setBackgroundColor('#efefef');
       win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0].setAttribute('id', 'loaded');
+        document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
+          'id',
+          'loaded'
+        );
       `);
       this.setTabTitle();
       this.setWindowTitle();
@@ -179,73 +175,9 @@ class Tab {
         height: windowSize[1] - viewY
       });
     });
-
-    // mac's contextmenu.
-    if (isMac) {
-      const {ipcMain} = require('electron');
-      const contextMenu = [
-        {
-          label: '戻る',
-          click: () => {
-            this.goBack();
-          }
-        },
-        {
-          label: '進む',
-          click: () => {
-            this.goForward();
-          }
-        },
-        {
-          label: '再読み込み',
-          click: () => {
-            this.reload();
-          }
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: '縮小',
-          click: () => {
-            this.entity.webContents.setZoomLevel(
-              this.entity.webContents.getZoomLevel() - 1
-            );
-          }
-        },
-        {
-          label: '実際のサイズ',
-          click: () => {
-            this.entity.webContents.setZoomLevel(
-              1
-            );
-          }
-        },
-        {
-          label: '拡大',
-          click: () => {
-            this.entity.webContents.setZoomLevel(
-              this.entity.webContents.getZoomLevel() + 1
-            );
-          }
-        },
-        {
-          label: '開発者向けツール',
-          click: () => {
-            this.entity.webContents.toggleDevTools();
-          }
-        }
-      ];
-
-      const context = Menu.buildFromTemplate(contextMenu);
-      ipcMain.removeHandler('context');
-      ipcMain.handle('context', () => {
-        context.popup();
-      });
-      browserView.webContents.on('context-menu', (e, params) => {
-        console.log('Context menu', params);
-      });
-    }
+    browserView.webContents.on('context-menu', (e, params) => {
+      console.log('Context menu', params);
+    });
 
     // last init
     win.addBrowserView(browserView);

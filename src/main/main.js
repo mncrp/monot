@@ -106,7 +106,11 @@ function windowClose() {
 app.on('ready', () => {
   const optionView = new BrowserView({
     transparent: true,
-    frame: false
+    frame: false,
+    webPreferences: {
+      preload: `${directory}/preload/option.js`,
+      nodeIntegrationInSubFrames: true
+    }
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
 
@@ -190,26 +194,28 @@ app.on('ready', () => {
   ipcMain.handle('addHistory', (e, data) => {
     history.set(data);
   });
+  ipcMain.handle('settings.view', () => {
+    showSetting();
+  });
 
   nw();
-
   ipcMain.handle('options', () => {
     if (BrowserWindow.fromBrowserView(optionView)) {
       win.removeBrowserView(optionView);
     } else {
       win.addBrowserView(optionView);
       optionView.setBounds({
-        x: win.getSize()[0] - 320,
+        x: win.getSize()[0] - 270,
         y: viewY - 35,
-        width: 300,
-        height: 500
+        width: 250,
+        height: 450
       });
       win.on('resize', () => {
         optionView.setBounds({
-          x: win.getSize()[0] - 320,
+          x: win.getSize()[0] - 270,
           y: viewY - 35,
-          width: 300,
-          height: 500
+          width: 250,
+          height: 450
         });
       });
       win.setTopBrowserView(optionView);
@@ -267,7 +273,8 @@ function showSetting() {
   }
 }
 
-// context menu
+// menu
+// Windows and Linux (menu, contextmenu)
 const menuTemplate = [
   {
     label: '表示',
@@ -408,6 +415,7 @@ Copyright 2021 monochrome Project.`
     ]
   }
 ];
+// macOS (Menu)
 const menuTemplateMac = [
   {
     label: 'Monot',
@@ -597,6 +605,60 @@ Copyright 2021-2022 monochrome Project.`
 
 if (isMac) {
   menu = Menu.buildFromTemplate(menuTemplateMac);
+  // macOS (context menu)
+  context = Menu.buildFromTemplate([
+    {
+      label: '戻る',
+      click: () => {
+        this.goBack();
+      }
+    },
+    {
+      label: '進む',
+      click: () => {
+        this.goForward();
+      }
+    },
+    {
+      label: '再読み込み',
+      click: () => {
+        this.reload();
+      }
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: '縮小',
+      click: () => {
+        this.entity.webContents.setZoomLevel(
+          this.entity.webContents.getZoomLevel() - 1
+        );
+      }
+    },
+    {
+      label: '実際のサイズ',
+      click: () => {
+        this.entity.webContents.setZoomLevel(
+          1
+        );
+      }
+    },
+    {
+      label: '拡大',
+      click: () => {
+        this.entity.webContents.setZoomLevel(
+          this.entity.webContents.getZoomLevel() + 1
+        );
+      }
+    },
+    {
+      label: '開発者向けツール',
+      click: () => {
+        this.entity.webContents.toggleDevTools();
+      }
+    }
+  ]);
 } else {
   menu = Menu.buildFromTemplate(menuTemplate);
   context = menu;

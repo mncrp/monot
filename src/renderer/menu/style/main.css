@@ -19,8 +19,8 @@ main {
   background-color: #efefef;
   margin-left: 5px;
   margin-right: 15px;
-  padding: 10px;
-  border-radius: 17px;
+  padding: 7px 10px;
+  border-radius: 13px;
   border: 1px solid #ddd;
   box-shadow: 5px 5px 10px #bfbfbf55;
   height: 92vh;
@@ -47,7 +47,7 @@ main > *:not(#menu-last) {
   left: 100%;
   width: 100vw;
   height: 100%;
-  transition: all .5s ease-in-out;
+  transition: all .6s cubic-bezier(.75,0,.25,1);
   box-shadow: 0 0 0px #0006;
 }
 #iframe.displaying {
@@ -79,6 +79,7 @@ main > *:not(#menu-last) {
     background-color: #202020;
     border-color: #666e;
     color: #fff;
+    box-shadow: 5px 5px 10px #5555;
   }
   #prev {
     background-image: url('../../../image/go-white.png');

@@ -34,8 +34,7 @@ class History {
 
   set(data) {
     history.update();
-    // .data.push(data).save();
-    console.log(history.data.unshift(data));
+    history.data.unshift(data);
     history.save();
   }
 }
