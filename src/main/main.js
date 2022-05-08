@@ -113,6 +113,7 @@ app.on('ready', () => {
     }
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
+  optionView.webContents.toggleDevTools();
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, index) => {
@@ -191,11 +192,41 @@ app.on('ready', () => {
       .set(`experiments.${change}`, to, true)
       .save();
   });
+  ipcMain.handle('setting.deleteHistory', () => {
+    history.deleteAll();
+  });
   ipcMain.handle('addHistory', (e, data) => {
     history.set(data);
   });
   ipcMain.handle('settings.view', () => {
     showSetting();
+  });
+  ipcMain.handle('viewHistory', () => {
+    showHistory();
+  });
+  ipcMain.handle('updateHistory', () => {
+    const histories = history.getAll();
+    let html = '';
+    // eslint-disable-next-line
+    for (const [key, value] of Object.entries(histories)) {
+      html = `
+        ${html}
+        <div onclick="node.open('${value.pageUrl}');">
+          <div class="history-favicon" style="background-image: url('${value.pageIcon}');"></div>
+          <div class="history-details">
+            <p>${value.pageTitle}</p>
+          </div>
+        </div>
+      `;
+    }
+    optionView.webContents.send('updatedHistory', html);
+  });
+  ipcMain.handle('openPage', (e, url) => {
+    try {
+      tabs.get().load(url);
+    } catch (e) {
+      console.log('ウィンドウやタブがないため開けませんでした');
+    }
   });
 
   nw();
@@ -245,6 +276,7 @@ function showSetting() {
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
+  setting.webContents.toggleDevTools();
 
   setting.webContents.executeJavaScript(`
     document.querySelector('option[value="${enginesConfig.get('engine')}"]');
@@ -271,6 +303,38 @@ function showSetting() {
       `);
     }
   }
+}
+function showHistory() {
+  const historyWin = new BrowserWindow({
+    width: 760,
+    height: 480,
+    minWidth: 300,
+    minHeight: 270,
+    icon: `${directory}/image/logo.ico`,
+    webPreferences: {
+      preload: `${directory}/preload/history.js`,
+      scrollBounce: true
+    }
+  });
+  historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
+  // objectからHTMLに変換
+  const histories = history.getAll();
+  let html = '';
+  // eslint-disable-next-line
+  for (const [key, value] of Object.entries(histories)) {
+    html = `
+      ${html}
+      <div onclick="node.open('${value.pageUrl}');">
+        <div class="history-favicon" style="background-image: url('${value.pageIcon}');"></div>
+        <div class="history-details">
+          <p>${value.pageTitle}</p>
+        </div>
+      </div>
+    `;
+  }
+  historyWin.webContents.executeJavaScript(`
+    document.getElementById('histories').innerHTML = \`${html}\`;
+  `);
 }
 
 // menu
@@ -610,19 +674,19 @@ if (isMac) {
     {
       label: '戻る',
       click: () => {
-        this.goBack();
+        tabs.get().goBack();
       }
     },
     {
       label: '進む',
       click: () => {
-        this.goForward();
+        tabs.get().goForward();
       }
     },
     {
       label: '再読み込み',
       click: () => {
-        this.reload();
+        tabs.get().reload();
       }
     },
     {
@@ -631,15 +695,15 @@ if (isMac) {
     {
       label: '縮小',
       click: () => {
-        this.entity.webContents.setZoomLevel(
-          this.entity.webContents.getZoomLevel() - 1
+        tabs.get().entity.webContents.setZoomLevel(
+          tabs.get().entity.webContents.getZoomLevel() - 1
         );
       }
     },
     {
       label: '実際のサイズ',
       click: () => {
-        this.entity.webContents.setZoomLevel(
+        tabs.get().entity.webContents.setZoomLevel(
           1
         );
       }
@@ -647,15 +711,15 @@ if (isMac) {
     {
       label: '拡大',
       click: () => {
-        this.entity.webContents.setZoomLevel(
-          this.entity.webContents.getZoomLevel() + 1
+        tabs.get().entity.webContents.setZoomLevel(
+          tabs.get().entity.webContents.getZoomLevel() + 1
         );
       }
     },
     {
       label: '開発者向けツール',
       click: () => {
-        this.entity.webContents.toggleDevTools();
+        tabs.get().entity.webContents.toggleDevTools();
       }
     }
   ]);

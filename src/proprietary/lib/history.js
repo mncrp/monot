@@ -12,7 +12,7 @@ class History {
   }
 
   getAll() {
-    return history.update(), history.slice();
+    return history.update().data;
   }
 
   get(arrayStart, arrayBegin) {
@@ -35,6 +35,12 @@ class History {
   set(data) {
     history.update();
     history.data.unshift(data);
+    history.save();
+  }
+
+  deleteAll() {
+    history.update();
+    history.data = [];
     history.save();
   }
 }

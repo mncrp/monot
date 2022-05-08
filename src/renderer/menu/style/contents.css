@@ -1,9 +1,19 @@
 main {
   border-bottom: 0px solid #fff;
-  height: 100vh;
+  height: calc(100vh - 13px);
+  overflow: auto;
+  z-index: 0;
 }
 main > div {
   margin-bottom: 0!important;
+}
+.history-details > p,
+.bookmark-details > p {
+  font-size: 13px;
+  width: 100%;
+  overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 header {
@@ -37,6 +47,11 @@ header h3 {
   box-shadow: 5px 5px 5px #bfbfbf00;
   height: 25px;
   display: flex;
+  width: calc(100% - 10px);
+  overflow: hidden;
+}
+#histories > a:not(.one-history) {
+  font-size: 13px;
 }
 
 .history-favicon,
@@ -44,15 +59,17 @@ header h3 {
   height: 100%;
   aspect-ratio: 1/1;
   border-radius: 2px;
-  background-color: #fff;
-  box-shadow: 2px 2px 5px #5554;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .history-details,
 .bookmark-details {
-  width: 100%;
+  width: calc(100% - 20px);
   height: 100%;
-  padding-left: 15px;
+  padding-top: 2px;
+  padding-left: 5px;
 }
 
 .bookmark-details {

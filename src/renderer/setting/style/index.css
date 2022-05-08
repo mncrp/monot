@@ -1,44 +1,47 @@
-*{
+* {
   position: relative;
   color: #000;
   margin: 0;
   outline: none;
 }
-body{
+body {
   margin: 10px 20px;
   margin-top: 60px;
-  width: auto; height: auto;
+  width: auto;
+  height: auto;
   background-color: #efefef;
 }
-b{
+b {
   font-size: 1.1rem;
 }
-h1::before{
+h1::before {
   display: none;
 }
-h1{
+h1 {
   font-size: 30px;
 }
-h2{
+h2 {
   font-size: 30px;
 }
-header{
+header {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 9990;
   backdrop-filter: blur(10px);
   padding: 10px;
   padding-left: 20px;
 }
 
-main>*{
+main > * {
   display: block;
 }
 
-#wallpaper-select{
+#wallpaper-select {
   display: flex;
 }
-#wallpaper-select>*{
+#wallpaper-select > * {
   width: 100%;
   margin: 10px;
   border-radius: 20px;
@@ -49,21 +52,21 @@ main>*{
   border: 3px solid #ddd;
   transition: all 0.2s ease-in-out;
 }
-#wallpaper-select>*:hover{
+#wallpaper-select > *:hover {
   background-color: #f3f3f3;
   box-shadow: 2px 2px 15px #ddd;
 }
-#wallpaper-select>*>p{
+#wallpaper-select > * > p {
   display: inline-block;
   position: absolute;
   left: 50%; top: 50%;
   transform: translate(-50%,-50%);
 }
 
-#engine>select{
+#engine > select {
   width: 160px;
 }
-select, input{
+select, input {
   padding: 2px 5px;
   background-color: #0001;
   border-radius: 12px;
@@ -71,11 +74,11 @@ select, input{
   transition: all 0.2s ease-in-out;
   border: 2px solid #0000;
 }
-select:hover, input:hover{
+select:hover, input:hover {
   border: 2px solid #0001;
   box-shadow: 2px 2px 15px #ddd;
 }
-input[type="text"]{
+input[type="text"] {
   width: 40vw;
   min-width: 450px;
   max-width: 90vw;
@@ -83,32 +86,32 @@ input[type="text"]{
   font-size: 12px;
 }
 
-input[type="checkbox"]{
+input[type="checkbox"] {
   margin: 5px;
 }
-form>*{
+form > * {
   user-select: none;
 }
-label{
+label {
   display: block;
 }
 
 @media (prefers-color-scheme: dark) {
-  body{
+  body {
     background-color: #202020;
   }
-  *{
+  * {
     color: #eee;
   }
 
-  select, input{
+  select, input {
     background-color: #fff1;
   }
-  select:hover, input:hover{
+  select:hover, input:hover {
     border: 2px solid #444;
     box-shadow: 2px 2px 15px #333;
   }
-  option{
+  option {
     color: #eee;
     background-color: #222;
     padding: 0;
