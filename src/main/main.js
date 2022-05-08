@@ -113,7 +113,6 @@ app.on('ready', () => {
     }
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
-  optionView.webContents.toggleDevTools();
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, index) => {
@@ -276,7 +275,6 @@ function showSetting() {
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
-  setting.webContents.toggleDevTools();
 
   setting.webContents.executeJavaScript(`
     document.querySelector('option[value="${enginesConfig.get('engine')}"]');
