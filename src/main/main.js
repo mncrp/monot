@@ -321,8 +321,6 @@ app.on('ready', () => {
   ipcMain.handle('viewBookmark', () => {
     showBookmark();
   });
-  ipcMain.handle('contextWithText', (e, text, url) => {
-  });
 
   nw();
   ipcMain.handle('options', () => {

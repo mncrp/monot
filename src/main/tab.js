@@ -1,8 +1,7 @@
 const {
   BrowserWindow,
   BrowserView,
-  app,
-  ipcRenderer
+  app
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
