@@ -2,7 +2,9 @@ const directory = `${__dirname}/../..`;
 const {
   LowLevelConfig
 } = require(`${directory}/proprietary/lib/config`);
-const history = new LowLevelConfig('history.mndata').copyFileIfNeeded(
+const history = new LowLevelConfig(
+  'history.mndata'
+).copyFileIfNeeded(
   `${directory}/default/data/history.mndata`,
 );
 

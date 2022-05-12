@@ -6,20 +6,18 @@
   <link rel="stylesheet" href="./style/contents.css">
   <title>メニュー</title>
 </head>
-<body>
+<body id="bookmark">
+  <header><h3>ブックマーク</h3></header>
   <main>
-    <header><h3>ブックマーク</h3></header>
-    <div id="bookmarks">
-      <div>
-        <div class="bookmark-favicon"></div>
-        <div class="bookmark-details">
-          <p>サイトの名前</p>
-        </div>
+    <div>
+      <div id="bookmarks">
+        <a href="javascript:node.viewBookmark();">ウィンドウを表示...</a>
       </div>
     </div>
   </main>
   <script>
     window.scrollTo(0, 1);
+    node.updateBookmark();
   </script>
 </body>
 </html>

@@ -5,7 +5,8 @@ const {
   dialog,
   ipcMain,
   Menu,
-  BrowserView
+  BrowserView,
+  MenuItem
 } = require('electron');
 
 const {
@@ -34,17 +35,81 @@ const navigationContextMenu = Menu.buildFromTemplate([
     }
   },
   {
+    type: 'separator'
+  },
+  {
+    label: '新規タブ',
+    click: () => {
+      win.webContents.executeJavaScript(`
+        newtab();
+      `);
+    }
+  },
+  {
+    type: 'separator'
+  },
+  {
     label: '設定',
     click: () => {
       showSetting();
+    }
+  },
+  {
+    label: '履歴',
+    click: () => {
+      showHistory();
+    }
+  },
+  {
+    label: 'ブックマーク',
+    click: () => {
+      showBookmark();
     }
   }
 ]);
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
-const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
-const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
+const bookmark = new LowLevelConfig(
+  'bookmark.mndata'
+).copyFileIfNeeded(
+  `${directory}/default/data/bookmark.mndata`
+);
+const monotConfig = new LowLevelConfig(
+  'config.mncfg'
+).copyFileIfNeeded(
+  `${directory}/default/config/config.mncfg`
+);
+const enginesConfig = new LowLevelConfig(
+  'engines.mncfg'
+).copyFileIfNeeded(
+  `${directory}/default/config/engines.mncfg`
+);
+
+function newtab() {
+  tabs.newTab(win);
+  tabs.get().entity.webContents.on('context-menu', (e, params) => {
+    const text = params.selectionText;
+    const url = params.linkURL;
+    if (text !== '' && url === '') {
+      context.closePopup();
+      enginesConfig.update();
+      context.insert(0, new MenuItem({
+        label: `${text}を調べる`,
+        id: 'search',
+        click: () => {
+          const selectEngine = enginesConfig.get('engine');
+          const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+          tabs.get().load(`${engineURL}${text}`);
+        }
+      }));
+      context.popup();
+      context = Menu.buildFromTemplate(
+        isMac ? contextTemplateMac : menuTemplate
+      );
+    }
+  });
+}
 
 function nw() {
   // create window
@@ -91,7 +156,8 @@ function nw() {
   });
 
   // create tab
-  tabs.newTab(win);
+  // tabs.newTab(win);
+  newtab();
 }
 
 function windowClose() {
@@ -227,6 +293,37 @@ app.on('ready', () => {
       console.log('ウィンドウやタブがないため開けませんでした');
     }
   });
+  ipcMain.handle('addABookmark', () => {
+    tabs.get().entity.webContents.send('addBookmark');
+  });
+  ipcMain.handle('addBookmark', (e, data) => {
+    bookmark.update();
+    bookmark.data.unshift(data);
+    bookmark.save();
+  });
+  ipcMain.handle('updateBookmark', () => {
+    bookmark.update();
+    const bookmarks = bookmark.data;
+    let html = '';
+    // eslint-disable-next-line
+    for (const [key, value] of Object.entries(bookmarks)) {
+      html = `
+        ${html}
+        <div onclick="node.open('${value.pageUrl}');">
+          <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
+          <div class="bookmark-details">
+            <p>${value.pageTitle}</p>
+          </div>
+        </div>
+      `;
+    }
+    optionView.webContents.send('updatedBookmark', html);
+  });
+  ipcMain.handle('viewBookmark', () => {
+    showBookmark();
+  });
+  ipcMain.handle('contextWithText', (e, text, url) => {
+  });
 
   nw();
   ipcMain.handle('options', () => {
@@ -332,6 +429,39 @@ function showHistory() {
   }
   historyWin.webContents.executeJavaScript(`
     document.getElementById('histories').innerHTML = \`${html}\`;
+  `);
+}
+function showBookmark() {
+  const bookmarkWin = new BrowserWindow({
+    width: 760,
+    height: 480,
+    minWidth: 300,
+    minHeight: 270,
+    icon: `${directory}/image/logo.ico`,
+    webPreferences: {
+      preload: `${directory}/preload/bookmark.js`,
+      scrollBounce: true
+    }
+  });
+  bookmarkWin.webContents.loadFile(`${directory}/renderer/bookmark/index.html`);
+  bookmark.update();
+  // objectからHTMLに変換
+  const bookmarks = bookmark.data;
+  let html = '';
+  // eslint-disable-next-line
+  for (const [key, value] of Object.entries(bookmarks)) {
+    html = `
+      ${html}
+      <div onclick="node.open('${value.pageUrl}');">
+        <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
+        <div class="bookmark-details">
+          <p>${value.pageTitle}</p>
+        </div>
+      </div>
+    `;
+  }
+  bookmarkWin.webContents.executeJavaScript(`
+    document.getElementById('bookmarks').innerHTML = \`${html}\`;
   `);
 }
 
@@ -664,66 +794,73 @@ Copyright 2021-2022 monochrome Project.`
     ]
   }
 ];
+// macOS (context)
+const contextTemplateMac = [
+  {
+    label: '戻る',
+    click: () => {
+      tabs.get().goBack();
+    }
+  },
+  {
+    label: '進む',
+    click: () => {
+      tabs.get().goForward();
+    }
+  },
+  {
+    label: '再読み込み',
+    click: () => {
+      tabs.get().reload();
+    }
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: '縮小',
+    click: () => {
+      tabs.get().entity.webContents.setZoomLevel(
+        tabs.get().entity.webContents.getZoomLevel() - 1
+      );
+    }
+  },
+  {
+    label: '実際のサイズ',
+    click: () => {
+      tabs.get().entity.webContents.setZoomLevel(
+        1
+      );
+    }
+  },
+  {
+    label: '拡大',
+    click: () => {
+      tabs.get().entity.webContents.setZoomLevel(
+        tabs.get().entity.webContents.getZoomLevel() + 1
+      );
+    }
+  },
+  {
+    label: '開発者向けツール',
+    click: () => {
+      tabs.get().entity.webContents.toggleDevTools();
+    }
+  }
+];
 
 if (isMac) {
   menu = Menu.buildFromTemplate(menuTemplateMac);
   // macOS (context menu)
-  context = Menu.buildFromTemplate([
-    {
-      label: '戻る',
-      click: () => {
-        tabs.get().goBack();
-      }
-    },
-    {
-      label: '進む',
-      click: () => {
-        tabs.get().goForward();
-      }
-    },
-    {
-      label: '再読み込み',
-      click: () => {
-        tabs.get().reload();
-      }
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: '縮小',
-      click: () => {
-        tabs.get().entity.webContents.setZoomLevel(
-          tabs.get().entity.webContents.getZoomLevel() - 1
-        );
-      }
-    },
-    {
-      label: '実際のサイズ',
-      click: () => {
-        tabs.get().entity.webContents.setZoomLevel(
-          1
-        );
-      }
-    },
-    {
-      label: '拡大',
-      click: () => {
-        tabs.get().entity.webContents.setZoomLevel(
-          tabs.get().entity.webContents.getZoomLevel() + 1
-        );
-      }
-    },
-    {
-      label: '開発者向けツール',
-      click: () => {
-        tabs.get().entity.webContents.toggleDevTools();
-      }
-    }
-  ]);
+  context = Menu.buildFromTemplate(contextTemplateMac);
 } else {
   menu = Menu.buildFromTemplate(menuTemplate);
   context = menu;
 }
+context.on('menu-will-close', () => {
+  context = Menu.buildFromTemplate(
+    isMac ? contextTemplateMac : menuTemplate
+  );
+});
 
 Menu.setApplicationMenu(menu);

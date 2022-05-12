@@ -1,22 +1,25 @@
 @import url('../../../proprietary/style/font.css');
 
-*{
+* {
   position: relative;
   top: 0;
-  margin: 0; padding: 0;
-  border: none; outline: none;
-  color: #000; text-decoration: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  color: #000;
+  text-decoration: none;
   z-index: 100;
 }
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   display: none;
 }
-script, style{
+script, style {
   display: none!important;
   width: 0; height: 0;
 }
 
-body{
+body {
   background-color: #efefef;
   -webkit-app-region: drag;
   user-select: none;
@@ -27,14 +30,14 @@ body{
   overflow: hidden;
   border-bottom: 1px solid #ddd;
 }
-nav{
+nav {
   display: flex;
   position: relative;
   height: auto;
   width: 100%;
 }
 
-body nav *{
+body nav * {
   user-select: none;
   -webkit-user-drag: none;
   -webkit-app-region: none;
@@ -50,7 +53,7 @@ body nav *{
   transition: all 0.2s ease-in-out;
   border: 1px solid #ddd0;
 }
-body input{
+body input {
   width: 100%;
   padding: 0 7.5px;
   font-size: 11px;
@@ -58,64 +61,64 @@ body input{
 }
 body nav *:hover,
 div > span:hover,
-tab-el > a:hover{
+tab-el > a:hover {
   box-shadow: 1px 1px 5px #bfbfbf55;
   background-color: #eee;
   border: 1px solid #ddde;
 }
-body nav a:first-child{
+body nav a:first-child {
   margin-left: 30px;
 }
-body nav a:last-child{
+body nav a:last-child {
   margin-right: 4px;
 }
-nav a{
+nav a {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
   cursor: default;
 }
-body nav input:focus{
+body nav input:focus {
   border: 1px solid #ddde;
 }
-nav a:active{
+nav a:active {
   background-color: #fff0;
   box-shadow: 0 0 0 #0000;
 }
-#home{
+#home {
   background-image: url('../../../image/home.png');
 }
-#reload{
+#reload {
   background-image: url('../../../image/reload.png');
 }
-#prev{
+#prev {
   background-image: url('../../../image/back.png');
 }
-#menu{
+#menu {
   background-image: url('../../../image/option.png');
 }
-#next{
+#next {
   background-image: url('../../../image/prev.png');
 }
-#move{
+#move {
   background-image: url('../../../image/go.png');
 }
-#minimize{
+#minimize {
   background-image: url('../../../image/hide.png');
 }
-#maximize{
+#maximize {
   background-image: url('../../../image/maximize.png');
 }
-#close{
+#close {
   background-image: url('../../../image/close.png');
 }
 
-div > span > a:first-child{
+div > span > a:first-child {
   color: #333;
   font-weight: 100;
   cursor: default;
 }
-div > span > a:last-child{
+div > span > a:last-child {
   display: inline-block;
   cursor: default;
   position: absolute;
@@ -132,24 +135,24 @@ div > span > a:last-child{
   background-image: url('../../../image/close.png');
   transition: all 0.2s ease-in-out;
 }
-div > span > a:last-child:hover{
+div > span > a:last-child:hover {
   background-color: #fff4;
 }
-div > span#opened{
+div > span#opened {
   background-color: #bbb3;
 }
-tab-el{
+tab-el {
   height: auto;
   vertical-align: middle;
   display: flex;
   overflow: hidden;
 }
-tab-el > div{
+tab-el > div {
   width: 100%;
   overflow: auto;
   display: flex;
 }
-tab-el > div > span{
+tab-el > div > span {
   min-width: 70px;
   overflow: hidden;
 	text-overflow: ellipsis;
@@ -170,7 +173,7 @@ tab-el > div > span{
   cursor: default;
   -webkit-app-region: none;
 }
-tab-el > a{
+tab-el > a {
   display: block;
   height: 24px;
   width: 24px;
@@ -188,7 +191,7 @@ tab-el > a{
   -webkit-app-region: none;
   cursor: default;
 }
-yomikomi-bar{
+yomikomi-bar {
   display: block;
   position: absolute;
   top: -1px;
@@ -196,91 +199,91 @@ yomikomi-bar{
   left: -9px;
   width: 0;
   height: 10px;
-  background: #fff;
+  background: #aaa;
   z-index: 0;
   transition: all 0.2s ease-in-out;
   border-radius: 0 5px 0 0;
   filter: blur(5px) brightness(125%);
 }
-yomikomi-bar#loading{
+yomikomi-bar#loading {
   width: 30vw;
   opacity: 1;
 }
-yomikomi-bar#loaded{
+yomikomi-bar#loaded {
   width: 95vw;
   opacity: 1;
 }
-yomikomi-bar#frame-finished{
+yomikomi-bar#frame-finished {
   width: 100vw;
   opacity: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  body{
+@media (prefers-color-scheme: dark)  {
+  body {
     background-color: #222;
     border-bottom: 1px solid #333;
   }
-  yomikomi-bar{
+  yomikomi-bar {
     background-color: #444;
   }
-  body input{
+  body input {
     background-color: #fff1;
     color: #fff;
   }
   body nav *:hover, 
   div > span:hover,
-  tab-el > a:hover{
+  tab-el > a:hover {
     box-shadow: 1px 1px 5px #bfbfbf55;
     background-color: #444;
     border: 1px solid #666e;
   }
-  body nav input:focus{
+  body nav input:focus {
     border: 1px solid #666e;
   }
-  nav a:active{
+  nav a:active {
     background-color: #fff0;
     box-shadow: 0 0 0 #0000;
   }
-  #home{
+  #home {
     background-image: url('../../../image/home-white.png');
   }
-  #reload{
+  #reload {
     background-image: url('../../../image/reload-white.png');
   }
-  #prev{
+  #prev {
     background-image: url('../../../image/back-white.png');
   }
-  #menu{
+  #menu {
     background-image: url('../../../image/option-white.png');
   }
-  #next{
+  #next {
     background-image: url('../../../image/prev-white.png');
   }
-  #move{
+  #move {
     background-image: url('../../../image/go-white.png');
   }
-  #minimize{
+  #minimize {
     background-image: url('../../../image/hide-white.png');
   }
-  #maximize{
+  #maximize {
     background-image: url('../../../image/maximize-white.png');
   }
-  #close{
+  #close {
     background-image: url('../../../image/close-white.png');
   }
-  div > span:hover{
+  div > span:hover {
     background-color: #444;
   }
-  div > span#opened{
+  div > span#opened {
     background-color: #fff1;
   }
-  div > span > a:first-child{
+  div > span > a:first-child {
     color: #bbb;
   }
-  div > span > a:last-child{
+  div > span > a:last-child {
     background-image: url('../../../image/close-white.png');
   }
-  tab-el > a{
+  tab-el > a {
     background-image: url('../../../image/plus-white.png');
   }
 }

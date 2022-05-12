@@ -6,12 +6,19 @@ const {
 
 ipcRenderer.on('updatedHistory', (e, html) => {
   webFrame.firstChild.executeJavaScript(`
-    console.log(
-      document.body
-    );
     if (document.body.id === 'history') {
       document.getElementById('histories').innerHTML = \`
         \${document.getElementById('histories').innerHTML}${html}
+      \`;
+    }
+  `);
+});
+
+ipcRenderer.on('updatedBookmark', (e, html) => {
+  webFrame.firstChild.executeJavaScript(`
+    if (document.body.id === 'bookmark') {
+      document.getElementById('bookmarks').innerHTML = \`
+        \${document.getElementById('bookmarks').innerHTML}${html}
       \`;
     }
   `);
@@ -31,5 +38,15 @@ contextBridge.exposeInMainWorld('node', {
   },
   open: (url) => {
     ipcRenderer.invoke('openPage', url);
+  },
+  addBookmark: () => {
+    ipcRenderer.invoke('addABookmark');
+  },
+  updateBookmark: () => {
+    ipcRenderer.invoke('updateBookmark');
+  },
+  viewBookmark: () => {
+    ipcRenderer.invoke('viewBookmark');
+    ipcRenderer.invoke('options');
   }
 });

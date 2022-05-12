@@ -10,7 +10,8 @@ h3 {
 
 hr {
   border: 1px solid #666;
-  border-radius: 1px;
+  height: 0;
+  margin: 0;
 }
 
 main {

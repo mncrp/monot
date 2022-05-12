@@ -1,6 +1,8 @@
 const {
   BrowserWindow,
-  BrowserView
+  BrowserView,
+  app,
+  ipcRenderer
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
@@ -79,6 +81,7 @@ class Tab {
         preload: `${directory}/preload/pages.js`
       }
     });
+    browserView.webContents.session.setDownloadPath(app.getPath('downloads'));
     browserView.webContents.setVisualZoomLevelLimits(1, 5);
 
     // events
@@ -93,11 +96,7 @@ class Tab {
     });
     // dom-ready
     browserView.webContents.on('dom-ready', () => {
-      /*
-       * これはレンダラプロセスモジュール以外使ってないから動かない理由がわからない
-       * でも動かない😟
-       * ちなみにメインプロセスモジュール(browserviewとか)はpreloadでは使えないみたい。
-       */
+      browserView.webContents.setVisualZoomLevelLimits(1, 5);
 
       this.url = new URL(browserView.webContents.getURL());
       // 新タブと同じURLなのかどうか
@@ -123,7 +122,7 @@ class Tab {
       // fontChange
       if (experiments.fontChange === true) {
         browserView.webContents.insertCSS(`
-          body,body>*, *{
+          body, body > *, * {
             font-family: ${experiments.changedfont},'Noto Sans JP'!important;
           }
         `);
@@ -174,9 +173,6 @@ class Tab {
         width: windowSize[0],
         height: windowSize[1] - viewY
       });
-    });
-    browserView.webContents.on('context-menu', (e, params) => {
-      console.log('Context menu', params);
     });
 
     // last init
