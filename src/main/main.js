@@ -90,8 +90,7 @@ function newtab() {
   tabs.newTab(win);
   tabs.get().entity.webContents.on('context-menu', (e, params) => {
     const text = params.selectionText;
-    const url = params.linkURL;
-    if (text !== '' && url === '') {
+    if (text !== '') {
       context.closePopup();
       enginesConfig.update();
       context.insert(0, new MenuItem({
