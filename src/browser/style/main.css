@@ -1,3 +1,9 @@
+:root {
+  --main-background: #efefef;
+  --text-color: #000;
+  --browsername-color: #fff;
+  --shadow-color: #bfbfbf99;
+}
 *{
   position: relative;
   outline: none;
@@ -5,8 +11,8 @@
 }
 
 body{
-  background-color: #efefef;
-  color: #444;
+  background-color: var(--main-background);
+  color: var(--browsername-color);
   font-weight: 100;
 }
 
@@ -48,7 +54,7 @@ body>div:nth-child(1){
 }
 div>div:nth-child(1) *{
   vertical-align: middle;
-  box-shadow: 2px 2px 5px #bfbfbf99;
+  box-shadow: 2px 2px 5px var(--shadow-color);
 }
 div input{
   position: relative;
