@@ -149,6 +149,22 @@ function nw() {
     win.webContents.executeJavaScript(`
       engine = '${getEngine()}';
     `);
+    monotConfig.update();
+    if (monotConfig.get('cssTheme') !== '') {
+      const fs = require('fs');
+      const style = fs.readFileSync(
+        monotConfig.get('cssTheme'),
+        'utf-8'
+      );
+      win.webContents.executeJavaScript(`
+        document.body.innerHTML = \`
+          \${document.body.innerHTML}
+          <style>
+            ${style}
+          </style>
+        \`
+      `);
+    }
   });
   win.on('ready-to-show', () => {
     win.show();
@@ -178,6 +194,15 @@ app.on('ready', () => {
     }
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
+  monotConfig.update();
+  if (monotConfig.get('cssTheme') !== '') {
+    const fs = require('fs');
+    const style = fs.readFileSync(
+      monotConfig.get('cssTheme'),
+      'utf-8'
+    );
+    optionView.webContents.insertCSS(style);
+  }
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, index) => {
@@ -247,7 +272,10 @@ app.on('ready', () => {
       .set('engine', engine)
       .save();
     win.webContents.executeJavaScript(`
-      engine = ${enginesConfig.get(`values.${engine}`, true)};
+      engine = '${enginesConfig.get(`values.${engine}`, true)}';
+    `);
+    tabs.get().entity.webContents.executeJavaScript(`
+      url = '${enginesConfig.get(`values.${engine}`, true)}';
     `);
   });
   ipcMain.handle('setting.changeExperimental', (e, change, to) => {
@@ -258,6 +286,11 @@ app.on('ready', () => {
   });
   ipcMain.handle('setting.deleteHistory', () => {
     history.deleteAll();
+  });
+  ipcMain.handle('setting.resetTheme', () => {
+    monotConfig.update()
+      .set('cssTheme', '')
+      .save();
   });
   ipcMain.handle('addHistory', (e, data) => {
     history.set(data);
@@ -366,16 +399,17 @@ function showSetting() {
       scrollBounce: true
     }
   });
+  setting.webContents.toggleDevTools();
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
 
-  setting.webContents.executeJavaScript(`
-    document.querySelector('option[value="${enginesConfig.get('engine')}"]');
-  `);
-
   // Apply of changes
   const experiments = monotConfig.get('experiments');
+
+  setting.webContents.executeJavaScript(`
+    document.getElementsByTagName('select')[0].value = '${enginesConfig.get('engine')}';
+  `);
 
   if (experiments.forceDark === true) {
     setting.webContents.executeJavaScript(`
@@ -395,6 +429,30 @@ function showSetting() {
       `);
     }
   }
+
+  ipcMain.removeHandler('setting.openThemeDialog');
+  ipcMain.handle('setting.openThemeDialog', () => {
+    const fileDialog = dialog.showOpenDialog(
+      setting,
+      {
+        title: 'CSSテーマを選択',
+        properties: [
+          'openFile'
+        ],
+        filters: [
+          {
+            name: 'CSS',
+            extensions: ['css']
+          }
+        ]
+      }
+    );
+    fileDialog.then((path) => {
+      monotConfig.update()
+        .set('cssTheme', path.filePaths[0])
+        .save();
+    });
+  });
 }
 function showHistory() {
   const historyWin = new BrowserWindow({
@@ -564,7 +622,7 @@ Copyright 2021 monochrome Project.`
       },
       {
         label: '設定',
-        accelerator: 'CmdOrCtrl+Alt+S',
+        accelerator: 'CmdOrCtrl+,',
         click: () => {
           showSetting();
         }
@@ -750,7 +808,7 @@ Copyright 2021-2022 monochrome Project.`
       },
       {
         label: '設定',
-        accelerator: 'CmdOrCtrl+Alt+S',
+        accelerator: 'CmdOrCtrl+,',
         click: () => {
           showSetting();
         }
@@ -769,7 +827,7 @@ Copyright 2021-2022 monochrome Project.`
       },
       {
         label: '開発者向けツール',
-        accelerator: 'CmdOrCtrl+Shift+I',
+        accelerator: 'CmdOrCtrl+Option+I',
         visible: false,
         click: () => {
           tabs.get().entity.webContents.toggleDevTools();

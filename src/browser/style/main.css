@@ -1,30 +1,38 @@
 :root {
   --main-background: #efefef;
   --text-color: #000;
-  --browsername-color: #fff;
+
+  --browsername-color: #444;
   --shadow-color: #bfbfbf99;
+  --shadow-color-unhover: #0000;
+  --border-color: #ddde;
+  --border-color-unhover: #4440;
+  --backgroundcolor: #eee;
+  --input-color-unhover: #bbb3;
+  --input-color: #efefef;
 }
-*{
+* {
   position: relative;
   outline: none;
   margin: 0; padding: 0;
 }
 
-body{
+body {
   background-color: var(--main-background);
   color: var(--browsername-color);
   font-weight: 100;
 }
 
-h1{
+h1 {
   display: inline-block;
 }
-h5{
+h5 {
   font-size: 15px;
   display: inline;
+  margin-left: 10px;
 }
 
-h1::before{
+h1::before {
   content: '';
   display: inline-block;
   width: 65px; height: 65px;
@@ -36,13 +44,13 @@ h1::before{
   top: 10px;
 }
 
-body{
+body {
   position: relative;
   display: block;
   width: 100%;
   height: 100vh;
 }
-body>div:nth-child(1){
+body > div:nth-child(1) {
   position: absolute;
   display: inline-block;
   height: auto;
@@ -50,13 +58,13 @@ body>div:nth-child(1){
   text-align: center;
   top: 50%;
   left: 50%;
-  transform : translate(-50%,-50%);
+  transform : translate(-50%, -50%);
 }
-div>div:nth-child(1) *{
+div > div:nth-child(1) * {
   vertical-align: middle;
   box-shadow: 2px 2px 5px var(--shadow-color);
 }
-div input{
+div input {
   position: relative;
   display: inline-block;
   width: 50vw;
@@ -66,13 +74,14 @@ div input{
   padding: 0 35px 0 10px;
   font-size: 17px;
   margin: 0; top: 0;
-  box-shadow: 0 0 0 #0000;
-  border: 1px solid #ddd0;
+  color: var(--text-color);
+  box-shadow: 0 0 0 var(--shadow-color-unhover);
+  border: 1px solid var(--border-color-unhover);
   transition: all 0.2s ease-in-out;
-  background-color: #fff8;
+  background-color: var(--input-color-unhover);
   box-sizing: border-box;
 }
-div:nth-child(1) button{
+div:nth-child(1) button {
   position: absolute;
   display: inline-block;
   right: 5px;
@@ -85,53 +94,52 @@ div:nth-child(1) button{
   background-size: 80%;
   background-repeat: no-repeat;
   transition: all 0.2s ease-in-out;
-  border: 0;
-  background-color: #fff0;
+  border: 1px solid var(--border-color-unhover);
+  background-color: var(--backgroundcolor-unhover);
 }
-div:nth-child(1)>div *:hover, input:focus{
-  box-shadow: 1px 1px 5px #bfbfbf55;
-  background-color: #eee;
+div:nth-child(1) > div *:hover,
+input:focus {
+  box-shadow: 1px 1px 5px var(--shadow-color);
+  background-color: var(--backgroundcolor);
+  border: 1px solid var(--border-color);
 }
-div:nth-child(1)>div button:hover{
-  background-color: #fff5;
+div:nth-child(1) > div button:hover {
+  background-color: var(--backgroundcolor);
 }
-input:hover,input:focus{
-  border: 1px solid #ddd;
-  background-color: #eee;
+input:is(:hover, :focus) {
+  border: 1px solid var(--border-color);
+  background-color: var(--backgroundcolor);
 }
-p{
+p {
   font-size: 10px;
 }
-p>a{
+p > a {
   display: inline;
   position: relative;
   background: none;
   box-shadow: none;
-  color: #aaa;
+  color: var(--text-color);
   text-decoration: none;
 }
 
-hr{
+hr {
   border: 0.1px solid #6669;
 }
 
-@media(prefers-color-scheme: dark){
-  body{
-    background-color: #222;
-    color: #ddd;
+@media(prefers-color-scheme: dark) {
+  :root {
+    --main-background: #222;
+    --text-color: #fff;
+    --browsername-color: #ccc;
+    --shadow-color: #bfbfbf99;
+    --shadow-color-unhover: #0000;
+    --border-color-unhover: #4440;
+    --border-color: #666e;
+    --backgroundcolor: #444;
+    --input-color-unhover: #fff1;
   }
-  body div input{
-    background-color: #fff1;
-    color: #fff;
-  }
-  div:nth-child(1) button{
+
+  div:nth-child(1) button {
     background-image: url('../../image/search-white.png');
-    background-color: #2220;
-  }
-  input:hover,
-  input:focus{
-    box-shadow: 1px 1px 5px #bfbfbf55;
-    background-color: #444!important;
-    border: 1px solid #666e;
   }
 }
