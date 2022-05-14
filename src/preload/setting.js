@@ -1,4 +1,7 @@
-const {contextBridge, ipcRenderer} = require('electron');
+const {
+  contextBridge,
+  ipcRenderer
+} = require('electron');
 
 contextBridge.exposeInMainWorld('node', {
   changeSearchEngine: (engine) => {
@@ -9,5 +12,11 @@ contextBridge.exposeInMainWorld('node', {
   },
   deleteHistory: () => {
     ipcRenderer.invoke('setting.deleteHistory');
+  },
+  selectTheme: () => {
+    ipcRenderer.invoke('setting.openThemeDialog');
+  },
+  resetTheme: () => {
+    ipcRenderer.invoke('setting.resetTheme');
   }
 });

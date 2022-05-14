@@ -108,6 +108,23 @@ class Tab {
           url = '${engineURL}';
         `);
       }
+      monotConfig.update();
+      if (monotConfig.get('cssTheme') !== '') {
+        const style = fs.readFileSync(
+          monotConfig.get('cssTheme'),
+          'utf-8'
+        );
+        browserView.webContents.executeJavaScript(`
+          document.body.innerHTML = \`
+            \${document.body.innerHTML}
+            <!-- injected by Monot (CSS Theme) -->
+            <style>
+              ${style}
+            </style>
+          \`
+        `);
+      }
+
       const experiments = monotConfig.update().get('experiments');
       // Force-Dark
       if (experiments.forceDark === true) {
