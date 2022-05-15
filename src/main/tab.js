@@ -27,6 +27,7 @@ class TabManager {
     this.tabs[index].entity.setBackgroundColor('#efefef');
     this.tabs[index].setWindowTitle();
     this.current = index;
+    this.tabs[index].setTitleUrl();
   }
 
   push(win, data) {
