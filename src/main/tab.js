@@ -95,6 +95,13 @@ class Tab {
     });
     // dom-ready
     browserView.webContents.on('dom-ready', () => {
+      win.webContents.executeJavaScript(`
+      document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
+        'id',
+        'loaded'
+      );
+    `);
+
       browserView.webContents.setVisualZoomLevelLimits(1, 5);
       browserView.webContents.setZoomFactor(1);
 
@@ -158,12 +165,6 @@ class Tab {
     // did-finish-load
     browserView.webContents.on('did-finish-load', () => {
       browserView.setBackgroundColor('#efefef');
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
-          'id',
-          'loaded'
-        );
-      `);
       this.setTabTitle();
       this.setWindowTitle();
     });

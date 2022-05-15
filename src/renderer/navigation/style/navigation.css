@@ -14,7 +14,7 @@
   --backgroundcolor: #eee;
   --input-color-unhover: #bbb3;
   --closebutton-color: #fff4;
-  --loading-color: #aaa;
+  --loading-color: #888;
 }
 
 * {
@@ -218,21 +218,18 @@ yomikomi-bar {
   height: 10px;
   background-color: var(--loading-color);
   z-index: 0;
-  transition: all 0.2s ease-in-out;
-  border-radius: 0 5px 0 0;
   filter: blur(5px) brightness(125%);
+  border-radius: 0 5px 0 0;
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
 }
 yomikomi-bar#loading {
   width: 30vw;
   opacity: 1;
 }
 yomikomi-bar#loaded {
-  width: 95vw;
-  opacity: 1;
-}
-yomikomi-bar#frame-finished {
   width: 100vw;
-  opacity: 0;
+  opacity: 1;
 }
 
 @media (prefers-color-scheme: dark)  {
