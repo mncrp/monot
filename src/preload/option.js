@@ -48,5 +48,8 @@ contextBridge.exposeInMainWorld('node', {
   viewBookmark: () => {
     ipcRenderer.invoke('viewBookmark');
     ipcRenderer.invoke('options');
+  },
+  removeBookmark: (key) => {
+    ipcRenderer.invoke('removeBookmark', key);
   }
 });

@@ -110,8 +110,6 @@ ipcRenderer.on('addBookmark', () => {
   `);
 });
 ipcRenderer.on('contextWith', (e, text, link) => {
-  console.log('UNKO');
-  console.log(text);
   ipcRenderer.invoke('contextWithText', text, link);
 });
 

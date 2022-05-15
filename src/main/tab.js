@@ -96,6 +96,7 @@ class Tab {
     // dom-ready
     browserView.webContents.on('dom-ready', () => {
       browserView.webContents.setVisualZoomLevelLimits(1, 5);
+      browserView.webContents.setZoomFactor(1);
 
       this.url = new URL(browserView.webContents.getURL());
       // 新タブと同じURLなのかどうか

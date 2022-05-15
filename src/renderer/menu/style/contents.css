@@ -74,6 +74,14 @@ header h3 {
 
 .bookmark-details {
   padding-left: 4px;
+  display: flex;
+}
+.bookmark-details > #title {
+  width: 100%;
+}
+.bookmark-details > #remove {
+  min-width: 30px;
+  max-width: 30px;
 }
 
 @media (prefers-color-scheme: dark) {

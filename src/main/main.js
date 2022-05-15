@@ -344,7 +344,8 @@ app.on('ready', () => {
         <div onclick="node.open('${value.pageUrl}');">
           <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
           <div class="bookmark-details">
-            <p>${value.pageTitle}</p>
+            <p id="title">${value.pageTitle}</p>
+            <p id="remove"><a href="#" onclick="node.removeBookmark(${key});">削除</a></p>
           </div>
         </div>
       `;
@@ -353,6 +354,12 @@ app.on('ready', () => {
   });
   ipcMain.handle('viewBookmark', () => {
     showBookmark();
+  });
+  ipcMain.handle('removeBookmark', (e, key) => {
+    bookmark.update();
+    bookmark.data[key] = null;
+    bookmark.data.splice(key, 1);
+    bookmark.save();
   });
 
   nw();
@@ -399,7 +406,6 @@ function showSetting() {
       scrollBounce: true
     }
   });
-  setting.webContents.toggleDevTools();
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
@@ -511,6 +517,7 @@ function showBookmark() {
         <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
         <div class="bookmark-details">
           <p>${value.pageTitle}</p>
+          <p><a href="javascript:node.removeBookmark(${key});">削除</a></p>
         </div>
       </div>
     `;
@@ -634,9 +641,13 @@ Copyright 2021 monochrome Project.`
         label: '新しいタブ',
         accelerator: 'CmdOrCtrl+T',
         click: () => {
-          win.webContents.executeJavaScript(`
-            newtab('Home')
-          `);
+          try {
+            win.webContents.executeJavaScript(`
+              newtab('Home')
+            `);
+          } catch (e) {
+            nw();
+          }
         }
       }
     ]
@@ -801,9 +812,13 @@ Copyright 2021-2022 monochrome Project.`
         label: '新しいタブ',
         accelerator: 'CmdOrCtrl+T',
         click: () => {
-          win.webContents.executeJavaScript(`
-            newtab('Home')
-          `);
+          try {
+            win.webContents.executeJavaScript(`
+              newtab('Home')
+            `);
+          } catch (e) {
+            nw();
+          }
         }
       },
       {
