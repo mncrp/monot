@@ -118,7 +118,7 @@ class Tab {
         `);
       }
       monotConfig.update();
-      if (monotConfig.get('cssTheme') !== '') {
+      if (monotConfig.get('cssTheme') != null) {
         const style = fs.readFileSync(
           monotConfig.get('cssTheme'),
           'utf-8'

@@ -150,7 +150,7 @@ function nw() {
       engine = '${getEngine()}';
     `);
     monotConfig.update();
-    if (monotConfig.get('cssTheme') !== '') {
+    if (monotConfig.get('cssTheme') != null) {
       const fs = require('fs');
       const style = fs.readFileSync(
         monotConfig.get('cssTheme'),
@@ -195,7 +195,7 @@ app.on('ready', () => {
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   monotConfig.update();
-  if (monotConfig.get('cssTheme') !== '') {
+  if (monotConfig.get('cssTheme') != null) {
     const fs = require('fs');
     const style = fs.readFileSync(
       monotConfig.get('cssTheme'),
