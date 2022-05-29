@@ -119,10 +119,7 @@ class Tab {
       }
       monotConfig.update();
       if (monotConfig.get('cssTheme') != null) {
-        const style = fs.readFileSync(
-          monotConfig.get('cssTheme'),
-          'utf-8'
-        );
+        const style = monotConfig.get('cssTheme');
         browserView.webContents.executeJavaScript(`
           document.body.innerHTML = \`
             \${document.body.innerHTML}

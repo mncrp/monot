@@ -152,10 +152,7 @@ function nw() {
     monotConfig.update();
     if (monotConfig.get('cssTheme') != null) {
       const fs = require('fs');
-      const style = fs.readFileSync(
-        monotConfig.get('cssTheme'),
-        'utf-8'
-      );
+      const style = monotConfig.get('cssTheme');
       win.webContents.executeJavaScript(`
         document.body.innerHTML = \`
           \${document.body.innerHTML}
@@ -197,10 +194,7 @@ app.on('ready', () => {
   monotConfig.update();
   if (monotConfig.get('cssTheme') != null) {
     const fs = require('fs');
-    const style = fs.readFileSync(
-      monotConfig.get('cssTheme'),
-      'utf-8'
-    );
+    const style = monotConfig.get('cssTheme');
     optionView.webContents.insertCSS(style);
   }
 
@@ -504,6 +498,7 @@ function showBookmark() {
       scrollBounce: true
     }
   });
+  bookmarkWin.toggleDevTools();
   bookmarkWin.webContents.loadFile(`${directory}/renderer/bookmark/index.html`);
   bookmark.update();
   // objectからHTMLに変換
