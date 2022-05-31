@@ -40,9 +40,7 @@ const navigationContextMenu = Menu.buildFromTemplate([
   {
     label: '新規タブ',
     click: () => {
-      win.webContents.executeJavaScript(`
-        newtab();
-      `);
+      newtab();
     }
   },
   {
@@ -128,6 +126,7 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
+  // win.webContents.toggleDevTools();
   win.setBackgroundColor('#efefef');
   win.loadFile(
     process.platform === 'darwin' ?
@@ -151,7 +150,6 @@ function nw() {
     `);
     monotConfig.update();
     if (monotConfig.get('cssTheme') != null) {
-      const fs = require('fs');
       const style = monotConfig.get('cssTheme');
       win.webContents.executeJavaScript(`
         document.body.innerHTML = \`
@@ -168,7 +166,6 @@ function nw() {
   });
 
   // create tab
-  // tabs.newTab(win);
   newtab();
 }
 
@@ -193,7 +190,6 @@ app.on('ready', () => {
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   monotConfig.update();
   if (monotConfig.get('cssTheme') != null) {
-    const fs = require('fs');
     const style = monotConfig.get('cssTheme');
     optionView.webContents.insertCSS(style);
   }
@@ -244,7 +240,7 @@ app.on('ready', () => {
     context.popup();
   });
   ipcMain.handle('newtab', () => {
-    tabs.newTab(win);
+    newtab();
   });
   ipcMain.handle('tabMove', (e, index) => {
     tabs.setCurrent(win, index);
@@ -462,8 +458,7 @@ function showHistory() {
     minHeight: 270,
     icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${directory}/preload/history.js`,
-      scrollBounce: true
+      preload: `${directory}/preload/history.js`
     }
   });
   historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
@@ -494,11 +489,9 @@ function showBookmark() {
     minHeight: 270,
     icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${directory}/preload/bookmark.js`,
-      scrollBounce: true
+      preload: `${directory}/preload/bookmark.js`
     }
   });
-  bookmarkWin.toggleDevTools();
   bookmarkWin.webContents.loadFile(`${directory}/renderer/bookmark/index.html`);
   bookmark.update();
   // objectからHTMLに変換
@@ -637,9 +630,7 @@ Copyright 2021 monochrome Project.`
         accelerator: 'CmdOrCtrl+T',
         click: () => {
           try {
-            win.webContents.executeJavaScript(`
-              newtab('Home')
-            `);
+            newtab();
           } catch (e) {
             nw();
           }
@@ -808,9 +799,7 @@ Copyright 2021-2022 monochrome Project.`
         accelerator: 'CmdOrCtrl+T',
         click: () => {
           try {
-            win.webContents.executeJavaScript(`
-              newtab('Home')
-            `);
+            newtab();
           } catch (e) {
             nw();
           }
@@ -922,10 +911,5 @@ if (isMac) {
   menu = Menu.buildFromTemplate(menuTemplate);
   context = menu;
 }
-context.on('menu-will-close', () => {
-  context = Menu.buildFromTemplate(
-    isMac ? contextTemplateMac : menuTemplate
-  );
-});
 
 Menu.setApplicationMenu(menu);

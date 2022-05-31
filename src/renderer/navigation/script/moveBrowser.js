@@ -17,11 +17,13 @@ function moveBrowser() {
   node.moveBrowser(url.href);
 }
 
-document.getElementsByTagName('input')[0].addEventListener('keydown', (e) => {
-  const word = document.getElementsByTagName('input')[0].value;
-  // press enter
-  if (!e.isComposing && e.key === 'Enter' && word != null) {
-    // <span#opened>
-    moveBrowser();
+document.addEventListener('keydown', (e) => {
+  if (e.target === document.getElementById('textbox')) {
+    const word = document.getElementsByTagName('input')[0].value;
+    // press enter
+    if (!e.isComposing && e.key === 'Enter' && word != null) {
+      // <span#opened>
+      moveBrowser();
+    }
   }
 });
