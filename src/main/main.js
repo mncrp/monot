@@ -601,16 +601,16 @@ const menuTemplate = [
             type: 'info',
             icon: './src/image/logo.png',
             title: 'Monotについて',
-            message: 'Monot 1.0.0 Official Versionについて',
+            message: 'Monotについて',
             detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
 バージョン: 1.0.0 Official Version
 ビルド番号: 7
-開発者: monochrome Project.
+開発元: monochrome Project.
 
-リポジトリ: https://github.com/Sorakime/monot
-公式サイト: https://sorakime.github.io/mncr/project/monot/
+リポジトリ: https://github.com/mncrp/monot
+公式サイト: https://www.monochrome.tk/project/monot/
 
-Copyright 2021 monochrome Project.`
+Copyright ©︎ 2021-2022 monochrome Project.`
           });
         }
       },
@@ -680,7 +680,7 @@ const menuTemplateMac = [
 リポジトリ: https://github.com/mncrp/monot
 公式サイト: https://www.monochrome.tk/project/monot/
 
-Copyright 2021-2022 monochrome Project.`
+Copyright ©︎ 2021-2022 monochrome Project.`
           });
         }
       },
@@ -840,7 +840,7 @@ Copyright 2021-2022 monochrome Project.`
         label: '公式サイト',
         click: () => {
           if (tabs.get() !== null) {
-            tabs.get().load('https://sorakime.github.io/mncr/project/monot');
+            tabs.get().load('https://www.monochrome.tk/project/monot');
           }
         }
       }
