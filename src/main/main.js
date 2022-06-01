@@ -126,6 +126,7 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
+  win.webContents.toggleDevTools();
   // win.webContents.toggleDevTools();
   win.setBackgroundColor('#efefef');
   win.loadFile(

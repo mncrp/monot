@@ -71,6 +71,7 @@ body nav * {
   border: 1px solid var(--border-color-unhover);
 }
 body input {
+  -webkit-user-drag: initial;
   width: 100%;
   padding: 0 7.5px;
   font-size: 11px;
@@ -163,6 +164,9 @@ tab-el {
   vertical-align: middle;
   display: flex;
   overflow: hidden;
+}
+tab-el * {
+  -webkit-user-drag: none;
 }
 tab-el > div {
   width: 100%;
