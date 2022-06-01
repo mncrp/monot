@@ -126,8 +126,6 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
-  win.webContents.toggleDevTools();
-  // win.webContents.toggleDevTools();
   win.setBackgroundColor('#efefef');
   win.loadFile(
     process.platform === 'darwin' ?
@@ -679,8 +677,8 @@ const menuTemplateMac = [
 ビルド番号: 7
 開発元: monochrome Project.
 
-リポジトリ: https://github.com/Sorakime/monot
-公式サイト: https://sorakime.github.io/mncr/project/monot/
+リポジトリ: https://github.com/mncrp/monot
+公式サイト: https://www.monochrome.tk/project/monot/
 
 Copyright 2021-2022 monochrome Project.`
           });
