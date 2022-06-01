@@ -11,7 +11,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |ビルド番号|7|
 |公開日|2022年6月1日(水)|
 |ライセンス|[monochrome. License](https://sorakime.github.io/mncr/license)|
-|言語|日本語|
+|言語|日本語, JavaScript, HTML, CSS|
 
 ## 注意
 - 更新頻度がビビるほど遅いです
