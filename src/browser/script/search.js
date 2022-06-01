@@ -10,8 +10,13 @@ document.getElementById('searchButton').addEventListener('click', () => {
   searchBrowser();
 });
 
-document.getElementById('search').addEventListener('keypress', (e) => {
-  if (!e.isComposing && e.code === 'Enter') {
-    searchBrowser();
+document.addEventListener('keydown', (e) => {
+  if (e.target === document.getElementById('search')) {
+    const word = document.getElementsByTagName('input')[0].value;
+    // press enter
+    if (!e.isComposing && e.key === 'Enter' && word != null) {
+      // <span#opened>
+      searchBrowser();
+    }
   }
 });

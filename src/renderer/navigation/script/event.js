@@ -27,19 +27,6 @@ function each() {
 }
 each();
 
-// eslint-disable-next-line no-unused-vars
-function newtab(title) {
-  document.getElementsByTagName('div')[0].innerHTML = `
-    ${document.getElementsByTagName('div')[0].innerHTML}
-    <span>
-      <a href="#">${title}</a>
-      <a href="#"></a>
-    </span>
-  `;
-  each();
-  node.newtab();
-}
-
 window.addEventListener('contextmenu', (e) => {
   e.preventDefault();
   node.popupMenu();

@@ -1,7 +1,8 @@
 const {
   BrowserWindow,
   BrowserView,
-  app
+  app,
+  nativeTheme
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
@@ -24,7 +25,6 @@ class TabManager {
     `);
 
     win.setTopBrowserView(this.tabs[index].entity);
-    this.tabs[index].entity.setBackgroundColor('#efefef');
     this.tabs[index].setWindowTitle();
     this.current = index;
     this.tabs[index].setTitleUrl();
@@ -55,8 +55,8 @@ class TabManager {
     this.setCurrent(win, index);
   }
 
-  newTab(win, shouldMoveCurrent = true, url) {
-    const tab = new Tab(win, url);
+  newTab(win, context, shouldMoveCurrent = true, url) {
+    const tab = new Tab(win, context, url);
     this.push(win, tab);
     if (shouldMoveCurrent) {
       this.setCurrent(win, this.length() - 1);
@@ -65,7 +65,7 @@ class TabManager {
 }
 
 class Tab {
-  constructor(win, url = new URL(`file://${directory}/browser/home.html`)) {
+  constructor(win, context, url = new URL(`file://${directory}/browser/home.html`)) {
 
     if (!(url instanceof URL)) {
       url = new URL(url);
@@ -83,6 +83,11 @@ class Tab {
     });
     browserView.webContents.session.setDownloadPath(app.getPath('downloads'));
     browserView.webContents.setVisualZoomLevelLimits(1, 5);
+
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('div')[0].innerHTML += '<span><a href="#">Home</a><a href="#"></a></span>';
+      each();
+    `);
 
     // events
     // did-fail-load
@@ -119,19 +124,8 @@ class Tab {
       }
       monotConfig.update();
       if (monotConfig.get('cssTheme') != null) {
-        const style = fs.readFileSync(
-          monotConfig.get('cssTheme'),
-          'utf-8'
-        );
-        browserView.webContents.executeJavaScript(`
-          document.body.innerHTML = \`
-            \${document.body.innerHTML}
-            <!-- injected by Monot (CSS Theme) -->
-            <style>
-              ${style}
-            </style>
-          \`
-        `);
+        const style = monotConfig.get('cssTheme');
+        browserView.webContents.insertCSS(style);
       }
 
       const experiments = monotConfig.update().get('experiments');
@@ -165,7 +159,11 @@ class Tab {
     });
     // did-finish-load
     browserView.webContents.on('did-finish-load', () => {
-      browserView.setBackgroundColor('#efefef');
+      if (!nativeTheme.shouldUseDarkColors) {
+        browserView.setBackgroundColor('#efefef');
+      } else {
+        browserView.setBackgroundColor('#222');
+      }
       this.setTabTitle();
       this.setWindowTitle();
     });
@@ -250,7 +248,7 @@ class Tab {
   setTabTitle() {
     const win = BrowserWindow.fromBrowserView(this.entity);
     win.webContents.executeJavaScript(`
-      document.getElementById('opened')
+      document.getElementsByTagName('span')[${win.getBrowserViews().indexOf(this.entity)}]
         .getElementsByTagName('a')[0]
         .innerText='${this.entity.webContents.getTitle()}';
     `);

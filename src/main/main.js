@@ -40,9 +40,7 @@ const navigationContextMenu = Menu.buildFromTemplate([
   {
     label: '新規タブ',
     click: () => {
-      win.webContents.executeJavaScript(`
-        newtab();
-      `);
+      newtab();
     }
   },
   {
@@ -151,11 +149,7 @@ function nw() {
     `);
     monotConfig.update();
     if (monotConfig.get('cssTheme') != null) {
-      const fs = require('fs');
-      const style = fs.readFileSync(
-        monotConfig.get('cssTheme'),
-        'utf-8'
-      );
+      const style = monotConfig.get('cssTheme');
       win.webContents.executeJavaScript(`
         document.body.innerHTML = \`
           \${document.body.innerHTML}
@@ -171,7 +165,6 @@ function nw() {
   });
 
   // create tab
-  // tabs.newTab(win);
   newtab();
 }
 
@@ -196,11 +189,7 @@ app.on('ready', () => {
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   monotConfig.update();
   if (monotConfig.get('cssTheme') != null) {
-    const fs = require('fs');
-    const style = fs.readFileSync(
-      monotConfig.get('cssTheme'),
-      'utf-8'
-    );
+    const style = monotConfig.get('cssTheme');
     optionView.webContents.insertCSS(style);
   }
 
@@ -250,7 +239,7 @@ app.on('ready', () => {
     context.popup();
   });
   ipcMain.handle('newtab', () => {
-    tabs.newTab(win);
+    newtab();
   });
   ipcMain.handle('tabMove', (e, index) => {
     tabs.setCurrent(win, index);
@@ -468,8 +457,7 @@ function showHistory() {
     minHeight: 270,
     icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${directory}/preload/history.js`,
-      scrollBounce: true
+      preload: `${directory}/preload/history.js`
     }
   });
   historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
@@ -500,8 +488,7 @@ function showBookmark() {
     minHeight: 270,
     icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${directory}/preload/bookmark.js`,
-      scrollBounce: true
+      preload: `${directory}/preload/bookmark.js`
     }
   });
   bookmarkWin.webContents.loadFile(`${directory}/renderer/bookmark/index.html`);
@@ -614,16 +601,16 @@ const menuTemplate = [
             type: 'info',
             icon: './src/image/logo.png',
             title: 'Monotについて',
-            message: 'Monot 1.0.0 Official Versionについて',
+            message: 'Monotについて',
             detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
 バージョン: 1.0.0 Official Version
 ビルド番号: 7
-開発者: monochrome Project.
+開発元: monochrome Project.
 
-リポジトリ: https://github.com/Sorakime/monot
-公式サイト: https://sorakime.github.io/mncr/project/monot/
+リポジトリ: https://github.com/mncrp/monot
+公式サイト: https://www.monochrome.tk/project/monot/
 
-Copyright 2021 monochrome Project.`
+Copyright ©︎ 2021-2022 monochrome Project.`
           });
         }
       },
@@ -642,9 +629,7 @@ Copyright 2021 monochrome Project.`
         accelerator: 'CmdOrCtrl+T',
         click: () => {
           try {
-            win.webContents.executeJavaScript(`
-              newtab('Home')
-            `);
+            newtab();
           } catch (e) {
             nw();
           }
@@ -692,10 +677,10 @@ const menuTemplateMac = [
 ビルド番号: 7
 開発元: monochrome Project.
 
-リポジトリ: https://github.com/Sorakime/monot
-公式サイト: https://sorakime.github.io/mncr/project/monot/
+リポジトリ: https://github.com/mncrp/monot
+公式サイト: https://www.monochrome.tk/project/monot/
 
-Copyright 2021-2022 monochrome Project.`
+Copyright ©︎ 2021-2022 monochrome Project.`
           });
         }
       },
@@ -813,9 +798,7 @@ Copyright 2021-2022 monochrome Project.`
         accelerator: 'CmdOrCtrl+T',
         click: () => {
           try {
-            win.webContents.executeJavaScript(`
-              newtab('Home')
-            `);
+            newtab();
           } catch (e) {
             nw();
           }
@@ -857,7 +840,7 @@ Copyright 2021-2022 monochrome Project.`
         label: '公式サイト',
         click: () => {
           if (tabs.get() !== null) {
-            tabs.get().load('https://sorakime.github.io/mncr/project/monot');
+            tabs.get().load('https://www.monochrome.tk/project/monot');
           }
         }
       }
@@ -927,10 +910,5 @@ if (isMac) {
   menu = Menu.buildFromTemplate(menuTemplate);
   context = menu;
 }
-context.on('menu-will-close', () => {
-  context = Menu.buildFromTemplate(
-    isMac ? contextTemplateMac : menuTemplate
-  );
-});
 
 Menu.setApplicationMenu(menu);
