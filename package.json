@@ -35,7 +35,7 @@
     ],
     "win": {
       "icon": "src/image/logo.ico",
-      "target": "portable",
+      "target": "nsis",
       "legalTrademarks": "Copyright 2021 monochrome."
     },
     "nsis": {
