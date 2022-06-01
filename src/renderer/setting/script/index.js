@@ -1,9 +1,3 @@
-/* document.getElementById('custom').addEventListener('click',()=>{
-  node.filePopUp();
-})
-document.getElementById('default').addEventListener('click',()=>{
-  node.writeBackgroundDefault();
-}) */
 document.getElementsByTagName('select')[0].addEventListener('change', () => {
   node.changeSearchEngine(document.getElementsByTagName('select')[0].value);
 });
@@ -24,4 +18,4 @@ document.getElementsByTagName('input')[1].addEventListener('change', (arg) => {
 document.getElementById('changedfont').addEventListener('input', () => {
   node.changeExperimentalFunctions('changedfont', document.getElementById('changedfont').value);
 });
-document.getElementsByTagName('input')[3].addEventListener('change', changeExperimental);
+document.getElementsByTagName('input')[2].addEventListener('change', changeExperimental);

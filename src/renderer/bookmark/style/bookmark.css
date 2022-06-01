@@ -1,0 +1,81 @@
+@import url('../../../proprietary/style/font.css');
+
+* {
+  padding: 0;
+  margin: 0;
+}
+body {
+  background-color: #efefef;
+}
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9990;
+  backdrop-filter: blur(10px);
+  padding: 10px;
+  padding-left: 20px;
+}
+main {
+  overflow: hidden;
+  position: relative;
+  margin-top: 64px;
+  padding: 7px 10px;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+#bookmarks > div {
+  background-color: #8888883f;
+  padding: 5px;
+  margin-top: 5px;
+  border-radius: 7px;
+  box-shadow: 5px 5px 5px #bfbfbf00;
+  height: 25px;
+  display: flex;
+}
+
+.bookmark-favicon {
+  height: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 2px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.bookmark-details {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding-left: 15px;
+}
+.bookmark-details > p:nth-child(1) {
+  width: 100%;
+}
+.bookmark-details > p:nth-child(2) {
+  min-width: 35px;
+  max-width: 35px;
+}
+.bookmark-details a {
+  color: #000;
+  text-decoration: none;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #202020;
+  }
+  header {
+    color: #fff;
+  }
+  main {
+    border-color: #666e;
+  }
+  * {
+    color: #fff!important;
+  }
+}

@@ -1,23 +1,43 @@
 @import url('../../../proprietary/style/font.css');
 
-*{
+:root {
+  --main-background: #efefef;
+  --text-color: #000;
+  --borderline-color: #ddd;
+  --opened-tab-color: #bbb3;
+
+  --border-color-unhover: #ddd0;
+  --border-color: #ddde;
+  --shadow-color: #bfbfbf55;
+  --shadow-color-unhover: #0000;
+  --backgroundcolor-unhover: #ccc0;
+  --backgroundcolor: #eee;
+  --input-color-unhover: #bbb3;
+  --closebutton-color: #fff4;
+  --loading-color: #888;
+}
+
+* {
   position: relative;
   top: 0;
-  margin: 0; padding: 0;
-  border: none; outline: none;
-  color: #000; text-decoration: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  color: var(--text-color);
+  text-decoration: none;
   z-index: 100;
 }
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   display: none;
 }
-script, style{
+script, style {
   display: none!important;
   width: 0; height: 0;
 }
 
-body{
-  background-color: #efefef;
+body {
+  background-color: var(--main-background);
   -webkit-app-region: drag;
   user-select: none;
   padding-bottom: 0;
@@ -25,20 +45,20 @@ body{
   margin-bottom: 0;
   height: auto;
   overflow: hidden;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--borderline-color);
 }
-nav{
+nav {
   display: flex;
   position: relative;
   height: auto;
   width: 100%;
 }
 
-body nav *{
+body nav * {
   user-select: none;
   -webkit-user-drag: none;
   -webkit-app-region: none;
-  box-shadow: 0 0 0 #0000;
+  box-shadow: 0 0 0 var(--shadow-color-unhover);
   position: relative;
   top: 0;
   display: inline-block;
@@ -46,76 +66,76 @@ body nav *{
   height: 23px;
   aspect-ratio: 1/1;
   margin: 3px;
-  background-color: #ccc0;
+  background-color: var(--backgroundcolor-unhover);
   transition: all 0.2s ease-in-out;
-  border: 1px solid #ddd0;
+  border: 1px solid var(--border-color-unhover);
 }
-body input{
+body input {
+  -webkit-user-drag: initial;
   width: 100%;
   padding: 0 7.5px;
   font-size: 11px;
-  background-color: #bbb3;
+  background-color: var(--input-color-unhover);
+  color: var(--text-color);
 }
 body nav *:hover,
 div > span:hover,
-tab-el > a:hover{
-  box-shadow: 1px 1px 5px #bfbfbf55;
-  background-color: #eee;
-  border: 1px solid #ddde;
+tab-el > a:hover,
+body nav input:focus {
+  box-shadow: 1px 1px 5px var(--shadow-color);
+  background-color: var(--backgroundcolor);
+  border: 1px solid var(--border-color);
 }
-body nav a:first-child{
+body nav a:first-child {
   margin-left: 30px;
 }
-body nav a:last-child{
+body nav a:last-child {
   margin-right: 4px;
 }
-nav a{
+nav a {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
   cursor: default;
 }
-body nav input:focus{
-  border: 1px solid #ddde;
+nav a:active {
+  background-color: var(--backgroundcolor-unhover);
+  box-shadow: 0 0 0 var(--shadow-color-unhover);
 }
-nav a:active{
-  background-color: #fff0;
-  box-shadow: 0 0 0 #0000;
-}
-#home{
+#home {
   background-image: url('../../../image/home.png');
 }
-#reload{
+#reload {
   background-image: url('../../../image/reload.png');
 }
-#prev{
+#prev {
   background-image: url('../../../image/back.png');
 }
-#menu{
+#menu {
   background-image: url('../../../image/option.png');
 }
-#next{
+#next {
   background-image: url('../../../image/prev.png');
 }
-#move{
+#move {
   background-image: url('../../../image/go.png');
 }
-#minimize{
+#minimize {
   background-image: url('../../../image/hide.png');
 }
-#maximize{
+#maximize {
   background-image: url('../../../image/maximize.png');
 }
-#close{
+#close {
   background-image: url('../../../image/close.png');
 }
 
-div > span > a:first-child{
-  color: #333;
+div > span > a:first-child {
+  color: var(--text-color);
   font-weight: 100;
   cursor: default;
 }
-div > span > a:last-child{
+div > span > a:last-child {
   display: inline-block;
   cursor: default;
   position: absolute;
@@ -125,31 +145,35 @@ div > span > a:last-child{
   width: 17px; height: 17px;
   font-size: 12px;
   border-radius: 7px;
-  background-color: #fff0;
+  background-color: var(--backgroundcolor-unhover);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
   background-image: url('../../../image/close.png');
   transition: all 0.2s ease-in-out;
 }
-div > span > a:last-child:hover{
-  background-color: #fff4;
+div > span > a:last-child:hover {
+  background-color: var(--closebutton-color);
 }
-div > span#opened{
-  background-color: #bbb3;
+div > span#opened {
+  background-color: var(--opened-tab-color);
+  color: var(--text-color);
 }
-tab-el{
+tab-el {
   height: auto;
   vertical-align: middle;
   display: flex;
   overflow: hidden;
 }
-tab-el > div{
+tab-el * {
+  -webkit-user-drag: none;
+}
+tab-el > div {
   width: 100%;
   overflow: auto;
   display: flex;
 }
-tab-el > div > span{
+tab-el > div > span {
   min-width: 70px;
   overflow: hidden;
 	text-overflow: ellipsis;
@@ -165,12 +189,12 @@ tab-el > div > span{
   font-size: 12px;
   -webkit-font-smoothing: antialiased;
   border-radius: 10px;
-  border: 1px solid #ddd0;
+  border: 1px solid var(--border-color-unhover);
   transition: all 0.2s ease-in-out;
   cursor: default;
   -webkit-app-region: none;
 }
-tab-el > a{
+tab-el > a {
   display: block;
   height: 24px;
   width: 24px;
@@ -181,14 +205,14 @@ tab-el > a{
   background-size: 80%;
   background-repeat: no-repeat;
   border-radius: 10px;
-  background-color: #fff0;
-  box-shadow: 1px 1px 5px #fff0;
-  border: 1px solid #fff0;
+  background-color: var(--backgroundcolor-unhover);
+  box-shadow: 1px 1px 5px var(--shadow-color-unhover);
+  border: 1px solid var(--border-color-unhover);
   transition: all 0.2s ease-in-out;
   -webkit-app-region: none;
   cursor: default;
 }
-yomikomi-bar{
+yomikomi-bar {
   display: block;
   position: absolute;
   top: -1px;
@@ -196,91 +220,70 @@ yomikomi-bar{
   left: -9px;
   width: 0;
   height: 10px;
-  background: #fff;
+  background-color: var(--loading-color);
   z-index: 0;
-  transition: all 0.2s ease-in-out;
-  border-radius: 0 5px 0 0;
   filter: blur(5px) brightness(125%);
+  border-radius: 0 5px 0 0;
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
 }
-yomikomi-bar#loading{
+yomikomi-bar#loading {
   width: 30vw;
   opacity: 1;
 }
-yomikomi-bar#loaded{
-  width: 95vw;
+yomikomi-bar#loaded {
+  width: 100vw;
   opacity: 1;
 }
-yomikomi-bar#frame-finished{
-  width: 100vw;
-  opacity: 0;
-}
 
-@media (prefers-color-scheme: dark) {
-  body{
-    background-color: #222;
-    border-bottom: 1px solid #333;
+@media (prefers-color-scheme: dark)  {
+  :root {
+    --main-background: #222;
+    --text-color: #fff;
+    --borderline-color: #333;
+    --opened-tab-color: #fff1;
+
+    --border-color-unhover: #ddd0;
+    --border-color: #666e;
+    --shadow-color: #bfbfbf55;
+    --shadow-color-unhover: #0000;
+    --backgroundcolor-unhover: #ccc0;
+    --backgroundcolor: #444;
+    --input-color-unhover: #fff1;
+    --closebutton-color: #fff4;
+    --loading-color: #444;  
   }
-  yomikomi-bar{
-    background-color: #444;
-  }
-  body input{
-    background-color: #fff1;
-    color: #fff;
-  }
-  body nav *:hover, 
-  div > span:hover,
-  tab-el > a:hover{
-    box-shadow: 1px 1px 5px #bfbfbf55;
-    background-color: #444;
-    border: 1px solid #666e;
-  }
-  body nav input:focus{
-    border: 1px solid #666e;
-  }
-  nav a:active{
-    background-color: #fff0;
-    box-shadow: 0 0 0 #0000;
-  }
-  #home{
+  #home {
     background-image: url('../../../image/home-white.png');
   }
-  #reload{
+  #reload {
     background-image: url('../../../image/reload-white.png');
   }
-  #prev{
+  #prev {
     background-image: url('../../../image/back-white.png');
   }
-  #menu{
+  #menu {
     background-image: url('../../../image/option-white.png');
   }
-  #next{
+  #next {
     background-image: url('../../../image/prev-white.png');
   }
-  #move{
+  #move {
     background-image: url('../../../image/go-white.png');
   }
-  #minimize{
+  #minimize {
     background-image: url('../../../image/hide-white.png');
   }
-  #maximize{
+  #maximize {
     background-image: url('../../../image/maximize-white.png');
   }
-  #close{
+  #close {
     background-image: url('../../../image/close-white.png');
   }
-  div > span:hover{
-    background-color: #444;
-  }
-  div > span#opened{
-    background-color: #fff1;
-  }
-  div > span > a:first-child{
-    color: #bbb;
-  }
-  div > span > a:last-child{
+  div > span > a:last-child {
     background-image: url('../../../image/close-white.png');
   }
-  tab-el > a{
+  tab-el > a {
     background-image: url('../../../image/plus-white.png');
   }
 }

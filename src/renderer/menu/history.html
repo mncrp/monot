@@ -6,24 +6,18 @@
   <link rel="stylesheet" href="./style/contents.css">
   <title>メニュー</title>
 </head>
-<body>
+<body id="history">
   <header><h3>履歴</h3></header>
   <main>
     <div>
       <div id="histories">
-        <div>
-          <!--one history-->
-          <div class="history-favicon"></div>
-          <div class="history-details">
-            <h4>ページのタイトル....</h4>
-            <p>page-no-url.com/url/</p>
-          </div>
-        </div>
+        <a href="javascript:node.viewHistory();">ウィンドウを表示...</a>
       </div>
     </div>
   </main>
   <script>
     window.scrollTo(0, 1);
+    node.updateHistory();
   </script>
 </body>
 </html>
