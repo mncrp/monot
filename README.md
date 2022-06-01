@@ -6,11 +6,11 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|正式名称|Monot by monochrome. v.1.0.0|
+|正式名称|Monot by monochrome. v.1.0.0 Official Version (Build 7)|
 |バージョン|v.1.0.0|
 |ビルド番号|7|
-|公開日|2021年11月23日(火)|
-|ライセンス|[monochrome License.](https://sorakime.github.io/mncr/license?v=1.1.1)|
+|公開日|2022年6月1日(水)|
+|ライセンス|[monochrome. License](https://sorakime.github.io/mncr/license)|
 |言語|日本語|
 
 ## 注意
@@ -19,11 +19,6 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 - [Twitter](https://twitter.com/Sorakime_)をフォローしてくれると嬉しがります。
 
 ---
-
-# アップデート内容
-- タブ対応
-  - タブを左右に移動することには未対応
-- ダークモード完全対応
 
 ## スクショ
 すべてダークモードで動作しています。ライトモードも完全に対応しています。
@@ -36,6 +31,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 
 
 ## ショートカットキー
+一蘭じゃないっていうのど時期バージョンでめっちゃ増やします。v.1.1.0
 |ショートカット|キー一覧|
 |:--|:--|
 |Monotについて|Ctrl(Cmd) + Alt + A|
@@ -52,26 +48,10 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 
 タブの移動には対応していませんが、正式版では対応する見通しです。
 
-## 開発チーム
-Monot開発者である僕は2021年10月ごろにMonot開発チームを立ち上げ、複数人でMonotの開発を始めました。
-
-メンバーは
-- [Sorakime](https://twitter.com/Sorakime_)
-- [waryu](https://twitter.com/waryu_YND)
-- [ひでまる](https://twitter.com/hidemal_OwO)
-- [USB 3.14](https://twitter.com/f82n9szax)
-- [蒼凰](https://twitter.com/Ao_skyblue_pika)
-
-とMonot for Androidの
-
-- [ZIP](https://twitter.com/ZIP_Muryobochi)
-
-の6人です。
-
 # ダウンロードしてくださいっ！！！！！
 右上のこのボタンをクリックしてください。
 ![image](https://user-images.githubusercontent.com/69241694/132985506-fa49c272-6032-4349-bad9-e97a068aa8fe.png)
 
 ---
-Copyright 2021 Sorakime.
-Licensed by [monochrome License.](https://sorakime.github.io/mncr/license?v=1.1.1)
+Copyright 2021 monochrome Project.
+Licensed by [monochrome. License](https://sorakime.github.io/mncr/license)
