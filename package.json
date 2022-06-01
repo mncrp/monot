@@ -30,7 +30,8 @@
       "!.dist",
       "src",
       "package-lock.json",
-      "package.json"
+      "package.json",
+      "!.DS_Store"
     ],
     "win": {
       "icon": "src/image/logo.ico",
@@ -48,16 +49,17 @@
     },
     "appImage": {
       "category": "Utility",
-      "synopsis": "Monot v1.0.0Build7"
+      "synopsis": "Monot v1.0.0 Build7"
     },
     "mac": {
+      "identity": null,
       "icon": "src/image/logo.icns",
       "category": "public.app-category.reference",
       "target": "dmg"
     },
     "dmg": {
       "backgroundColor": "#efefef",
-      "title": "Monot v1.0.0Build7"
+      "title": "Monot v1.0.0 Build7"
     }
   }
 }
