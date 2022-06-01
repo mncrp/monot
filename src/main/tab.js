@@ -248,7 +248,7 @@ class Tab {
   setTabTitle() {
     const win = BrowserWindow.fromBrowserView(this.entity);
     win.webContents.executeJavaScript(`
-      document.getElementById('opened')
+      document.getElementsByTagName('span')[${win.getBrowserViews().indexOf(this.entity)}]
         .getElementsByTagName('a')[0]
         .innerText='${this.entity.webContents.getTitle()}';
     `);
