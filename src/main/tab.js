@@ -6,11 +6,12 @@ const {
 } = require('electron');
 const fs = require('fs');
 const directory = `${__dirname}/..`;
-const viewY = 66;
+let viewY = 66;
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 let windowSize;
+if (monotConfig.update().get('ui') === 'thin') viewY = 28;
 
 class TabManager {
   constructor() {

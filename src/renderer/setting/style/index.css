@@ -38,29 +38,16 @@ main > * {
   display: block;
 }
 
-#wallpaper-select {
-  display: flex;
-}
-#wallpaper-select > * {
-  width: 100%;
-  margin: 10px;
+#ui a img {
+  width: 20vw;
+  min-width: 300px;
+  border: 1px solid #8880;
   border-radius: 20px;
-  padding: 20px;
-  height: 20vh;
-  user-select: none;
-  background: #0000;
-  border: 3px solid #ddd;
-  transition: all 0.2s ease-in-out;
+  transition: all .4s ease-in-out;
 }
-#wallpaper-select > *:hover {
-  background-color: #f3f3f3;
-  box-shadow: 2px 2px 15px #ddd;
-}
-#wallpaper-select > * > p {
-  display: inline-block;
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%,-50%);
+#ui a.selected img {
+  border: 1px solid #888;
+  box-shadow: 0 0 15px #555;
 }
 
 #engine > select {

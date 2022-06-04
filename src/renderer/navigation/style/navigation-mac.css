@@ -4,3 +4,9 @@ body nav a:first-child{
 body nav a:last-child{
   margin-right: 30px;
 }
+.thin tab-el {
+  padding-right: 25px;
+}
+.thin .window#menu {
+  right: 1px;
+}

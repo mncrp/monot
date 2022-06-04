@@ -19,3 +19,13 @@ document.getElementById('changedfont').addEventListener('input', () => {
   node.changeExperimentalFunctions('changedfont', document.getElementById('changedfont').value);
 });
 document.getElementsByTagName('input')[2].addEventListener('change', changeExperimental);
+
+function ui(which) {
+  if (document.getElementsByClassName('selected')[0] === undefined) {
+    document.getElementById(which).classList.add('selected');
+  } else {
+    document.getElementsByClassName('selected')[0].classList.remove('selected');
+    node.changeUI(which);
+    document.getElementById(which).classList.add('selected');
+  }
+}
