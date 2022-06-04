@@ -52,6 +52,7 @@ nav {
   position: relative;
   height: auto;
   width: 100%;
+  transition: all 0.4s cubic-bezier(.7, 0, .3, 1);
 }
 
 body nav * {
@@ -234,6 +235,62 @@ yomikomi-bar#loading {
 yomikomi-bar#loaded {
   width: 100vw;
   opacity: 1;
+}
+
+.thin {
+  display: flex;
+  height: 25px;
+}
+.thin nav {
+  z-index: 9999;
+  width: 500px;
+  min-width: 500px;
+}
+.thin nav .window {
+  position: fixed;
+  margin: 1px;
+  top: 1px;
+}
+.thin .window#close {
+  right: 0;
+}
+.thin .window#maximize {
+  right: 22px;
+}
+.thin .window#minimize {
+  right: 44px;
+}
+.thin .window#menu {
+  right: 66px;
+}
+.thin nav * {
+  height: 20px;
+  margin: 1px;
+}
+.thin tab-el {
+  width: 100%;
+  padding-right: 85px;
+}
+.thin tab-el div span {
+  display: inline-block;
+  width: min-content;
+  margin: 0 2px;
+  padding-right: 20px;
+}
+.thin tab-el > a {
+  height: 20px;
+  width: 20px;
+  margin: 0px;
+}
+
+@media (max-width: 700px) {
+  .thin nav {
+    width: 230px;
+    min-width: 230px;
+  }
+  .thin nav:is(:focus-within, :hover) {
+    width: 2000px;
+  }
 }
 
 @media (prefers-color-scheme: dark)  {

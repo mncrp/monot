@@ -10,6 +10,9 @@ contextBridge.exposeInMainWorld('node', {
   changeExperimentalFunctions: (change, to) => {
     ipcRenderer.invoke('setting.changeExperimental', change, to);
   },
+  changeUI: (to) => {
+    ipcRenderer.invoke('setting.changeUI', to);
+  },
   deleteHistory: () => {
     ipcRenderer.invoke('setting.deleteHistory');
   },

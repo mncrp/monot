@@ -7,5 +7,6 @@
   "startup": false,
   "width": "1000",
   "height": "800",
-  "cssTheme": ""
+  "cssTheme": "",
+  "ui": "thin"
 }

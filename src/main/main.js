@@ -163,6 +163,11 @@ function nw() {
   win.on('ready-to-show', () => {
     win.show();
   });
+  if (monotConfig.update().get('ui') === 'thin') {
+    win.webContents.executeJavaScript(`
+      document.body.classList.add('thin');
+    `);
+  }
 
   // create tab
   newtab();
@@ -279,6 +284,11 @@ app.on('ready', () => {
   ipcMain.handle('setting.resetTheme', () => {
     monotConfig.update()
       .set('cssTheme', '')
+      .save();
+  });
+  ipcMain.handle('setting.changeUI', (e, ui) => {
+    monotConfig.update()
+      .set('ui', ui)
       .save();
   });
   ipcMain.handle('addHistory', (e, data) => {
@@ -404,6 +414,7 @@ function showSetting() {
 
   setting.webContents.executeJavaScript(`
     document.getElementsByTagName('select')[0].value = '${enginesConfig.get('engine')}';
+    ui('${monotConfig.get('ui')}');
   `);
 
   if (experiments.forceDark === true) {
