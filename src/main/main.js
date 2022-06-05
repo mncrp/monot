@@ -218,7 +218,7 @@ app.on('ready', () => {
     win.isMaximized() ? win.unmaximize() : win.maximize();
   });
   ipcMain.handle('windowMaxMinMac', () => {
-    win.fullScreen ? win.fullScreen = false : win.fullScreen = true;
+    win.isFullScreen() ? win.fullScreen = false : win.fullScreen = true;
   });
   ipcMain.handle('moveViewBlank', (e, index) => {
     tabs.get(index).load(
@@ -232,7 +232,7 @@ app.on('ready', () => {
     tabs.get(index).goBack();
   });
   ipcMain.handle('browserGoes', (e, index) => {
-    tabs.get(index).entity.webContents.goForward();
+    tabs.get(index).goForward();
   });
   ipcMain.handle('getBrowserUrl', (e, index) => {
     return tabs.get(index).entity.webContents.getURL();
