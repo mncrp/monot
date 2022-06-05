@@ -287,7 +287,8 @@ app.on('ready', () => {
       .save();
   });
   ipcMain.handle('addHistory', (e, data) => {
-    history.set(data);
+    const fileURL = new URL(`file://${directory}/browser/home.html`);
+    if (data.pageUrl !== fileURL.href) history.set(data);
   });
   ipcMain.handle('settings.view', () => {
     showSetting();
