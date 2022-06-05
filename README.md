@@ -1,39 +1,61 @@
-![image](https://user-images.githubusercontent.com/69241694/143031805-9e5636a0-e9c7-44ff-b2d5-5f4cf9bed654.png)
+![image](https://www.monochrome.tk/image/top/monot.jpg)
 
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
+
+※まだv.1.1.0リリースされてねぇからな、そこんとこ勘違いすんなよ？
 
 ## 概要
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|正式名称|Monot by monochrome. v.1.0.0 Official Version (Build 7)|
-|バージョン|v.1.0.0|
-|ビルド番号|7|
-|公開日|2022年6月1日(水)|
+|正式名称|Monot by monochrome. v.1.1.0 (Build 8)|
+|バージョン|v.1.1.0|
+|ビルド番号|8|
+|公開日|2022年6月x日(x)|
 |ライセンス|[monochrome. License](https://sorakime.github.io/mncr/license)|
 |言語|日本語, JavaScript, HTML, CSS|
 
 ## 注意
 - 更新頻度がビビるほど遅いです
 - [Floorp](https://floorp.ablaze.one)などのブラウザとは違い、どちらかというと[Safari](https://apple.com/jp/safari/)などのようにエコシステムの一部として開発されています。
-- [Twitter](https://twitter.com/Sorakime_)をフォローしてくれると嬉しがります。
+- [Twitter](https://twitter.com/mncrp_)をフォローしてくれると嬉しがります。
 
 ---
 
-アップデート内容など：https://www.monochrome.tk/news/1
+## アップデート内容
+詳細：https://www.monochrome.tk/news/2
+
+- 設定ウィンドウの項目の追加とデザインの修正等
+- タブ関連のバグを修正
+- UIに"Default"および"Thin"を実装。
+- 内部の細かな変更
 
 ## スクショ
-すべてダークモードで動作しています。ライトモードも完全に対応しています。
+### Default - ライトモード
+![起動直後](https://user-images.githubusercontent.com/69241694/172031044-0d6f360a-d4d7-45c2-9f86-05b7d888001c.png)
+![オプションを表示](https://user-images.githubusercontent.com/69241694/172031053-1ceb19d5-a65f-4f83-b003-d1d8ed40e85c.png)
 
-![起動直後の画面](https://user-images.githubusercontent.com/69241694/143030979-a3d142b6-cbb0-4775-9673-114aa59ec42f.png)
-起動直後の画面
+### Default - ダークモード
+![起動直後](https://user-images.githubusercontent.com/69241694/172031064-1bb8539d-5d86-47b1-8381-e25e06456c58.png)
+![オプションを表示](https://user-images.githubusercontent.com/69241694/172031075-8d154f01-e8fa-45f8-bd08-33ad9c4ff921.png)
 
-![実際にウェブサイトを閲覧している様子](https://user-images.githubusercontent.com/69241694/143031042-9a797fdf-4689-47d2-b0fd-c626f3b9145d.png)
-実際にウェブサイトを閲覧している様子
+### Thin - ライトモード
+![起動直後](https://user-images.githubusercontent.com/69241694/172031090-cd5bb654-1299-45b0-bb2a-b470f9f976a1.png)
+![オプションを表示](https://user-images.githubusercontent.com/69241694/172031096-28a2ad85-f053-464e-97b1-d10e095587bc.png)
 
+### Thin - ダークモード
+![起動直後](https://user-images.githubusercontent.com/69241694/172031195-dac7c557-2243-47aa-b310-11612a273f83.png)
+![オプションを表示](https://user-images.githubusercontent.com/69241694/172031197-158d4080-ee3b-4e38-8299-b6113c7bf760.png)
+
+### 設定ウィンドウ
+![ライトモード](https://user-images.githubusercontent.com/69241694/172031236-92e917c6-ca25-4d52-bd3e-4541381e215b.png)
+![ダークモード](https://user-images.githubusercontent.com/69241694/172031258-cd24b39d-6f94-4136-b13c-ac4247c44fe4.png)
+
+### 履歴
+![ライトモード](https://user-images.githubusercontent.com/69241694/172031277-1d75b3d0-3b39-41c4-be37-a3d3da5acf35.png)
+![ダークモード](https://user-images.githubusercontent.com/69241694/172031270-360ba3ef-672e-4467-8274-e0584807e368.png)
 
 ## ショートカットキー
-一蘭じゃないっていうのど時期バージョンでめっちゃ増やします。v.1.1.0
 |ショートカット|キー一覧|
 |:--|:--|
 |Monotについて|Ctrl(Cmd) + Alt + A|
@@ -47,12 +69,6 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Webサイトの開発者向けツール|F12|
 |Monotの開発者向けツール|Alt + F12|
 |設定ウィンドウ|Ctrl(Cmd) + Alt + S|
-
-タブの移動には対応していませんが、正式版では対応する見通しです。
-
-# ダウンロードしてくださいっ！！！！！
-右上のこのボタンをクリックしてください。
-![image](https://user-images.githubusercontent.com/69241694/132985506-fa49c272-6032-4349-bad9-e97a068aa8fe.png)
 
 ---
 Copyright 2021 monochrome Project.
