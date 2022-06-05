@@ -148,16 +148,11 @@ function nw() {
       engine = '${getEngine()}';
     `);
     monotConfig.update();
-    if (monotConfig.get('cssTheme') != null) {
+    if (monotConfig.get('cssTheme') !== '') {
       const style = monotConfig.get('cssTheme');
       win.webContents.executeJavaScript(`
-        document.body.innerHTML = \`
-          \${document.body.innerHTML}
-          <style>
-            ${style}
-          </style>
-        \`
-      `);
+      document.head.innerHTML += '<link rel="stylesheet" href="${style}">'
+    `);
     }
   });
   win.on('ready-to-show', () => {
@@ -381,6 +376,9 @@ app.on('ready', () => {
           height: 450
         });
       });
+      optionView.webContents.executeJavaScript(`
+        document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+      `);
       win.setTopBrowserView(optionView);
     }
   });
@@ -415,7 +413,11 @@ function showSetting() {
   setting.webContents.executeJavaScript(`
     document.getElementsByTagName('select')[0].value = '${enginesConfig.get('engine')}';
     ui('${monotConfig.get('ui')}');
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
   `);
+  if (monotConfig.get('cssTheme') !== '') {
+    setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
+  }
 
   if (experiments.forceDark === true) {
     setting.webContents.executeJavaScript(`
@@ -457,6 +459,8 @@ function showSetting() {
       monotConfig.update()
         .set('cssTheme', path.filePaths[0])
         .save();
+      if (path.filePaths[0] !== '')
+        setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
     });
   });
 }
@@ -489,6 +493,7 @@ function showHistory() {
   }
   historyWin.webContents.executeJavaScript(`
     document.getElementById('histories').innerHTML = \`${html}\`;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
   `);
 }
 function showBookmark() {
@@ -522,6 +527,7 @@ function showBookmark() {
   }
   bookmarkWin.webContents.executeJavaScript(`
     document.getElementById('bookmarks').innerHTML = \`${html}\`;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
   `);
 }
 

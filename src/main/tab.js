@@ -125,9 +125,11 @@ class Tab {
         `);
       }
       monotConfig.update();
-      if (monotConfig.get('cssTheme') != null) {
+      if (monotConfig.get('cssTheme') !== '') {
         const style = monotConfig.get('cssTheme');
-        browserView.webContents.insertCSS(style);
+        browserView.webContents.executeJavaScript(`
+          document.head.innerHTML += '<link rel="stylesheet" href="${style}">'
+        `);
       }
 
       const experiments = monotConfig.update().get('experiments');

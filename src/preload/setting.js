@@ -1,7 +1,19 @@
 const {
   contextBridge,
-  ipcRenderer
+  ipcRenderer,
+  webFrame
 } = require('electron');
+
+ipcRenderer.on('updateTheme', (e, filepath) => {
+  webFrame.executeJavaScript(`
+    document.getElementById('theme').innerHTML = \`
+    <h2>テーマ</h2>
+    <p>現在${filepath}が選択されています</p>
+    <p><a href="javascript:node.selectTheme();">ファイルを選択...</a></p>
+    <p><a href="javascript:node.resetTheme();">テーマをリセット</a></p>
+  \`;
+  `);
+});
 
 contextBridge.exposeInMainWorld('node', {
   changeSearchEngine: (engine) => {
