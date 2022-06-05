@@ -92,7 +92,8 @@ class Tab {
 
     // events
     // did-fail-load
-    browserView.webContents.on('did-fail-load', () => {
+    browserView.webContents.on('did-fail-load', (e, errCode) => {
+      if (errCode !== -105) return;
       this.load(
         `file://${directory}/browser/server-notfound.html`
       );
@@ -143,7 +144,7 @@ class Tab {
       if (experiments.fontChange === true) {
         browserView.webContents.insertCSS(`
           body, body > *, * {
-            font-family: ${experiments.changedfont},'Noto Sans JP'!important;
+            font-family: '${experiments.changedfont}','Noto Sans JP'!important;
           }
         `);
       }
@@ -271,6 +272,7 @@ class Tab {
   }
 
   goBack() {
+    this.entity.webContents.stop();
     this.entity.webContents.goBack();
   }
 
@@ -279,6 +281,7 @@ class Tab {
   }
 
   reload() {
+    if (this.entity.webContents.isLoading() === true) return;
     this.entity.webContents.reload();
   }
 }
