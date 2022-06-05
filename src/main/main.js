@@ -226,10 +226,10 @@ app.on('ready', () => {
     );
   });
   ipcMain.handle('reloadBrowser', (e, index) => {
-    tabs.get(index).entity.webContents.reload();
+    tabs.get(index).reload();
   });
   ipcMain.handle('browserBack', (e, index) => {
-    tabs.get(index).entity.webContents.goBack();
+    tabs.get(index).goBack();
   });
   ipcMain.handle('browserGoes', (e, index) => {
     tabs.get(index).entity.webContents.goForward();
