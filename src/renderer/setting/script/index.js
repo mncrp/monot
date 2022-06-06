@@ -19,3 +19,13 @@ document.getElementById('changedfont').addEventListener('input', () => {
   node.changeExperimentalFunctions('changedfont', document.getElementById('changedfont').value);
 });
 document.getElementsByTagName('input')[2].addEventListener('change', changeExperimental);
+
+function setSearchList(array){
+  let searctList = document.getElementsByTagName('select')[0];
+  for (var i = 0; i < array.length; i++) {
+    let list = document.createElement("option");
+    list.value = array[i].id;
+    list.textContent = array[i].name;
+    searctList.appendChild(list);
+}
+}

@@ -11,7 +11,7 @@ function moveBrowser() {
     if (word.match(/\S+\.\S+/)) {
       url = new URL(`http://${word}`);
     } else {
-      url = new URL(engine + word);
+      url = new URL(engine.replace("%s",word));
     }
   }
   node.moveBrowser(url.href);
