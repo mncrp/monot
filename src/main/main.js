@@ -136,7 +136,7 @@ function nw() {
   function getEngine() {
     enginesConfig.update();
     const selectEngine = enginesConfig.get('engine');
-    return enginesConfig.get(`values.${selectEngine}`, true);
+    return enginesConfig.get(`values`, true).find((item) => item.id == selectEngine).url;
   }
 
   // window's behavior
@@ -261,10 +261,10 @@ app.on('ready', () => {
       .set('engine', engine)
       .save();
     win.webContents.executeJavaScript(`
-      engine = '${enginesConfig.get(`values.${engine}`, true)}';
+      engine = '${enginesConfig.get(`values`, true).find((item) => item.id == engine).url}';
     `);
     tabs.get().entity.webContents.executeJavaScript(`
-      url = '${enginesConfig.get(`values.${engine}`, true)}';
+      url = '${enginesConfig.get(`values`, true).find((item) => item.id == engine).url}';
     `);
   });
   ipcMain.handle('setting.changeExperimental', (e, change, to) => {
@@ -401,9 +401,11 @@ function showSetting() {
 
   // Apply of changes
   const experiments = monotConfig.get('experiments');
-
+  
   setting.webContents.executeJavaScript(`
-    document.getElementsByTagName('select')[0].value = '${enginesConfig.get('engine')}';
+  let searchJson = \`${JSON.stringify(enginesConfig.get("values"))}\`;
+  setSearchList(JSON.parse(searchJson));
+  document.getElementsByTagName('select')[0].value = '${enginesConfig.get('engine')}';
   `);
 
   if (experiments.forceDark === true) {
