@@ -325,6 +325,10 @@ app.on('ready', () => {
   });
   ipcMain.handle('addBookmark', (e, data) => {
     bookmark.update();
+    // eslint-disable-next-line
+    for (const [key, value] of Object.entries(bookmark.data)) {
+      if (value.pageUrl === data.pageUrl) return;
+    }
     bookmark.data.unshift(data);
     bookmark.save();
   });
