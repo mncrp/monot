@@ -47,7 +47,7 @@ main > * {
 }
 #ui a.selected img {
   border: 1px solid #888;
-  box-shadow: 0 0 15px #555;
+  box-shadow: 0 0 15px #bfbfbf55;
 }
 
 #engine > select {
