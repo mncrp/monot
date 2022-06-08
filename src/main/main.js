@@ -287,7 +287,8 @@ app.on('ready', () => {
       .save();
   });
   ipcMain.handle('addHistory', (e, data) => {
-    history.set(data);
+    const fileURL = new URL(`file://${directory}/browser/home.html`);
+    if (data.pageUrl !== fileURL.href) history.set(data);
   });
   ipcMain.handle('settings.view', () => {
     showSetting();
@@ -324,6 +325,10 @@ app.on('ready', () => {
   });
   ipcMain.handle('addBookmark', (e, data) => {
     bookmark.update();
+    // eslint-disable-next-line
+    for (const [key, value] of Object.entries(bookmark.data)) {
+      if (value.pageUrl === data.pageUrl) return;
+    }
     bookmark.data.unshift(data);
     bookmark.save();
   });

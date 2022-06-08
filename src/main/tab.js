@@ -116,6 +116,7 @@ class Tab {
       this.url = new URL(browserView.webContents.getURL());
       // 新タブと同じURLなのかどうか
       const fileURL = new URL(`file://${directory}/browser/home.html`);
+
       if (this.url.href === fileURL.href) {
         enginesConfig.update();
         const selectEngine = enginesConfig.get('engine');
@@ -124,6 +125,8 @@ class Tab {
           url = '${engineURL}';
         `);
       }
+
+      // オプション機能系
       monotConfig.update();
       if (monotConfig.get('cssTheme') !== '') {
         const style = monotConfig.get('cssTheme');
