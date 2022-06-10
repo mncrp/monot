@@ -24,7 +24,7 @@
   "build": {
     "appId": "me.soraki.monot",
     "productName": "Monot",
-    "copyright": "Copyright © 2022 monochrome Project.",
+    "copyright": "Copyright 息 2022 monochrome Project.",
     "files": [
       "!.git",
       "!.dist",
