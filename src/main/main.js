@@ -21,50 +21,6 @@ const {History} = require(`${directory}/proprietary/lib/history`);
 const history = new History();
 const tabs = new TabManager();
 const viewY = 66;
-const navigationContextMenu = Menu.buildFromTemplate([
-  {
-    label: '戻る',
-    click: () => {
-      tabs.get().goBack();
-    }
-  },
-  {
-    label: '進む',
-    click: () => {
-      tabs.get().goForward();
-    }
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: '新規タブ',
-    click: () => {
-      newtab();
-    }
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: '設定',
-    click: () => {
-      showSetting();
-    }
-  },
-  {
-    label: '履歴',
-    click: () => {
-      showHistory();
-    }
-  },
-  {
-    label: 'ブックマーク',
-    click: () => {
-      showBookmark();
-    }
-  }
-]);
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -84,6 +40,7 @@ const enginesConfig = new LowLevelConfig(
   `${directory}/default/config/engines.mncfg`
 );
 
+// コンテキストメニューのやつマジでどうしてもSorakimeさんの環境だと動かないのでなくなく作ったのがこの関数
 function newtab() {
   tabs.newTab(win);
   tabs.get().entity.webContents.on('context-menu', (e, params) => {
@@ -537,6 +494,51 @@ function showBookmark() {
 }
 
 // menu
+// navigation-bar context menu
+const navigationContextMenu = Menu.buildFromTemplate([
+  {
+    label: '戻る',
+    click: () => {
+      tabs.get().goBack();
+    }
+  },
+  {
+    label: '進む',
+    click: () => {
+      tabs.get().goForward();
+    }
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: '新規タブ',
+    click: () => {
+      newtab();
+    }
+  },
+  {
+    type: 'separator'
+  },
+  {
+    label: '設定',
+    click: () => {
+      showSetting();
+    }
+  },
+  {
+    label: '履歴',
+    click: () => {
+      showHistory();
+    }
+  },
+  {
+    label: 'ブックマーク',
+    click: () => {
+      showBookmark();
+    }
+  }
+]);
 // Windows and Linux (menu, contextmenu)
 const menuTemplate = [
   {

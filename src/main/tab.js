@@ -66,7 +66,7 @@ class TabManager {
 }
 
 class Tab {
-  constructor(win, context, url = new URL(`file://${directory}/browser/home.html`)) {
+  constructor(win, url = new URL(`file://${directory}/browser/home.html`)) {
 
     if (!(url instanceof URL)) {
       url = new URL(url);
