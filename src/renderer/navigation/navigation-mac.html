@@ -27,5 +27,11 @@
     <yomikomi-bar></yomikomi-bar>
     <script src="script/moveBrowser.js"></script>
     <script src="script/event.js"></script>
+    <script>
+      document.addEventListener('dblclick', (e) => {
+        if (e.target.parentElement === document.body) 
+          node.maxMin();
+      });
+    </script>
   </body>
 </html>
