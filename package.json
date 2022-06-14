@@ -1,16 +1,16 @@
 {
-  "name": "monot",
-  "homepage": "https://sorakime.github.io/mncr/project/monot",
+  "name": "flatbrowser",
+  "homepage": "https://flatponch.github.io/",
   "version": "1.0.0",
-  "description": "The new web browser \"Monot\" by monochrome.",
+  "description": "The new web browser \"FlatBrowser\" by FlatPonch  ",
   "main": "src/main/main.js",
-  "repository": "https://github.com/Sorakime/monot/",
+  "repository": "https://github.com/FlatPonch/FlatBrowser/",
   "scripts": {
     "test": "npx electron .",
     "build": "npx electron-builder",
     "format": "npx eslint --fix ."
   },
-  "author": "monochrome Project.",
+  "author": "FlatPonch",
   "license": "ISC",
   "devDependencies": {
     "electron": "^17.1.0",
@@ -22,9 +22,9 @@
     "node": ">=15.0.0"
   },
   "build": {
-    "appId": "me.soraki.monot",
-    "productName": "Monot",
-    "copyright": "Copyright © 2022 monochrome Project.",
+    "appId": "io.flatpnc.flatbrowser",
+    "productName": "FlatBrowser",
+    "copyright": "Copyright © 2022 FlatPonch",
     "files": [
       "!.git",
       "!.dist",
@@ -49,7 +49,7 @@
     },
     "appImage": {
       "category": "Utility",
-      "synopsis": "Monot v1.0.0 Build7"
+      "synopsis": "FlatBrowser v1.0.0 Build7"
     },
     "mac": {
       "identity": null,
@@ -59,7 +59,7 @@
     },
     "dmg": {
       "backgroundColor": "#efefef",
-      "title": "Monot v1.0.0 Build7"
+      "title": "FlatBrowser v1.0.0 Build7"
     }
   }
 }
