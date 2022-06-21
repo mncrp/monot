@@ -22,7 +22,7 @@
     <tab-el>
       <div>
       </div>
-      <a href="javascript:node.newtab()"></a>
+      <a href="javascript:node.newtab()" id="newtab"></a>
     </tab-el>
     <yomikomi-bar></yomikomi-bar>
     <script src="script/moveBrowser.js"></script>
@@ -39,7 +39,8 @@
             e.target.parentElement === document.body ||
             e.target.parentElement === document.getElementsByTagName('tab-el')[0]
           ) && 
-          document.body.className === 'mac thin'
+          document.body.className === 'mac thin' &&
+          e.target !== document.getElementById('newtab')
         ) {
           node.maxMin();
         }

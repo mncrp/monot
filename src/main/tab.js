@@ -188,16 +188,6 @@ class Tab {
       this.setTabTitle();
       this.setWindowTitle();
     });
-    // resize
-    win.on('resize', () => {
-      windowSize = win.getContentSize();
-      browserView.setBounds({
-        x: 0,
-        y: viewY,
-        width: windowSize[0],
-        height: windowSize[1] - viewY
-      });
-    });
 
     // last init
     win.addBrowserView(browserView);
