@@ -31,6 +31,18 @@ body > a:active {
   color: #444;
   text-decoration: none;
 }
+#bookmarks > a::before {
+  content: '';
+  display: inline-block;
+  position: relative;
+  background-image: url('../../image/back.png');
+  background-size: contain;
+  background-position: center;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  transform: rotateZ(270deg);
+}
 
 @media (prefers-color-scheme: dark) {
   #bookmarks > a {
