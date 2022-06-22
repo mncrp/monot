@@ -1,24 +1,39 @@
 body {
+  position: relative;
   user-select: none;
   margin: 2px;
   margin-top: 0;
   padding: 0;
-  width: calc(100vw - 4px);
+  width: calc(100% - 4px);
   height: calc(100vh - 2px);
 }
 input {
   user-select: text;
   -webkit-app-region: no-drag;
 }
-body > div:nth-child(2) {
-  display: inline-block;
-  position: fixed;
-  bottom: 15px; right: 15px;
-  text-align: right;
-}
 body > a:hover {
   background-color: #ccc7;
 }
 body > a:active {
   background-color: #ccc;
+}
+
+#bookmarks {
+  position: absolute;
+  top: calc(100% - 25px);
+  left: 0;
+  right: 0;
+}
+#bookmarks > a {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #444;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  #bookmarks > a {
+    color: #bbb;
+  }
 }
