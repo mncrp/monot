@@ -10,7 +10,8 @@ const {
 } = require('electron');
 
 const {
-  TabManager
+  TabManager,
+  ViewY
 } = require('./tab');
 
 // letiables
@@ -20,7 +21,7 @@ const directory = `${__dirname}/..`;
 const {History} = require(`${directory}/proprietary/lib/history`);
 const history = new History();
 const tabs = new TabManager();
-const viewY = 66;
+const viewY = new ViewY();
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -84,6 +85,7 @@ function nw() {
     }
   });
   win.setBackgroundColor('#efefef');
+  win.webContents.toggleDevTools();
   win.loadFile(
     process.platform === 'darwin' ?
       `${directory}/renderer/navigation/navigation-mac.html` :
@@ -242,6 +244,16 @@ app.on('ready', () => {
     monotConfig.update()
       .set('ui', ui)
       .save();
+
+    switch (ui) {
+    case 'default':
+      viewY.toDefault();
+      tabs.get().replace();
+      break;
+    case 'thin':
+      viewY.toThin();
+      tabs.get().replace();
+    }
   });
   ipcMain.handle('addHistory', (e, data) => {
     const fileURL = new URL(`file://${directory}/browser/home.html`);
@@ -326,14 +338,14 @@ app.on('ready', () => {
       win.addBrowserView(optionView);
       optionView.setBounds({
         x: win.getSize()[0] - 270,
-        y: viewY - 35,
+        y: viewY.get() - 35,
         width: 250,
         height: 450
       });
       win.on('resize', () => {
         optionView.setBounds({
           x: win.getSize()[0] - 270,
-          y: viewY - 35,
+          y: viewY.get() - 35,
           width: 250,
           height: 450
         });
@@ -434,7 +446,8 @@ function showHistory() {
     minHeight: 270,
     icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${directory}/preload/history.js`
+      preload: `${directory}/preload/history.js`,
+      scrollBounce: true
     }
   });
   historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
@@ -466,7 +479,8 @@ function showBookmark() {
     minHeight: 270,
     icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${directory}/preload/bookmark.js`
+      preload: `${directory}/preload/bookmark.js`,
+      scrollBounce: true
     }
   });
   bookmarkWin.webContents.loadFile(`${directory}/renderer/bookmark/index.html`);

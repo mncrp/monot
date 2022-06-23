@@ -23,15 +23,19 @@ body > a:active {
   top: calc(100% - 25px);
   left: 0;
   right: 0;
+  height: auto;
+  padding: 20px;
+  padding-top: 0;
 }
-#bookmarks > a {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+#bookmarks > p > a {
   color: #444;
   text-decoration: none;
+  font-size: 15px;
 }
-#bookmarks > a::before {
+#bookmarks > p {
+  text-align: center;
+}
+#bookmarks > p > a::before {
   content: '';
   display: inline-block;
   position: relative;
@@ -43,9 +47,24 @@ body > a:active {
   height: 20px;
   transform: rotateZ(270deg);
 }
+#bookmarks-content {
+  position: relative;
+  margin-top: 10px;
+  width: calc(100% - 20px);
+  height: 50px;
+}
+
+.one-bookmark {
+  width: 150px;
+  height: 170px;
+  background-color: #8888;
+}
 
 @media (prefers-color-scheme: dark) {
   #bookmarks > a {
     color: #bbb;
+  }
+  #bookmarks > a::before {
+    background-image: url('../../image/back-white.png');
   }
 }
