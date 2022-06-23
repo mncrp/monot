@@ -1,7 +1,7 @@
 ### FlatBrowser
 ![image](https://user-images.githubusercontent.com/69241694/143031805-9e5636a0-e9c7-44ff-b2d5-5f4cf9bed654.png)
 
-FlatPonchによる、「オシャレ、高機能、そして使いやすい」を目指しているMonotをベースにしたウェブブラウザです。
+FlatPonchによる、「オシャレ、高機能、そして使いやすい」を目指しているMonot派生のウェブブラウザです。
 
 ### 概要
 |FlatBrowser|について|
