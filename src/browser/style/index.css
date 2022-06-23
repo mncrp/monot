@@ -49,8 +49,9 @@ body > a:active {
 }
 #bookmarks-content {
   position: relative;
+  margin: 0 20vw;
   margin-top: 10px;
-  width: calc(100% - 20px);
+  width: 60vw;
   height: 50px;
 }
 

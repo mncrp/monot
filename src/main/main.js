@@ -85,7 +85,6 @@ function nw() {
     }
   });
   win.setBackgroundColor('#efefef');
-  win.webContents.toggleDevTools();
   win.loadFile(
     process.platform === 'darwin' ?
       `${directory}/renderer/navigation/navigation-mac.html` :
@@ -337,15 +336,15 @@ app.on('ready', () => {
     } else {
       win.addBrowserView(optionView);
       optionView.setBounds({
-        x: win.getSize()[0] - 270,
-        y: viewY.get() - 35,
+        x: win.getSize()[0] - 260,
+        y: 30,
         width: 250,
         height: 450
       });
       win.on('resize', () => {
         optionView.setBounds({
-          x: win.getSize()[0] - 270,
-          y: viewY.get() - 35,
+          x: win.getSize()[0] - 260,
+          y: 30,
           width: 250,
           height: 450
         });
