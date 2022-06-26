@@ -133,12 +133,12 @@ nav a:active {
   background-image: url('../../../image/close.png');
 }
 
-div > span > a:first-child {
+div > span > p:first-child {
   color: var(--text-color);
   font-weight: 100;
   cursor: default;
 }
-div > span > a:last-child {
+div > span > p:last-child {
   display: inline-block;
   cursor: default;
   position: absolute;
@@ -155,7 +155,7 @@ div > span > a:last-child {
   background-image: url('../../../image/close.png');
   transition: all 0.2s ease-in-out;
 }
-div > span > a:last-child:hover {
+div > span > p:last-child:hover {
   background-color: var(--closebutton-color);
 }
 div > span#opened {
