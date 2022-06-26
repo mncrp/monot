@@ -10,6 +10,7 @@ let viewY = 66;
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
+const bookmark = new LowLevelConfig('bookmark.mndata').copyFileIfNeeded(`${directory}/default/data/bookmark.mndata`);
 let windowSize;
 if (monotConfig.update().get('ui') === 'thin') viewY = 28;
 
@@ -123,7 +124,6 @@ class Tab {
       }
     });
     browserView.webContents.session.setDownloadPath(app.getPath('downloads'));
-    browserView.webContents.setVisualZoomLevelLimits(1, 5);
 
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('div')[0].innerHTML += '<span><a href="#">Home</a><a href="#"></a></span>';
@@ -150,7 +150,7 @@ class Tab {
       );
     `);
 
-      browserView.webContents.setVisualZoomLevelLimits(1, 5);
+      browserView.webContents.setVisualZoomLevelLimits(1, 10);
       browserView.webContents.setZoomFactor(1);
 
       this.url = new URL(browserView.webContents.getURL());
@@ -161,8 +161,28 @@ class Tab {
         enginesConfig.update();
         const selectEngine = enginesConfig.get('engine');
         const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+        const bookmarks = bookmark.update().data;
+        let html = '';
+        let i = 0;
+        // eslint-disable-next-line
+        for (const [key, value] of Object.entries(bookmarks)) {
+          if (i < 7)
+            i += 1;
+          else
+            return;
+
+          html = `
+            ${html}
+            <div class="one-bookmark" onclick="location.href = '${value.pageUrl}';">
+              <div class="one-image" style="background-image: url('${value.pageIcon}');"></div>
+              <p class="one-title">${value.pageTitle}</p>
+            </div>
+          `;
+          console.log(html);
+        }
         browserView.webContents.executeJavaScript(`
           url = '${engineURL}';
+          document.getElementById('bookmarks-content').innerHTML = \`${html}\`;
         `);
       }
 
@@ -240,10 +260,6 @@ class Tab {
       width: windowSize[0],
       height: windowSize[1] - viewY
     });
-    /* browserView.setAutoResize({
-      width: true,
-      height: true
-    });*/
     win.on('resize', () => {
       windowSize = win.getSize();
       browserView.setBounds({

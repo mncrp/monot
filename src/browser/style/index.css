@@ -48,17 +48,47 @@ body > a:active {
   transform: rotateZ(270deg);
 }
 #bookmarks-content {
+  display: grid;
   position: relative;
-  margin: 0 20vw;
+  margin: 0 calc(50% - 500px);
   margin-top: 10px;
-  width: 60vw;
+  width: 1000px;
   height: 50px;
+  grid-template-columns: repeat(7, 1fr);
+  overflow-y: hidden;
+  height: 140px;
 }
 
 .one-bookmark {
-  width: 150px;
-  height: 170px;
-  background-color: #8888;
+  display: flex;
+  flex-direction: column;
+  width: 130px;
+  height: 130px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.one-bookmark > .one-image {
+  width: 100%;
+  height: 100px;
+  box-shadow: none;
+  padding: 5px;
+  box-sizing: inherit;
+  border-radius: 10px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.one-bookmark > .one-title {
+  box-shadow: none;
+  font-size: 15px;
+  position: relative;
+  top: -3px;
+  padding: 5px;
+  box-sizing: inherit;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 @media (prefers-color-scheme: dark) {
