@@ -150,7 +150,7 @@ class Tab {
       );
     `);
 
-      browserView.webContents.setVisualZoomLevelLimits(1, 10);
+      browserView.webContents.setVisualZoomLevelLimits(1, 20);
       browserView.webContents.setZoomFactor(1);
 
       this.url = new URL(browserView.webContents.getURL());

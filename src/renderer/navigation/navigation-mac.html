@@ -30,17 +30,15 @@
     <script>
       document.addEventListener('dblclick', (e) => {
         if (
-          e.target.parentElement === document.body &&
-          document.body.className === 'mac'
+          e.target.parentElement.className === 'mac '
         ) {
           node.maxMin();
         } else if (
+          document.body.className === 'mac thin' &&
           (
             e.target.parentElement === document.body ||
-            e.target.parentElement === document.getElementsByTagName('tab-el')[0]
-          ) && 
-          document.body.className === 'mac thin' &&
-          e.target !== document.getElementById('newtab')
+            e.target === document.getElementsByTagName('div')[0]
+          )
         ) {
           node.maxMin();
         }
