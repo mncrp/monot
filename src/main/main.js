@@ -248,10 +248,16 @@ app.on('ready', () => {
     case 'default':
       viewY.toDefault();
       tabs.get().replace();
+      tabs.tabs.forEach((i) => {
+        i.replace();
+      });
       break;
     case 'thin':
       viewY.toThin();
       tabs.get().replace();
+      tabs.tabs.forEach((i) => {
+        i.replace();
+      });
     }
   });
   ipcMain.handle('addHistory', (e, data) => {

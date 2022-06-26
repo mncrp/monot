@@ -178,7 +178,6 @@ class Tab {
               <p class="one-title">${value.pageTitle}</p>
             </div>
           `;
-          console.log(html);
         }
         browserView.webContents.executeJavaScript(`
           url = '${engineURL}';
