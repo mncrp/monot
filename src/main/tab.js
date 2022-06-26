@@ -126,7 +126,7 @@ class Tab {
     browserView.webContents.session.setDownloadPath(app.getPath('downloads'));
 
     win.webContents.executeJavaScript(`
-      document.getElementsByTagName('div')[0].innerHTML += '<span><a href="#">Home</a><a href="#"></a></span>';
+      document.getElementsByTagName('div')[0].innerHTML += '<span><p>Home</p><p></p></span>';
       each();
     `);
 
@@ -310,7 +310,7 @@ class Tab {
     const win = BrowserWindow.fromBrowserView(this.entity);
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('span')[${win.getBrowserViews().indexOf(this.entity)}]
-        .getElementsByTagName('a')[0]
+        .getElementsByTagName('p')[0]
         .innerText='${this.entity.webContents.getTitle()}';
     `);
   }
