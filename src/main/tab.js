@@ -10,8 +10,48 @@ let viewY = 66;
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${directory}/default/config/config.mncfg`);
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
+const bookmark = new LowLevelConfig('bookmark.mndata').copyFileIfNeeded(`${directory}/default/data/bookmark.mndata`);
 let windowSize;
 if (monotConfig.update().get('ui') === 'thin') viewY = 28;
+
+class ViewY {
+  constructor() {
+    this.type = monotConfig.update().get('ui');
+  }
+
+  get() {
+    return viewY;
+  }
+
+  getHtmlClass() {
+    let value;
+    switch (this.type) {
+    case 'thin': value = 'thin'; break;
+    case 'default': value = ''; break;
+    }
+    return value;
+  }
+
+  toThin() {
+    viewY = 28;
+    monotConfig
+      .update()
+      .set('ui', 'thin')
+      .save();
+    this.type = 'thin';
+    return 28;
+  }
+
+  toDefault() {
+    viewY = 66;
+    monotConfig
+      .update()
+      .set('ui', 'default')
+      .save();
+    this.type = 'default';
+    return 66;
+  }
+}
 
 class TabManager {
   constructor() {
@@ -29,6 +69,7 @@ class TabManager {
     this.tabs[index].setWindowTitle();
     this.current = index;
     this.tabs[index].setTitleUrl();
+    this.tabs[index].replace();
   }
 
   push(win, data) {
@@ -83,7 +124,6 @@ class Tab {
       }
     });
     browserView.webContents.session.setDownloadPath(app.getPath('downloads'));
-    browserView.webContents.setVisualZoomLevelLimits(1, 5);
 
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('div')[0].innerHTML += '<span><a href="#">Home</a><a href="#"></a></span>';
@@ -110,7 +150,7 @@ class Tab {
       );
     `);
 
-      browserView.webContents.setVisualZoomLevelLimits(1, 5);
+      browserView.webContents.setVisualZoomLevelLimits(1, 20);
       browserView.webContents.setZoomFactor(1);
 
       this.url = new URL(browserView.webContents.getURL());
@@ -121,8 +161,27 @@ class Tab {
         enginesConfig.update();
         const selectEngine = enginesConfig.get('engine');
         const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+        const bookmarks = bookmark.update().data;
+        let html = '';
+        let i = 0;
+        // eslint-disable-next-line
+        for (const [key, value] of Object.entries(bookmarks)) {
+          if (i < 7)
+            i += 1;
+          else
+            return;
+
+          html = `
+            ${html}
+            <div class="one-bookmark" onclick="location.href = '${value.pageUrl}';">
+              <div class="one-image" style="background-image: url('${value.pageIcon}');"></div>
+              <p class="one-title">${value.pageTitle}</p>
+            </div>
+          `;
+        }
         browserView.webContents.executeJavaScript(`
           url = '${engineURL}';
+          document.getElementById('bookmarks-content').innerHTML = \`${html}\`;
         `);
       }
 
@@ -200,9 +259,14 @@ class Tab {
       width: windowSize[0],
       height: windowSize[1] - viewY
     });
-    browserView.setAutoResize({
-      width: true,
-      height: true
+    win.on('resize', () => {
+      windowSize = win.getSize();
+      browserView.setBounds({
+        x: 0,
+        y: viewY,
+        width: windowSize[0],
+        height: windowSize[1] - viewY
+      });
     });
 
     this.entity = browserView;
@@ -222,15 +286,15 @@ class Tab {
     // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
     // It gets win variable from myself not to make bugs.
     const win = BrowserWindow.fromBrowserView(this.entity);
-    const srcPath = new URL(`file://${__dirname}/../`);
+    const srcPath = new URL(`file://${__dirname}/../browser/`);
 
-    switch (url.href) {
-    case `${srcPath}browser/home.html`:
+    switch (`${url.protocol}//${url.pathname}`) {
+    case `${srcPath}home.html`:
       return win.webContents.executeJavaScript(`
         document.getElementsByTagName('input')[0].value = '';
       `);
-    case `${srcPath}browser/server-notfound.html`:
-    case `${srcPath}browser/blank.html`:
+    case `${srcPath}server-notfound.html`:
+    case `${srcPath}blank.html`:
       return Promise.resolve();
     }
 
@@ -279,9 +343,27 @@ class Tab {
     if (this.entity.webContents.isLoading() === true) return;
     this.entity.webContents.reload();
   }
+
+  replace() {
+    const win = BrowserWindow.fromBrowserView(this.entity);
+    const windowSize = win.getSize();
+    this.entity.setBounds({
+      x: 0,
+      y: viewY,
+      width: windowSize[0],
+      height: windowSize[1] - viewY
+    });
+    win.webContents.executeJavaScript(`
+      if (document.body.classList.contains('mac'))
+        document.body.className = 'mac ${new ViewY().getHtmlClass()}';
+      else
+        document.body.className = '${new ViewY().getHtmlClass()}';
+    `);
+  }
 }
 
 module.exports = {
   Tab,
-  TabManager
+  TabManager,
+  ViewY
 };

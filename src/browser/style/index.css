@@ -23,17 +23,79 @@ body > a:active {
   top: calc(100% - 25px);
   left: 0;
   right: 0;
+  height: auto;
+  padding: 20px;
+  padding-top: 0;
 }
-#bookmarks > a {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+#bookmarks > p > a {
   color: #444;
   text-decoration: none;
+  font-size: 15px;
+}
+#bookmarks > p {
+  text-align: center;
+}
+#bookmarks > p > a::before {
+  content: '';
+  display: inline-block;
+  position: relative;
+  background-image: url('../../image/back.png');
+  background-size: contain;
+  background-position: center;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  transform: rotateZ(270deg);
+}
+#bookmarks-content {
+  display: grid;
+  position: relative;
+  margin: 0 calc(50% - 500px);
+  margin-top: 10px;
+  width: 1000px;
+  height: 50px;
+  grid-template-columns: repeat(7, 1fr);
+  overflow-y: hidden;
+  height: 140px;
+}
+
+.one-bookmark {
+  display: flex;
+  flex-direction: column;
+  width: 130px;
+  height: 130px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.one-bookmark > .one-image {
+  width: 100%;
+  height: 100px;
+  box-shadow: none;
+  padding: 5px;
+  box-sizing: inherit;
+  border-radius: 10px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.one-bookmark > .one-title {
+  box-shadow: none;
+  font-size: 15px;
+  position: relative;
+  top: -3px;
+  padding: 5px;
+  box-sizing: inherit;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 @media (prefers-color-scheme: dark) {
   #bookmarks > a {
     color: #bbb;
+  }
+  #bookmarks > a::before {
+    background-image: url('../../image/back-white.png');
   }
 }
