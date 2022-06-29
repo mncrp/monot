@@ -62,7 +62,14 @@ class TabManager {
   setCurrent(win, index) {
     win.webContents.executeJavaScript(`
       document.getElementById('opened')?.removeAttribute('id');
-      document.querySelectorAll('div>span')[${index}].setAttribute('id', 'opened');
+      {
+        let tabEl = document.querySelectorAll('div > span');
+        if (tabEl[${index}] !== undefined ){
+          tabEl[${index}].setAttribute('id', 'opened');
+        } else {
+          tabEl[tabEl.length - 1].setAttribute('id', 'opened');
+        }
+      }
     `);
 
     win.setTopBrowserView(this.tabs[index].entity);
