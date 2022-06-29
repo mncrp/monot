@@ -104,6 +104,10 @@ class TabManager {
       this.setCurrent(win, this.length() - 1);
     }
   }
+
+  move(win, target, destination) {
+    this.tabs.splice(destination, 0, this.tabs[target]);
+  }
 }
 
 class Tab {

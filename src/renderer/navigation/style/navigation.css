@@ -137,6 +137,9 @@ div > span > p:first-child {
   color: var(--text-color);
   font-weight: 100;
   cursor: default;
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
 }
 div > span > p:last-child {
   display: inline-block;
@@ -167,6 +170,7 @@ tab-el {
   vertical-align: middle;
   display: flex;
   overflow: hidden;
+  height: 33px;
 }
 tab-el * {
   -webkit-user-drag: none;
@@ -190,11 +194,12 @@ tab-el > div > span {
   padding: 2px;
   padding-right: 15px;
   font-size: 12px;
-  -webkit-font-smoothing: antialiased;
   border-radius: 10px;
   border: 1px solid var(--border-color-unhover);
   transition: all 0.2s ease-in-out;
   cursor: default;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-drag: element;
   -webkit-app-region: none;
 }
 tab-el > a {
@@ -339,7 +344,7 @@ yomikomi-bar#loaded {
   #close {
     background-image: url('../../../image/close-white.png');
   }
-  div > span > a:last-child {
+  div > span > p:last-child {
     background-image: url('../../../image/close-white.png');
   }
   tab-el > a {

@@ -21,7 +21,24 @@ function each() {
     // when tab-bar clicked
     element.addEventListener('click', () => {
       if (!canMove) return;
-      node.tabMove(index);
+      node.tabSwitch(index);
+    });
+    // move tab
+    element.addEventListener('dragstart', () => {
+      console.log('drag start');
+    });
+    element.addEventListener('dragend', (e) => {
+      console.log('drag end');
+      const pointerX = e.target.getBoundingClientRect().x + e.offsetX + 5;
+      const y = document.body.classList.contains('thin') ? 15 : 40;
+      const el = document.elementFromPoint(pointerX, y).parentElement === document.getElementsByTagName('div')[0] ?
+        document.elementFromPoint(pointerX + 30, y).parentElement :
+        document.elementFromPoint(pointerX, y).parentElement;
+      const els = document.getElementsByTagName('span');
+      const target = [].slice.call(els).indexOf(e.target);
+      const destination = [].slice.call(els).indexOf(el);
+      document.getElementsByTagName('div')[0].insertBefore(e.target, el);
+      node.tabMove(target, destination);
     });
   });
 }

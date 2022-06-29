@@ -91,6 +91,8 @@ function nw() {
       `${directory}/renderer/navigation/navigation.html`
   );
 
+  win.webContents.toggleDevTools();
+
   function getEngine() {
     enginesConfig.update();
     const selectEngine = enginesConfig.get('engine');
@@ -199,8 +201,11 @@ app.on('ready', () => {
   ipcMain.handle('newtab', () => {
     newtab();
   });
-  ipcMain.handle('tabMove', (e, index) => {
+  ipcMain.handle('tabSwitch', (e, index) => {
     tabs.setCurrent(win, index);
+  });
+  ipcMain.handle('tabMove', (e, target, destination) => {
+    tabs.move(win, target, destination);
   });
   ipcMain.handle('removeTab', (e, index) => {
     try {
