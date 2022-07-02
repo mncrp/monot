@@ -3,6 +3,7 @@ main {
   height: calc(100vh - 13px);
   overflow: auto;
   z-index: 0;
+  margin-top: 40px;
 }
 main > div {
   margin-bottom: 0!important;
@@ -31,11 +32,6 @@ header {
 }
 header h3 {
   z-index: +1;
-}
-
-#histories,
-#bookmarks {
-  margin-top: 40px;
 }
 
 #histories > div ,

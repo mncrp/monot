@@ -9,7 +9,8 @@ h3 {
 }
 
 hr {
-  border: 1px solid #666;
+  border: 0;
+  border-top: 1px solid #666;
   height: 0;
   margin: 0;
 }

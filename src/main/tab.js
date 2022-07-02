@@ -335,7 +335,6 @@ class Tab {
   // set tab's title.
   setTabTitle() {
     const win = BrowserWindow.fromBrowserView(this.entity);
-    console.log(this.number());
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('span')[${this.number()}]
         .getElementsByTagName('p')[0]
