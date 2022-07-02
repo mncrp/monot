@@ -15,7 +15,7 @@ const {
 } = require('./tab');
 
 // letiables
-let win, windowSize, menu, context;
+let win, windowSize, context;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const {History} = require(`${directory}/proprietary/lib/history`);
@@ -59,9 +59,7 @@ function newtab() {
         }
       }));
       context.popup();
-      context = Menu.buildFromTemplate(
-        isMac ? contextTemplateMac : menuTemplate
-      );
+      context = Menu.buildFromTemplate(menuTemplate);
     }
   });
 }
@@ -90,6 +88,8 @@ function nw() {
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
+
+  win.webContents.toggleDevTools();
 
   function getEngine() {
     enginesConfig.update();
@@ -199,8 +199,11 @@ app.on('ready', () => {
   ipcMain.handle('newtab', () => {
     newtab();
   });
-  ipcMain.handle('tabMove', (e, index) => {
+  ipcMain.handle('tabSwitch', (e, index) => {
     tabs.setCurrent(win, index);
+  });
+  ipcMain.handle('tabMove', (e, target, destination) => {
+    tabs.move(win, target, destination);
   });
   ipcMain.handle('removeTab', (e, index) => {
     try {
@@ -558,151 +561,8 @@ const navigationContextMenu = Menu.buildFromTemplate([
     }
   }
 ]);
-// Windows and Linux (menu, contextmenu)
-const menuTemplate = [
-  {
-    label: '表示',
-    submenu: [
-      {
-        role: 'togglefullscreen',
-        accelerator: 'F11',
-        label: '全画面表示'
-      },
-      {
-        role: 'hide',
-        label: '隠す'
-      },
-      {
-        role: 'hideothers',
-        label: '他を隠す'
-      },
-      {
-        label: '終了',
-        accelerator: 'CmdOrCtrl+Q',
-        click: () => {
-          windowClose();
-        }
-      }
-    ]
-  },
-  {
-    label: '移動',
-    id: 'move',
-    submenu: [
-      {
-        label: '再読み込み',
-        accelerator: 'CmdOrCtrl+R',
-        click: () => {
-          tabs.get().reload();
-        }
-      },
-      {
-        label: '戻る',
-        accelerator: 'Alt+Left',
-        click: () => {
-          tabs.get().goBack();
-        }
-      },
-      {
-        label: '進む',
-        accelerator: 'Alt+Right',
-        click: () => {
-          tabs.get().goForward();
-        }
-      }
-    ]
-  },
-  {
-    label: '編集',
-    submenu: [
-      {
-        label: 'カット',
-        role: 'cut'
-      },
-      {
-        label: 'コピー',
-        role: 'copy'
-      },
-      {
-        label: 'ペースト',
-        role: 'paste'
-      },
-      {
-        label: '全て選択',
-        role: 'selectAll'
-      }
-    ]
-  },
-  {
-    label: 'ウィンドウ',
-    submenu: [
-      {
-        label: 'Monotについて',
-        accelerator: 'CmdOrCtrl+Alt+A',
-        click: () => {
-          dialog.showMessageBox(null, {
-            type: 'info',
-            icon: './src/image/logo.png',
-            title: 'Monotについて',
-            message: 'Monotについて',
-            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
-バージョン: 1.0.0 Official Version
-ビルド番号: 7
-開発元: monochrome Project.
-
-リポジトリ: https://github.com/mncrp/monot
-公式サイト: https://www.monochrome.tk/project/monot/
-
-Copyright ©︎ 2021-2022 monochrome Project.`
-          });
-        }
-      },
-      {
-        label: '設定',
-        accelerator: 'CmdOrCtrl+,',
-        click: () => {
-          showSetting();
-        }
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: '新しいタブ',
-        accelerator: 'CmdOrCtrl+T',
-        click: () => {
-          try {
-            newtab();
-          } catch (e) {
-            nw();
-          }
-        }
-      }
-    ]
-  },
-  {
-    label: '開発',
-    submenu: [
-      {
-        label: '開発者向けツール',
-        accelerator: 'F12',
-        click: () => {
-          tabs.get().entity.webContents.toggleDevTools();
-        }
-      },
-      {
-        label: '開発者向けツール',
-        accelerator: 'CmdOrCtrl+Shift+I',
-        visible: false,
-        click: () => {
-          tabs.get().entity.webContents.toggleDevTools();
-        }
-      }
-    ]
-  }
-];
 // macOS (Menu)
-const menuTemplateMac = [
+const menuTemplate = [
   {
     label: 'Monot',
     submenu: [
@@ -715,13 +575,13 @@ const menuTemplateMac = [
             icon: './src/image/logo-mac.png',
             title: 'Monotについて',
             message: 'Monotについて',
-            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
-バージョン: 1.0.0 Official Version
-ビルド番号: 7
+            detail: `Monot by monochrome. v.1.1.0 (Build 8)
+バージョン: 1.1.0
+ビルド番号: 8
 開発元: monochrome Project.
 
 リポジトリ: https://github.com/mncrp/monot
-公式サイト: https://www.monochrome.tk/project/monot/
+公式サイト: https://mncrp.github.io/project/monot/
 
 Copyright ©︎ 2021-2022 monochrome Project.`
           });
@@ -883,7 +743,15 @@ Copyright ©︎ 2021-2022 monochrome Project.`
         label: '公式サイト',
         click: () => {
           if (tabs.get() !== null) {
-            tabs.get().load('https://www.monochrome.tk/project/monot');
+            tabs.get().load('https://mncrp.github.io/project/monot/');
+          }
+        }
+      },
+      {
+        label: 'ドキュメント',
+        click: () => {
+          if (tabs.get() !== null) {
+            tabs.get().load('https://mncrp.github.io/document/monot/');
           }
         }
       }
@@ -891,7 +759,7 @@ Copyright ©︎ 2021-2022 monochrome Project.`
   }
 ];
 // macOS (context)
-const contextTemplateMac = [
+const contextTemplate = [
   {
     label: '戻る',
     click: () => {
@@ -945,13 +813,7 @@ const contextTemplateMac = [
   }
 ];
 
-if (isMac) {
-  menu = Menu.buildFromTemplate(menuTemplateMac);
-  // macOS (context menu)
-  context = Menu.buildFromTemplate(contextTemplateMac);
-} else {
-  menu = Menu.buildFromTemplate(menuTemplate);
-  context = menu;
-}
+const menu = Menu.buildFromTemplate(menuTemplate);
+context = Menu.buildFromTemplate(contextTemplate);
 
 Menu.setApplicationMenu(menu);

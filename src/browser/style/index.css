@@ -28,7 +28,7 @@ body > a:active {
   padding-top: 0;
 }
 #bookmarks > p > a {
-  color: #444;
+  color: var(--browsername-color);
   text-decoration: none;
   font-size: 15px;
 }

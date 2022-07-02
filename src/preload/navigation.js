@@ -55,9 +55,13 @@ contextBridge.exposeInMainWorld('node', {
     // create new tab
     ipcRenderer.invoke('newtab');
   },
-  tabMove: (index) => {
+  tabSwitch: (index) => {
+    // switch tab
+    ipcRenderer.invoke('tabSwitch', index);
+  },
+  tabMove: (target, destination) => {
     // move tab
-    ipcRenderer.invoke('tabMove', index);
+    ipcRenderer.invoke('tabMove', target, destination);
   },
   removeTab: async(index) => {
     // remove tab
