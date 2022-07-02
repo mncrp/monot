@@ -91,11 +91,19 @@ body > a:active {
   text-overflow: ellipsis;
 }
 
+@media (max-width: 1080px) {
+  #bookmarks-content {
+    margin: auto 10px;
+    width: auto;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   #bookmarks > a {
     color: #bbb;
   }
-  #bookmarks > a::before {
+  #bookmarks > p > a::before {
     background-image: url('../../image/back-white.png');
   }
 }
