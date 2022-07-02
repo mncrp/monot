@@ -44,9 +44,15 @@ function each() {
       const els = document.getElementsByTagName('span');
       const target = [].slice.call(els).indexOf(e.target);
       const destination = [].slice.call(els).indexOf(el());
-      const value = (pointerX - el().getBoundingClientRect().left) / (el().getBoundingClientRect().right - el().getBoundingClientRect().left);
-      console.log('value', value > 0.5);
-      if (value > 0.5 && target < destination) {
+      const value = (
+        pointerX - el().getBoundingClientRect().left
+      ) / (
+        el().getBoundingClientRect().right - el().getBoundingClientRect().left
+      );
+      if (
+        value > 0.5 &&
+        target < destination
+      ) {
         direction = 1;
       } else if (target + 1 === destination) {
         direction = -destination + target;
@@ -54,8 +60,14 @@ function each() {
         direction = 0;
       }
 
-      document.getElementsByTagName('div')[0].insertBefore(e.target, els[destination + direction]);
-      node.tabMove(target, destination + direction);
+      document.getElementsByTagName('div')[0].insertBefore(
+        e.target,
+        els[destination + direction]
+      );
+      node.tabMove(
+        target,
+        destination + direction
+      );
       each();
     });
   });
