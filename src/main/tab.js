@@ -125,11 +125,8 @@ class TabManager {
   move(win, target, destination) {
 
     this.tabs.splice(destination, 0, this.tabs[target]);
-    console.log(this.tabs);
-    this.tabs.splice(target + 1, 1);
+    this.tabs.splice(target > destination ? target + 1 : target, 1);
     this.setCurrent(win, destination);
-    /* this.tabs[target].number = target;
-    this.tabs[destination].number = destination; */
 
   }
 }
@@ -137,7 +134,7 @@ class TabManager {
 class Tab {
   constructor(win, url = new URL(`file://${directory}/browser/home.html`), num) {
 
-    this.number = num;
+    this.num = num;
     if (!(url instanceof URL)) {
       url = new URL(url);
     }

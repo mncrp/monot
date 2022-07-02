@@ -31,14 +31,19 @@ function each() {
       const pointerX = e.target.getBoundingClientRect().x + e.offsetX + 5;
       const y = document.body.classList.contains('thin') ? 15 : 40;
       const el = () => {
-        if (!document.body.classList.contains('thin')) {
+        try {
+          if (!document.body.classList.contains('thin')) {
+            return document.elementFromPoint(pointerX, y) === document.getElementsByTagName('div')[0] ?
+              document.elementFromPoint(pointerX + 30, y).parentElement :
+              document.elementFromPoint(pointerX, y).parentElement;
+          }
           return document.elementFromPoint(pointerX, y) === document.getElementsByTagName('div')[0] ?
             document.elementFromPoint(pointerX + 30, y).parentElement :
             document.elementFromPoint(pointerX, y).parentElement;
+        } catch (e) {
+          console.log('エラーは無視してください');
+          return document.elementFromPoint(pointerX, y).parentElement;
         }
-        return document.elementFromPoint(pointerX, y) === document.getElementsByTagName('div')[0] ?
-          document.elementFromPoint(pointerX + 30, y).parentElement :
-          document.elementFromPoint(pointerX, y).parentElement;
       };
       const els = document.getElementsByTagName('span');
       const target = [].slice.call(els).indexOf(e.target);

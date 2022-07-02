@@ -15,7 +15,7 @@ const {
 } = require('./tab');
 
 // letiables
-let win, windowSize, menu, context;
+let win, windowSize, context;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const {History} = require(`${directory}/proprietary/lib/history`);
@@ -575,13 +575,13 @@ const menuTemplate = [
             icon: './src/image/logo-mac.png',
             title: 'Monotについて',
             message: 'Monotについて',
-            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
-バージョン: 1.0.0 Official Version
-ビルド番号: 7
+            detail: `Monot by monochrome. v.1.1.0 (Build 8)
+バージョン: 1.1.0
+ビルド番号: 8
 開発元: monochrome Project.
 
 リポジトリ: https://github.com/mncrp/monot
-公式サイト: https://www.monochrome.tk/project/monot/
+公式サイト: https://mncrp.github.io/project/monot/
 
 Copyright ©︎ 2021-2022 monochrome Project.`
           });
@@ -743,7 +743,15 @@ Copyright ©︎ 2021-2022 monochrome Project.`
         label: '公式サイト',
         click: () => {
           if (tabs.get() !== null) {
-            tabs.get().load('https://www.monochrome.tk/project/monot');
+            tabs.get().load('https://mncrp.github.io/project/monot/');
+          }
+        }
+      },
+      {
+        label: 'ドキュメント',
+        click: () => {
+          if (tabs.get() !== null) {
+            tabs.get().load('https://mncrp.github.io/document/monot/');
           }
         }
       }
@@ -805,7 +813,7 @@ const contextTemplate = [
   }
 ];
 
-menu = Menu.buildFromTemplate(menuTemplate);
+const menu = Menu.buildFromTemplate(menuTemplate);
 context = Menu.buildFromTemplate(contextTemplate);
 
 Menu.setApplicationMenu(menu);
