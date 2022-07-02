@@ -25,15 +25,25 @@ function each() {
     });
     // move tab
     element.addEventListener('dragend', (e) => {
+      element.addEventListener('click', (e) => {
+        e.preventDefault();
+      });
       const pointerX = e.target.getBoundingClientRect().x + e.offsetX + 5;
       const y = document.body.classList.contains('thin') ? 15 : 40;
-      const el = document.elementFromPoint(pointerX, y)?.parentElement === document.getElementsByTagName('div')[0] ?
-        document.elementFromPoint(pointerX + 30, y).parentElement :
-        document.elementFromPoint(pointerX, y).parentElement;
+      const el = () => {
+        if (!document.body.classList.contains('thin')) {
+          return document.elementFromPoint(pointerX, y) === document.getElementsByTagName('div')[0] ?
+            document.elementFromPoint(pointerX + 30, y).parentElement :
+            document.elementFromPoint(pointerX, y).parentElement;
+        }
+        return document.elementFromPoint(pointerX, y) === document.getElementsByTagName('div')[0] ?
+          document.elementFromPoint(pointerX + 30, y).parentElement :
+          document.elementFromPoint(pointerX, y).parentElement;
+      };
       const els = document.getElementsByTagName('span');
       const target = [].slice.call(els).indexOf(e.target);
-      const destination = [].slice.call(els).indexOf(el);
-      document.getElementsByTagName('div')[0].insertBefore(e.target, el);
+      const destination = [].slice.call(els).indexOf(el());
+      document.getElementsByTagName('div')[0].insertBefore(e.target, el());
       node.tabMove(target, destination);
       each();
     });

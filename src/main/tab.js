@@ -61,14 +61,18 @@ class TabManager {
 
   setCurrent(win, index) {
     win.webContents.executeJavaScript(`
-      document.getElementById('opened')?.removeAttribute('id');
-      {
-        let tabEl = document.querySelectorAll('div > span');
-        if (tabEl[${index}] !== undefined ){
-          tabEl[${index}].setAttribute('id', 'opened');
-        } else {
-          tabEl[tabEl.length - 1].setAttribute('id', 'opened');
+      try {
+        document.getElementById('opened')?.removeAttribute('id');
+        {
+          let tabEl = document.querySelectorAll('div > span');
+          if (tabEl[${index}] !== undefined) {
+            tabEl[${index}].setAttribute('id', 'opened');
+          } else {
+            tabEl[tabEl.length - 1].setAttribute('id', 'opened');
+          }
         }
+      } catch(e) {
+        alert(e)
       }
     `);
 
@@ -88,10 +92,12 @@ class TabManager {
   }
 
   get(index = this.current) {
+
     return this.tabs[index];
   }
 
   removeTab(win, index = this.current) {
+
     win.removeBrowserView(this.tabs[index].entity);
     this.tabs[index].entity.webContents.destroy();
     this.tabs[index] = null;
@@ -102,24 +108,36 @@ class TabManager {
     }
 
     this.setCurrent(win, index);
+
   }
 
   newTab(win, context, shouldMoveCurrent = true, url) {
-    const tab = new Tab(win, context, url);
+
+    const tab = new Tab(win, url, this.tabs.length);
+    tab.number = () => this.tabs.indexOf(tab);
     this.push(win, tab);
     if (shouldMoveCurrent) {
       this.setCurrent(win, this.length() - 1);
     }
+
   }
 
   move(win, target, destination) {
+
     this.tabs.splice(destination, 0, this.tabs[target]);
+    console.log(this.tabs);
+    this.tabs.splice(target + 1, 1);
+    this.setCurrent(win, destination);
+    /* this.tabs[target].number = target;
+    this.tabs[destination].number = destination; */
+
   }
 }
 
 class Tab {
-  constructor(win, url = new URL(`file://${directory}/browser/home.html`)) {
+  constructor(win, url = new URL(`file://${directory}/browser/home.html`), num) {
 
+    this.number = num;
     if (!(url instanceof URL)) {
       url = new URL(url);
     }
@@ -282,6 +300,7 @@ class Tab {
 
     this.entity = browserView;
     this.load(url.href);
+
   }
 
   load(url = new URL(`file://${directory}/browser/home.html`)) {
@@ -319,8 +338,9 @@ class Tab {
   // set tab's title.
   setTabTitle() {
     const win = BrowserWindow.fromBrowserView(this.entity);
+    console.log(this.number());
     win.webContents.executeJavaScript(`
-      document.getElementsByTagName('span')[${win.getBrowserViews().indexOf(this.entity)}]
+      document.getElementsByTagName('span')[${this.number()}]
         .getElementsByTagName('p')[0]
         .innerText='${this.entity.webContents.getTitle()}';
     `);
@@ -328,6 +348,7 @@ class Tab {
 
   // set window's title.
   setWindowTitle() {
+
     const win = BrowserWindow.fromBrowserView(this.entity);
     const srcPath = new URL(`file://${__dirname}/../`);
     if (this.url.href === `${srcPath}browser/home.html`) {
@@ -339,6 +360,7 @@ class Tab {
         document.getElementsByTagName('title')[0].innerText = '${this.entity.webContents.getTitle()} - Monot';
       `);
     }
+
   }
 
   goBack() {
