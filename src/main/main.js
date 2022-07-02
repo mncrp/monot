@@ -105,8 +105,6 @@ function nw() {
       `${directory}/renderer/navigation/navigation.html`
   );
 
-  win.webContents.toggleDevTools();
-
   function getEngine() {
     enginesConfig.update();
     const selectEngine = enginesConfig.get('engine');
