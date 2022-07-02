@@ -23,6 +23,22 @@ const history = new History();
 const tabs = new TabManager();
 const viewY = new ViewY();
 
+const aboutContent = {
+  type: 'info',
+  icon: './src/image/logo-mac.png',
+  title: 'Monotについて',
+  message: 'Monotについて',
+  detail: `Monot by monochrome. v.1.1.0 (Build 8)
+バージョン: 1.1.0
+ビルド番号: 8
+開発元: monochrome Project.
+
+リポジトリ: https://github.com/mncrp/monot
+公式サイト: https://mncrp.github.io/project/monot/
+
+Copyright ©︎ 2021-2022 monochrome Project.`
+};
+
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
 const bookmark = new LowLevelConfig(
@@ -337,6 +353,30 @@ app.on('ready', () => {
     bookmark.data.splice(key, 1);
     bookmark.save();
   });
+  ipcMain.handle('zoom', () => {
+    tabs.get().entity.webContents.send('zoom');
+  });
+  ipcMain.handle('shrink', () => {
+    tabs.get().entity.webContents.send('shrink');
+  });
+  ipcMain.handle('actual', () => {
+    tabs.get().entity.webContents.send('actual');
+  });
+  ipcMain.handle('fullscreen', () => {
+    if (isMac)
+      win.isFullScreen() ? win.fullScreen = false : win.fullScreen = true;
+    else
+      win.isMaximized() ? win.unmaximize() : win.maximize();
+  });
+  ipcMain.handle('hide', () => {
+    win.hide();
+  });
+  ipcMain.handle('about', () => {
+    dialog.showMessageBox(null, aboutContent);
+  });
+  ipcMain.handle('devTools', () => {
+    tabs.get().entity.webContents.toggleDevTools();
+  });
 
   nw();
   ipcMain.handle('options', () => {
@@ -561,7 +601,7 @@ const navigationContextMenu = Menu.buildFromTemplate([
     }
   }
 ]);
-// macOS (Menu)
+// Menu
 const menuTemplate = [
   {
     label: 'Monot',
@@ -570,21 +610,7 @@ const menuTemplate = [
         label: 'Monotについて',
         accelerator: 'CmdOrCtrl+Alt+A',
         click: () => {
-          dialog.showMessageBox(null, {
-            type: 'info',
-            icon: './src/image/logo-mac.png',
-            title: 'Monotについて',
-            message: 'Monotについて',
-            detail: `Monot by monochrome. v.1.1.0 (Build 8)
-バージョン: 1.1.0
-ビルド番号: 8
-開発元: monochrome Project.
-
-リポジトリ: https://github.com/mncrp/monot
-公式サイト: https://mncrp.github.io/project/monot/
-
-Copyright ©︎ 2021-2022 monochrome Project.`
-          });
+          dialog.showMessageBox(null, aboutContent);
         }
       },
       {
@@ -758,7 +784,7 @@ Copyright ©︎ 2021-2022 monochrome Project.`
     ]
   }
 ];
-// macOS (context)
+// context
 const contextTemplate = [
   {
     label: '戻る',

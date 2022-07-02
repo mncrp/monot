@@ -26,12 +26,12 @@ ipcRenderer.on('updatedBookmark', (e, html) => {
 
 contextBridge.exposeInMainWorld('node', {
   viewSettings: () => {
-    ipcRenderer.invoke('settings.view');
     ipcRenderer.invoke('options');
+    ipcRenderer.invoke('settings.view');
   },
   viewHistory: () => {
-    ipcRenderer.invoke('viewHistory');
     ipcRenderer.invoke('options');
+    ipcRenderer.invoke('viewHistory');
   },
   updateHistory: () => {
     ipcRenderer.invoke('updateHistory');
@@ -46,10 +46,42 @@ contextBridge.exposeInMainWorld('node', {
     ipcRenderer.invoke('updateBookmark');
   },
   viewBookmark: () => {
-    ipcRenderer.invoke('viewBookmark');
     ipcRenderer.invoke('options');
+    ipcRenderer.invoke('viewBookmark');
   },
   removeBookmark: (key) => {
     ipcRenderer.invoke('removeBookmark', key);
+  },
+  zoom: () => {
+    ipcRenderer.invoke('zoom');
+  },
+  shrink: () => {
+    ipcRenderer.invoke('shrink');
+  },
+  actual: () => {
+    ipcRenderer.invoke('actual');
+  },
+  fullScreen: () => {
+    ipcRenderer.invoke('options');
+    ipcRenderer.invoke('fullscreen');
+  },
+  hide: () => {
+    ipcRenderer.invoke('options');
+    ipcRenderer.invoke('hide');
+  },
+  viewSite: () => {
+    ipcRenderer.invoke('options');
+    ipcRenderer.invoke('openPage', 'https://mncrp.github.io/project/monot/');
+  },
+  viewDocs: () => {
+    ipcRenderer.invoke('options');
+    ipcRenderer.invoke('openPage', 'https://mncrp.github.io/document/monot/');
+  },
+  about: () => {
+    ipcRenderer.invoke('options');
+    ipcRenderer.invoke('about');
+  },
+  devTools: () => {
+    ipcRenderer.invoke('devTools');
   }
 });
