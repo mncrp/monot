@@ -60,6 +60,7 @@ class TabManager {
   }
 
   setCurrent(win, index) {
+    console.log(index);
     win.webContents.executeJavaScript(`
       try {
         document.getElementById('opened')?.removeAttribute('id');
