@@ -101,6 +101,10 @@ class TabManager {
 
     win.removeBrowserView(this.tabs[index].entity);
     this.tabs[index].entity.webContents.destroy();
+    win.webContents.executeJavaScript(`
+      document.getElementsByTagName('yomikomi-bar')[0]
+      .removeAttribute('id');
+    `);
     this.tabs[index] = null;
     this.tabs.splice(index, 1);
 
@@ -177,7 +181,7 @@ class Tab {
       );
     `);
 
-      browserView.webContents.setVisualZoomLevelLimits(1, 20);
+      browserView.webContents.setVisualZoomLevelLimits(1, 10);
       browserView.webContents.setZoomFactor(1);
 
       this.url = new URL(browserView.webContents.getURL());
@@ -310,52 +314,64 @@ class Tab {
 
   // This function sets URL to the URL bar of the title bar.
   setTitleUrl() {
-    const url = this.url;
-    // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
-    // It gets win variable from myself not to make bugs.
-    const win = BrowserWindow.fromBrowserView(this.entity);
-    const srcPath = new URL(`file://${__dirname}/../browser/`);
+    try {
+      const url = this.url;
+      // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
+      // It gets win variable from myself not to make bugs.
+      const win = BrowserWindow.fromBrowserView(this.entity);
+      const srcPath = new URL(`file://${__dirname}/../browser/`);
 
-    switch (`${url.protocol}//${url.pathname}`) {
-    case `${srcPath}home.html`:
+      switch (`${url.protocol}//${url.pathname}`) {
+      case `${srcPath}home.html`:
+        return win.webContents.executeJavaScript(`
+          document.getElementsByTagName('input')[0].value = '';
+        `);
+      case `${srcPath}server-notfound.html`:
+      case `${srcPath}blank.html`:
+        return Promise.resolve();
+      }
+
+      // Set URL in the URL bar.
       return win.webContents.executeJavaScript(`
-        document.getElementsByTagName('input')[0].value = '';
+        document.getElementsByTagName('input')[0].value =
+          '${url.host}${url.pathname}${url.search}${url.hash}';
       `);
-    case `${srcPath}server-notfound.html`:
-    case `${srcPath}blank.html`:
-      return Promise.resolve();
+    } catch (e) {
+      return e;
     }
-
-    // Set URL in the URL bar.
-    return win.webContents.executeJavaScript(`
-      document.getElementsByTagName('input')[0].value =
-        '${url.host}${url.pathname}${url.search}${url.hash}';
-    `);
   }
 
   // set tab's title.
   setTabTitle() {
-    const win = BrowserWindow.fromBrowserView(this.entity);
-    win.webContents.executeJavaScript(`
-      document.getElementsByTagName('span')[${this.number()}]
-        .getElementsByTagName('p')[0]
-        .innerText='${this.entity.webContents.getTitle()}';
-    `);
+    try {
+      const win = BrowserWindow.fromBrowserView(this.entity);
+      win.webContents.executeJavaScript(`
+        document.getElementsByTagName('span')[${this.number()}]
+          .getElementsByTagName('p')[0]
+          .innerText='${this.entity.webContents.getTitle()}';
+      `);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   // set window's title.
   setWindowTitle() {
 
-    const win = BrowserWindow.fromBrowserView(this.entity);
-    const srcPath = new URL(`file://${__dirname}/../`);
-    if (this.url.href === `${srcPath}browser/home.html`) {
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
-      `);
-    } else {
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('title')[0].innerText = '${this.entity.webContents.getTitle()} - Monot';
-      `);
+    try {
+      const win = BrowserWindow.fromBrowserView(this.entity);
+      const srcPath = new URL(`file://${__dirname}/../`);
+      if (this.url.href === `${srcPath}browser/home.html`) {
+        win.webContents.executeJavaScript(`
+          document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
+        `);
+      } else {
+        win.webContents.executeJavaScript(`
+          document.getElementsByTagName('title')[0].innerText = '${this.entity.webContents.getTitle()} - Monot';
+        `);
+      }
+    } catch (e) {
+      console.error(e);
     }
 
   }
@@ -375,20 +391,25 @@ class Tab {
   }
 
   replace() {
-    const win = BrowserWindow.fromBrowserView(this.entity);
-    const windowSize = win.getSize();
-    this.entity.setBounds({
-      x: 0,
-      y: viewY,
-      width: windowSize[0],
-      height: windowSize[1] - viewY
-    });
-    win.webContents.executeJavaScript(`
-      if (document.body.classList.contains('mac'))
-        document.body.className = 'mac ${new ViewY().getHtmlClass()}';
-      else
-        document.body.className = '${new ViewY().getHtmlClass()}';
-    `);
+
+    try {
+      const win = BrowserWindow.fromBrowserView(this.entity);
+      const windowSize = win.getSize();
+      this.entity.setBounds({
+        x: 0,
+        y: viewY,
+        width: windowSize[0],
+        height: windowSize[1] - viewY
+      });
+      win.webContents.executeJavaScript(`
+        if (document.body.classList.contains('mac'))
+          document.body.className = 'mac ${new ViewY().getHtmlClass()}';
+        else
+          document.body.className = '${new ViewY().getHtmlClass()}';
+      `);
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 
