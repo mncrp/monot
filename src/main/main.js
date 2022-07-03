@@ -25,7 +25,7 @@ const viewY = new ViewY();
 
 const aboutContent = {
   type: 'info',
-  icon: './src/image/logo-mac.png',
+  icon: isMac ? './src/image/logo-mac.png' : './src/image/logo.png',
   title: 'Monotについて',
   message: 'Monotについて',
   detail: `Monot by monochrome. v.1.1.0 (Build 8)
