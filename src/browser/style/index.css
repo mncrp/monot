@@ -5,7 +5,7 @@ body {
   margin-top: 0;
   padding: 0;
   width: calc(100% - 4px);
-  height: calc(100vh - 2px);
+  height: calc(100vh + 50px);
 }
 input {
   user-select: text;
@@ -20,7 +20,7 @@ body > a:active {
 
 #bookmarks {
   position: absolute;
-  top: calc(100% - 25px);
+  top: calc(100vh - 25px);
   left: 0;
   right: 0;
   height: auto;

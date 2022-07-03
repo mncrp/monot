@@ -1,20 +1,22 @@
 @import url('../../../proprietary/style/font.css');
 
 :root {
-  --main-background: #efefef;
+  --main-background: #efefef8;
   --text-color: #000;
-  --borderline-color: #ddd;
+  --borderline-color: #ddd8;
   --opened-tab-color: #bbb3;
 
   --border-color-unhover: #ddd0;
-  --border-color: #ddde;
+  --border-color: #ddd8;
   --shadow-color: #bfbfbf55;
   --shadow-color-unhover: #0000;
   --backgroundcolor-unhover: #ccc0;
-  --backgroundcolor: #eee;
+  --backgroundcolor: #eee8;
   --input-color-unhover: #bbb3;
   --closebutton-color: #fff4;
-  --loading-color: #888;
+  --loading-color: #8888;
+
+  --wallpaper: none;
 }
 
 * {
@@ -46,6 +48,10 @@ body {
   height: auto;
   overflow: hidden;
   border-bottom: 1px solid var(--borderline-color);
+  background-image: var(--wallpaper);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
 }
 nav {
   display: flex;
@@ -72,6 +78,7 @@ body nav * {
   transition: all 0.2s ease-in-out;
   border: 1px solid var(--border-color-unhover);
   z-index: +1;
+  backdrop-filter: blur(15px);
 }
 body input {
   -webkit-user-drag: initial;
@@ -80,6 +87,7 @@ body input {
   font-size: 11px;
   background-color: var(--input-color-unhover);
   color: var(--text-color);
+  backdrop-filter: blur(15px);
 }
 body nav *:hover,
 div > span:hover,
@@ -169,7 +177,7 @@ tab-el {
   vertical-align: middle;
   display: flex;
   overflow: hidden;
-  height: 32px;
+  height: 33px;
 }
 tab-el * {
   -webkit-user-drag: none;
@@ -200,6 +208,7 @@ tab-el > div > span {
   -webkit-font-smoothing: antialiased;
   -webkit-user-drag: element;
   -webkit-app-region: none;
+  backdrop-filter: blur(15px);
 }
 tab-el > a {
   display: block;
@@ -302,9 +311,9 @@ yomikomi-bar#loaded {
 
 @media (prefers-color-scheme: dark)  {
   :root {
-    --main-background: #222;
+    --main-background: #2228;
     --text-color: #fff;
-    --borderline-color: #333;
+    --borderline-color: #3338;
     --opened-tab-color: #fff1;
 
     --border-color-unhover: #ddd0;
@@ -312,10 +321,10 @@ yomikomi-bar#loaded {
     --shadow-color: #bfbfbf55;
     --shadow-color-unhover: #0000;
     --backgroundcolor-unhover: #ccc0;
-    --backgroundcolor: #444;
+    --backgroundcolor: #4448;
     --input-color-unhover: #fff1;
     --closebutton-color: #fff4;
-    --loading-color: #444;  
+    --loading-color: #444c;  
   }
   #home {
     background-image: url('../../../image/home-white.png');
