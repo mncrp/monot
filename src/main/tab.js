@@ -191,6 +191,7 @@ class Tab {
 
       if (this.url.href === fileURL.href) {
         enginesConfig.update();
+        const wallpaper = monotConfig.update().get('wallpaper');
         const selectEngine = enginesConfig.get('engine');
         const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
         const bookmarks = bookmark.update().data;
@@ -214,6 +215,11 @@ class Tab {
         browserView.webContents.executeJavaScript(`
           url = '${engineURL}';
           document.getElementById('bookmarks-content').innerHTML = \`${html}\`;
+        `);
+        browserView.webContents.insertCSS(`
+          :root {
+            --wallpaper: url('file://${wallpaper}')!important;
+          }
         `);
       }
 

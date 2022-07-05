@@ -10,7 +10,11 @@
   --backgroundcolor: #eee;
   --input-color-unhover: #bbb3;
   --input-color: #efefef;
+
+  --wallpaper: none;
+  --wallpaper-brightness: brightness(100%);
 }
+
 * {
   position: relative;
   outline: none;
@@ -23,6 +27,25 @@ body {
   background-color: var(--main-background);
   color: var(--browsername-color);
   font-weight: 100;
+}
+body::before {
+  content: '';
+  display: block;
+  width: calc(100vw + 20px);
+  height: calc(100vh + 20px);
+  position: fixed;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background-image: var(--wallpaper);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center -50px;
+  background-attachment: fixed;
+  filter: blur(10px) var(--wallpaper-brightness);
+  overflow: hidden;
+  z-index: -10;
 }
 
 h1 {
@@ -58,13 +81,16 @@ body > div:nth-child(1) {
   height: auto;
   width: auto;
   text-align: center;
-  top: 50%;
-  left: 50%;
+  top: 50vh;
+  left: 50vw;
   transform : translate(-50%, -50%);
 }
 div > div:nth-child(1) * {
   vertical-align: middle;
   box-shadow: 2px 2px 5px var(--shadow-color);
+}
+div > h1 {
+  text-shadow: 0 0 15px #888;
 }
 div input {
   position: relative;
@@ -130,17 +156,18 @@ hr {
 
 @media(prefers-color-scheme: dark) {
   :root {
-    --main-background: #222;
+    --main-background: #2228;
     --text-color: #fff;
     --browsername-color: #ccc;
     --shadow-color: #bfbfbf99;
     --shadow-color-unhover: #0000;
     --border-color-unhover: #4440;
-    --border-color: #666e;
-    --backgroundcolor: #444;
+    --border-color: #6668;
+    --backgroundcolor: #4448;
     --input-color-unhover: #fff1;
-  }
 
+    --wallpaper-brightness: brightness(80%);
+  }
   div:nth-child(1) button {
     background-image: url('../../image/search-white.png');
   }

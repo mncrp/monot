@@ -75,7 +75,7 @@ function newtab() {
         }
       }));
       context.popup();
-      context = Menu.buildFromTemplate(menuTemplate);
+      context = Menu.buildFromTemplate(contextTemplate);
     }
   });
 }
@@ -135,6 +135,11 @@ function nw() {
       document.body.classList.add('thin');
     `);
   }
+  win.webContents.insertCSS(`
+  :root {
+    --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+  }
+`);
 
   // create tab
   newtab();
@@ -402,6 +407,16 @@ app.on('ready', () => {
       win.setTopBrowserView(optionView);
     }
   });
+  ipcMain.handle('setting.resetWallpaper', () => {
+    monotConfig.update()
+      .set('wallpaper', '')
+      .save();
+    win.webContents.insertCSS(`
+      :root {
+        --wallpaper: none!important;
+      }
+    `);
+  });
 });
 
 app.on('window-all-closed', () => {
@@ -435,6 +450,11 @@ function showSetting() {
     ui('${monotConfig.get('ui')}');
     document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
   `);
+
+  if (monotConfig.get('wallpaper') !== '') {
+    setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
+  }
+
   if (monotConfig.get('cssTheme') !== '') {
     setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
   }
@@ -481,6 +501,37 @@ function showSetting() {
         .save();
       if (path.filePaths[0] !== '')
         setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
+    });
+  });
+  ipcMain.removeHandler('setting.openWallpaperDialog');
+  ipcMain.handle('setting.openWallpaperDialog', () => {
+    const fileDialog = dialog.showOpenDialog(
+      setting,
+      {
+        title: '壁紙を選択',
+        properties: [
+          'openFile'
+        ],
+        filters: [
+          {
+            name: '画像',
+            extensions: ['png', 'jpg', 'jpeg']
+          }
+        ]
+      }
+    );
+    fileDialog.then((path) => {
+      monotConfig.update()
+        .set('wallpaper', path.filePaths[0])
+        .save();
+      if (path.filePaths[0] !== '') {
+        setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
+        win.webContents.insertCSS(`
+          :root {
+            --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+          }
+        `);
+      }
     });
   });
 }
