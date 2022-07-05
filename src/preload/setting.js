@@ -14,6 +14,16 @@ ipcRenderer.on('updateTheme', (e, filepath) => {
   \`;
   `);
 });
+ipcRenderer.on('updateWallpaper', (e, filepath) => {
+  webFrame.executeJavaScript(`
+    document.getElementById('wallpaper').innerHTML = \`
+    <h2>壁紙</h2>
+    <p>現在${filepath}が選択されています</p>
+    <p><a href="javascript:node.selectWallpaper();">ファイルを選択...</a></p>
+    <p><a href="javascript:node.resetWallpaper();">壁紙をリセット</a></p>
+  \`;
+  `);
+});
 
 contextBridge.exposeInMainWorld('node', {
   changeSearchEngine: (engine) => {
@@ -33,5 +43,11 @@ contextBridge.exposeInMainWorld('node', {
   },
   resetTheme: () => {
     ipcRenderer.invoke('setting.resetTheme');
+  },
+  selectWallpaper: () => {
+    ipcRenderer.invoke('setting.openWallpaperDialog');
+  },
+  resetWallpaper: () => {
+    ipcRenderer.invoke('setting.resetWallpaper');
   }
 });
