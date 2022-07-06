@@ -293,6 +293,7 @@ yomikomi-bar#loaded {
   width: min-content;
   margin: 0 2px;
   padding-right: 20px;
+  max-width: 50vw;
 }
 .thin tab-el > a {
   height: 20px;

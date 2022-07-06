@@ -260,54 +260,46 @@ class Tab {
     });
     // did-start-loading
     // こいつらはタイミング指定しているのでpreloadにしない
-    try {
-      browserView.webContents.on('did-start-loading', () => {
+    browserView.webContents.on('did-start-loading', () => {
+      try {
         win.webContents.executeJavaScript(`
           document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
             'id',
             'loading'
           );
         `);
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    try {
-      // did-finish-load
-      browserView.webContents.on('did-finish-load', () => {
-        if (!nativeTheme.shouldUseDarkColors) {
-          browserView.setBackgroundColor('#efefef');
-        } else {
-          browserView.setBackgroundColor('#222');
-        }
-        this.setTabTitle();
-        this.setWindowTitle();
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    try {
-      // did-stop-loading
-      browserView.webContents.on('did-stop-loading', () => {
+      } catch (e) {
+        console.error(e);
+      }
+    });
+    // did-finish-load
+    browserView.webContents.on('did-finish-load', () => {
+      if (!nativeTheme.shouldUseDarkColors) {
+        browserView.setBackgroundColor('#efefef');
+      } else {
+        browserView.setBackgroundColor('#222');
+      }
+      this.setTabTitle();
+      this.setWindowTitle();
+    });
+    // did-stop-loading
+    browserView.webContents.on('did-stop-loading', () => {
+      try {
         // changes the progress
         win.webContents.executeJavaScript(`
           document.getElementsByTagName('yomikomi-bar')[0]
             .removeAttribute('id');
         `);
         this.setTitleUrl();
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    try {
-      // when the page title is updated (update the window title and tab title) config.mncfg
-      browserView.webContents.on('page-title-updated', () => {
-        this.setTabTitle();
-        this.setWindowTitle();
-      });
-    } catch (e) {
-      console.error(e);
-    }
+      } catch (e) {
+        console.error(e);
+      }
+    });
+    // when the page title is updated (update the window title and tab title) config.mncfg
+    browserView.webContents.on('page-title-updated', () => {
+      this.setTabTitle();
+      this.setWindowTitle();
+    });
 
     // last init
     win.addBrowserView(browserView);
