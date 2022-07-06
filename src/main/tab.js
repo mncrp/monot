@@ -126,6 +126,13 @@ class TabManager {
       this.setCurrent(win, this.length() - 1);
     }
 
+    tab.entity.webContents.setWindowOpenHandler((details) => {
+      this.newTab(win, context, true, details.url);
+      return {
+        action: 'deny'
+      };
+    });
+
   }
 
   move(win, target, destination) {
@@ -253,38 +260,54 @@ class Tab {
     });
     // did-start-loading
     // こいつらはタイミング指定しているのでpreloadにしない
-    browserView.webContents.on('did-start-loading', () => {
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
-          'id',
-          'loading'
-        );
-      `);
-    });
-    // did-finish-load
-    browserView.webContents.on('did-finish-load', () => {
-      if (!nativeTheme.shouldUseDarkColors) {
-        browserView.setBackgroundColor('#efefef');
-      } else {
-        browserView.setBackgroundColor('#222');
-      }
-      this.setTabTitle();
-      this.setWindowTitle();
-    });
-    // did-stop-loading
-    browserView.webContents.on('did-stop-loading', () => {
-      // changes the progress
-      win.webContents.executeJavaScript(`
-        document.getElementsByTagName('yomikomi-bar')[0]
-          .removeAttribute('id');
-      `);
-      this.setTitleUrl();
-    });
-    // when the page title is updated (update the window title and tab title) config.mncfg
-    browserView.webContents.on('page-title-updated', () => {
-      this.setTabTitle();
-      this.setWindowTitle();
-    });
+    try {
+      browserView.webContents.on('did-start-loading', () => {
+        win.webContents.executeJavaScript(`
+          document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
+            'id',
+            'loading'
+          );
+        `);
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    try {
+      // did-finish-load
+      browserView.webContents.on('did-finish-load', () => {
+        if (!nativeTheme.shouldUseDarkColors) {
+          browserView.setBackgroundColor('#efefef');
+        } else {
+          browserView.setBackgroundColor('#222');
+        }
+        this.setTabTitle();
+        this.setWindowTitle();
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    try {
+      // did-stop-loading
+      browserView.webContents.on('did-stop-loading', () => {
+        // changes the progress
+        win.webContents.executeJavaScript(`
+          document.getElementsByTagName('yomikomi-bar')[0]
+            .removeAttribute('id');
+        `);
+        this.setTitleUrl();
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    try {
+      // when the page title is updated (update the window title and tab title) config.mncfg
+      browserView.webContents.on('page-title-updated', () => {
+        this.setTabTitle();
+        this.setWindowTitle();
+      });
+    } catch (e) {
+      console.error(e);
+    }
 
     // last init
     win.addBrowserView(browserView);
@@ -313,8 +336,12 @@ class Tab {
   }
 
   load(url = new URL(`file://${directory}/browser/home.html`)) {
-    if (!(url instanceof URL)) {
-      url = new URL(url);
+    try {
+      if (!(url instanceof URL)) {
+        url = new URL(url);
+      }
+    } catch (e) {
+      url = new URL(`file://${directory}/browser/home.html`);
     }
     this.entity.webContents.loadURL(url.href);
   }
