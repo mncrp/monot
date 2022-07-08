@@ -120,7 +120,7 @@ function nw() {
     frame: false,
     transparent: false,
     backgroundColor: '#efefef',
-    title: 'Monot by monochrome.',
+    title: 'FlatBrowser by FlatPonch',
     icon: isMac ? `${directory}/image/logo.icns` : `${directory}/image/logo.png`,
     webPreferences: {
       preload: `${directory}/preload/navigation.js`
