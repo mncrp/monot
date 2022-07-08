@@ -2,11 +2,13 @@
 const {
   app,
   BrowserWindow,
+  clipboard,
   dialog,
   ipcMain,
   Menu,
   BrowserView,
-  MenuItem
+  MenuItem,
+  webContents
 } = require('electron');
 
 const {
@@ -61,22 +63,40 @@ const enginesConfig = new LowLevelConfig(
 function newtab() {
   tabs.newTab(win);
   tabs.get().entity.webContents.on('context-menu', (e, params) => {
-    const text = params.selectionText;
-    if (text !== '') {
+    const selection = params.selectionText;
+    if (selection !== '') {
       context.closePopup();
       enginesConfig.update();
       context.insert(0, new MenuItem({
-        label: `${text}を調べる`,
+        label: `${selection}を調べる`,
         id: 'search',
         click: () => {
           const selectEngine = enginesConfig.get('engine');
           const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
-          tabs.get().load(`${engineURL}${text}`);
+          tabs.get().load(`${engineURL}${selection}`);
         }
       }));
-      context.popup();
-      context = Menu.buildFromTemplate(contextTemplate);
     }
+    if (params.mediaType === 'image' && params.srcURL !== '') {
+      context.closePopup();
+      context.insert(0, new MenuItem({
+        label: `選択した画像を開く`,
+        id: 'openImage',
+        click: () => {
+          tabs.get().load(params.srcURL);
+        }
+      }));
+      context.insert(0, new MenuItem({
+        label: `選択した画像をコピー`,
+        id: 'saveImage',
+        click: () => {
+          webContents.getFocusedWebContents().copyImageAt(params.x, params.y);
+        }
+      }));
+    }
+    console.dirxml(params);
+    context.popup();
+    context = Menu.buildFromTemplate(contextTemplate);
   });
 }
 
@@ -881,9 +901,18 @@ const contextTemplate = [
     }
   },
   {
+    type: 'separator'
+  },
+  {
     label: '開発者向けツール',
     click: () => {
       tabs.get().entity.webContents.toggleDevTools();
+    }
+  },
+  {
+    label: 'ソースコードを表示',
+    click: () => {
+      tabs.get().load(`view-source:${tabs.get().entity.webContents.getURL()}`);
     }
   }
 ];
