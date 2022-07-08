@@ -2,7 +2,6 @@
 const {
   app,
   BrowserWindow,
-  clipboard,
   dialog,
   ipcMain,
   Menu,
