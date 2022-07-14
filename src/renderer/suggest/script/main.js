@@ -1,7 +1,10 @@
 function select(n) {
   let num;
   num = [].slice.call(document.getElementsByTagName('div')).indexOf(document.getElementById('selected'));
-  if (num === -1) num = 0;
+  if (num === -1) {
+    num = 0;
+    if (n === 1) n = 0;
+  }
   console.log(num + n);
   try {
     if (document.getElementById('selected') === null) {

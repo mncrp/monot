@@ -465,7 +465,7 @@ app.on('ready', () => {
     win.addBrowserView(suggest);
     suggest.setBounds({
       x: 150,
-      y: 70,
+      y: viewY.get() / 2 + 5,
       width: win.getSize()[0] - 300,
       height: 400
     });
@@ -491,15 +491,16 @@ app.on('ready', () => {
     `);
   });
   ipcMain.handle('suggest.up', () => {
-    suggest.webContents.toggleDevTools();
     suggest.webContents.executeJavaScript(`
       select(-1);
     `);
   });
   ipcMain.handle('suggest.select', () => {
-    suggest.webContents.executeJavaScript(`
-      document.getElementById('selected').click();
-    `);
+    setTimeout(() => {
+      suggest.webContents.executeJavaScript(`
+        document.getElementById('selected').click();
+      `);
+    }, 100);
   });
 
   nw();
