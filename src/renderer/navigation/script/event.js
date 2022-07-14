@@ -74,6 +74,13 @@ function each() {
 }
 each();
 
+document.getElementById('textbox').addEventListener('input', () => {
+  node.suggest(document.getElementById('textbox').value);
+});
+document.getElementById('textbox').addEventListener('blur', () => {
+  setTimeout(node.suggestClose, 100);
+});
+
 window.addEventListener('contextmenu', (e) => {
   e.preventDefault();
   node.popupMenu();

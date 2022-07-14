@@ -44,9 +44,6 @@ contextBridge.exposeInMainWorld('node', {
     // go current BrowserView
     ipcRenderer.invoke('browserGoes', index);
   },
-  dirName: () => {
-    return __dirname;
-  },
   showMenu: () => {
     // open options (settings) window
     ipcRenderer.invoke('options');
@@ -69,5 +66,20 @@ contextBridge.exposeInMainWorld('node', {
   },
   popupMenu: () => {
     ipcRenderer.invoke('popupNavigationMenu');
+  },
+  suggest: (word) => {
+    ipcRenderer.invoke('suggest.send', word);
+  },
+  suggestClose: () => {
+    ipcRenderer.invoke('suggest.close');
+  },
+  suggestDown: () => {
+    ipcRenderer.invoke('suggest.down');
+  },
+  suggestUp: () => {
+    ipcRenderer.invoke('suggest.up');
+  },
+  suggestSelect: () => {
+    ipcRenderer.invoke('suggest.select');
   }
 });
