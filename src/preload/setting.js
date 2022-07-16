@@ -5,20 +5,35 @@ const {
 } = require('electron');
 
 ipcRenderer.on('updateTheme', (e, filepath) => {
+  let setThemeMessage = '';
+  if (filepath === undefined) {
+    setThemeMessage = '現在テーマは設定されてません';
+  } else {
+    setThemeMessage = `現在のテーマは ${ filepath } です`;
+  }
+
   webFrame.executeJavaScript(`
     document.getElementById('theme').innerHTML = \`
     <h2>テーマ</h2>
-    <p>現在${filepath}が選択されています</p>
+    <p>${setThemeMessage}</p>
     <p><a href="javascript:node.selectTheme();">ファイルを選択...</a></p>
     <p><a href="javascript:node.resetTheme();">テーマをリセット</a></p>
   \`;
   `);
 });
+
 ipcRenderer.on('updateWallpaper', (e, filepath) => {
+  let setWallpaperMessage = '';
+  if (filepath === undefined) {
+    setWallpaperMessage = '現在の壁紙は設定されてません';
+  } else {
+    setWallpaperMessage = `現在の壁紙は ${ filepath } です`;
+  }
+
   webFrame.executeJavaScript(`
     document.getElementById('wallpaper').innerHTML = \`
     <h2>壁紙</h2>
-    <p>現在${filepath}が選択されています</p>
+    <p>${setWallpaperMessage}</p>
     <p><a href="javascript:node.selectWallpaper();">ファイルを選択...</a></p>
     <p><a href="javascript:node.resetWallpaper();">壁紙をリセット</a></p>
   \`;
