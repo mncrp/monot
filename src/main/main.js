@@ -362,8 +362,7 @@ app.on('ready', () => {
     let html = '';
     // eslint-disable-next-line
     for (const [key, value] of Object.entries(bookmarks)) {
-      html = `
-        ${html}
+      html += `
         <div onclick="node.open('${value.pageUrl}');">
           <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
           <div class="bookmark-details">
