@@ -2,6 +2,7 @@
 const {
   app,
   BrowserWindow,
+  clipboard,
   dialog,
   ipcMain,
   Menu,
@@ -72,7 +73,7 @@ function newtab() {
         click: () => {
           const selectEngine = enginesConfig.get('engine');
           const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
-          tabs.get().load(`${engineURL}${selection}`);
+          tabs.newTab(win, context, true, `${engineURL}${selection}`);
         }
       }));
     }
@@ -82,7 +83,7 @@ function newtab() {
         label: `選択した画像を開く`,
         id: 'openImage',
         click: () => {
-          tabs.get().load(params.srcURL);
+          tabs.newTab(win, context, true, params.srcURL);
         }
       }));
       context.insert(0, new MenuItem({
@@ -93,7 +94,6 @@ function newtab() {
         }
       }));
     }
-    console.dirxml(params);
     context.popup();
     context = Menu.buildFromTemplate(contextTemplate);
   });
@@ -188,15 +188,6 @@ app.on('ready', () => {
     const style = monotConfig.get('cssTheme');
     optionView.webContents.insertCSS(style);
   }
-
-  const suggest = new BrowserView({
-    transparent: true,
-    frame: false,
-    webPreferences: {
-      preload: `${directory}/preload/suggest.js`
-    }
-  });
-  suggest.webContents.loadURL(`file://${directory}/renderer/suggest/index.html`);
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, index) => {
@@ -407,100 +398,6 @@ app.on('ready', () => {
   });
   ipcMain.handle('devTools', () => {
     tabs.get().entity.webContents.toggleDevTools();
-  });
-  ipcMain.handle('suggest.send', (e, word) => {
-    try {
-      const url = new URL(`http://api.bing.com/qsonhs.aspx?mkt=ja-JP&q=${word}`);
-      const req = require('https').request({
-        hostname: url.hostname,
-        port: url.port,
-        path: url.pathname + url.search,
-        method: 'GET',
-      }, res => {
-        let data = '';
-        res.on('data', (d) => {
-          try {
-            data = JSON.parse(d.toString());
-          } catch (e) {
-            console.error(e);
-          }
-        });
-        console.log(word);
-        res.on('end', () => {
-          let html = ``;
-          try {
-            try {
-              Object.entries(data.AS.Results)[1][1].Suggests.forEach((data) => {
-                html += `
-                  <div onclick="node.moveBrowser('${data.Txt}');">${data.Txt}</div>
-                `;
-              });
-            } catch (e) {
-              Object.entries(data.AS.Results)[0][1].Suggests.forEach((data) => {
-                html += `
-                  <div onclick="node.moveBrowser('${data.Txt}');">${data.Txt}</div>
-                `;
-              });
-            }
-
-            win.addBrowserView(suggest);
-            win.setTopBrowserView(suggest);
-
-            suggest.webContents.executeJavaScript(`
-              document.getElementsByTagName('main')[0].innerHTML = \`${html}\`;
-            `);
-          } catch (e) {
-            win.removeBrowserView(suggest);
-            console.error(e);
-          }
-        });
-      });
-      req.on('error', err => {
-        console.log(err);
-      });
-      req.end();
-    } catch (e) {
-      console.error(e);
-    }
-    win.addBrowserView(suggest);
-    suggest.setBounds({
-      x: 150,
-      y: viewY.get() / 2 + 5,
-      width: win.getSize()[0] - 300,
-      height: 400
-    });
-    suggest.setAutoResize({
-      x: true,
-      y: true,
-      width: true,
-      height: true
-    });
-  });
-  ipcMain.handle('suggest.searchBrowser', (e, txt) => {
-    enginesConfig.update();
-    const engine = enginesConfig.get(`values.${enginesConfig.get('engine')}`, true);
-    tabs.get().load(`${engine}${txt}`);
-    win.removeBrowserView(suggest);
-  });
-  ipcMain.handle('suggest.close', () => {
-    win.removeBrowserView(suggest);
-  });
-  ipcMain.handle('suggest.down', () => {
-    suggest.webContents.executeJavaScript(`
-      select(1);
-    `);
-  });
-  ipcMain.handle('suggest.up', () => {
-    suggest.webContents.executeJavaScript(`
-      select(-1);
-    `);
-  });
-  ipcMain.handle('suggest.select', () => {
-    setTimeout(() => {
-      suggest.webContents.executeJavaScript(`
-        document.getElementById('selected').click();
-      `);
-    }, 100);
   });
 
   nw();
@@ -1014,7 +911,7 @@ const contextTemplate = [
   {
     label: 'ソースコードを表示',
     click: () => {
-      tabs.get().load(`view-source:${tabs.get().entity.webContents.getURL()}`);
+      tabs.newTab(win, context, true, `view-source:${tabs.get().entity.webContents.getURL()}`);
     }
   }
 ];
