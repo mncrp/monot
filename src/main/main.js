@@ -7,8 +7,7 @@ const {
   Menu,
   BrowserView,
   MenuItem,
-  webContents,
-  webFrame
+  webContents
 } = require('electron');
 
 const {
@@ -564,6 +563,7 @@ app.on('window-all-closed', () => {
 });
 app.on('activate', () => {
   if (win === null) nw();
+
 });
 
 function showSetting() {

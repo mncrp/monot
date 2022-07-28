@@ -172,6 +172,7 @@ div > span > img {
   float: left;
   height: 100%;
   aspect-ratio: 1/1;
+  margin-right: 5px;
 }
 div > span > p:last-child:hover {
   background-color: var(--closebutton-color);

@@ -162,6 +162,12 @@ class Tab {
       }
     });
     browserView.webContents.session.setDownloadPath(app.getPath('downloads'));
+    browserView.webContents.setUserAgent(
+      browserView.webContents.getUserAgent()
+        .replace('monot', 'Chrome')
+        .replace(/Electron\/[0-9 | .]/, '')
+        .replace('Chrome/1.0.0', '')
+    );
 
     win.webContents.executeJavaScript(`
       document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
