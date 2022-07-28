@@ -37,7 +37,7 @@ if (webFrame.parent === null) {
         }
         return favicon;
       }();
-      
+
       node.addHistory(
         ${webFrame.routingId},
         document.head.getElementsByTagName('title')[0].innerText,

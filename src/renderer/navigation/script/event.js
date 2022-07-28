@@ -23,6 +23,13 @@ function each() {
       if (!canMove) return;
       node.tabSwitch(index);
     });
+    element.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      node.popupTabMenu([
+        e.clientX,
+        e.clientY
+      ]);
+    });
     // move tab
     element.addEventListener('dragend', (e) => {
       element.addEventListener('click', (e) => {
