@@ -329,6 +329,11 @@ app.on('ready', () => {
       });
     }
   });
+  ipcMain.handle('setting.changeAppearances', (e, content, to) => {
+    monotConfig.update()
+      .update(content, to)
+      .save();
+  });
   ipcMain.handle('addHistory', (e, data) => {
     const fileURL = new URL(`file://${directory}/browser/home.html`);
     if (data.pageUrl !== fileURL.href) history.set(data);
@@ -563,7 +568,6 @@ app.on('window-all-closed', () => {
 });
 app.on('activate', () => {
   if (win === null) nw();
-
 });
 
 function showSetting() {
@@ -578,6 +582,7 @@ function showSetting() {
       scrollBounce: true
     }
   });
+  setting.webContents.toggleDevTools();
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);

@@ -34,15 +34,26 @@ header {
   padding-left: 20px;
 }
 
-main > * {
+main > div {
   display: block;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #666;
+}
+strong {
+  font-weight: 900;
+}
+
+#appearance > * {
+  margin: 5px 0;
+  padding: 5px 0;
 }
 
 #ui a img {
   width: 20vw;
   min-width: 300px;
   border: 1px solid #8880;
-  border-radius: 20px;
+  border-radius: 15px;
   transition: all .4s ease-in-out;
 }
 #ui a.selected img {

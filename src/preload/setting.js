@@ -9,7 +9,7 @@ ipcRenderer.on('updateTheme', (e, filepath) => {
   if (filepath === undefined) {
     setThemeMessage = '現在テーマは設定されてません';
   } else {
-    setThemeMessage = `現在のテーマは ${ filepath } です`;
+    setThemeMessage = `現在のテーマは ${filepath} です`;
   }
 
   webFrame.executeJavaScript(`
@@ -27,7 +27,7 @@ ipcRenderer.on('updateWallpaper', (e, filepath) => {
   if (filepath === undefined) {
     setWallpaperMessage = '現在の壁紙は設定されてません';
   } else {
-    setWallpaperMessage = `現在の壁紙は ${ filepath } です`;
+    setWallpaperMessage = `現在の壁紙は ${filepath} です`;
   }
 
   webFrame.executeJavaScript(`
