@@ -67,6 +67,9 @@ contextBridge.exposeInMainWorld('node', {
   popupMenu: () => {
     ipcRenderer.invoke('popupNavigationMenu');
   },
+  popupTabMenu: (data) => {
+    ipcRenderer.invoke('popupTabMenu', data);
+  },
   suggest: (word) => {
     ipcRenderer.invoke('suggest.send', word);
   },

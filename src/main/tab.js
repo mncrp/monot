@@ -119,7 +119,7 @@ class TabManager {
 
   newTab(win, context, shouldMoveCurrent = true, url) {
 
-    const tab = new Tab(win, url, this.tabs.length);
+    const tab = new Tab(win, url);
     tab.number = () => this.tabs.indexOf(tab);
     this.push(win, tab);
     if (shouldMoveCurrent) {
@@ -145,9 +145,8 @@ class TabManager {
 }
 
 class Tab {
-  constructor(win, url = new URL(`file://${directory}/browser/home.html`), num) {
+  constructor(win, url = new URL(`file://${directory}/browser/home.html`)) {
 
-    this.num = num;
     if (!(url instanceof URL)) {
       url = new URL(url);
     }
@@ -165,7 +164,7 @@ class Tab {
     browserView.webContents.session.setDownloadPath(app.getPath('downloads'));
 
     win.webContents.executeJavaScript(`
-      document.getElementsByTagName('div')[0].innerHTML += '<span><p>Home</p><p></p></span>';
+      document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
       each();
     `);
 
@@ -183,11 +182,11 @@ class Tab {
     // dom-ready
     browserView.webContents.on('dom-ready', () => {
       win.webContents.executeJavaScript(`
-      document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
-        'id',
-        'loaded'
-      );
-    `);
+        document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
+          'id',
+          'loaded'
+        );
+      `);
 
       browserView.webContents.setVisualZoomLevelLimits(1, 10);
       browserView.webContents.setZoomFactor(1);
@@ -229,6 +228,14 @@ class Tab {
           }
         `);
       }
+      // favicon-updated
+      browserView.webContents.on('page-favicon-updated', (e, favicons) => {
+        win.webContents.executeJavaScript(`
+          document.getElementsByTagName('span')[${this.number()}]
+            .getElementsByTagName('img')[0]
+            .src = '${favicons[0]}';
+        `);
+      });
 
       // オプション機能系
       monotConfig.update();
@@ -289,6 +296,9 @@ class Tab {
         win.webContents.executeJavaScript(`
           document.getElementsByTagName('yomikomi-bar')[0]
             .removeAttribute('id');
+          document.getElementsByTagName('span')[${this.number()}]
+            .getElementsByTagName('img')[0]
+            .src = '';  
         `);
         this.setTitleUrl();
       } catch (e) {

@@ -7,7 +7,8 @@ const {
   Menu,
   BrowserView,
   MenuItem,
-  webContents
+  webContents,
+  webFrame
 } = require('electron');
 
 const {
@@ -262,6 +263,26 @@ app.on('ready', () => {
   });
   ipcMain.handle('popupNavigationMenu', () => {
     navigationContextMenu.popup();
+  });
+  ipcMain.handle('popupTabMenu', (e, data) => {
+    navigationContextMenu.insert(0, new MenuItem({
+      label: '選択したタブを固定・解除',
+      id: 'tabFix',
+      click: () => {
+        e.senderFrame.executeJavaScript(`
+          if (
+            document.elementFromPoint(${data[0]}, ${data[1]}).parentNode
+              === document.getElementsByTagName('div')[0]
+          ) {
+            document.elementFromPoint(${data[0]}, ${data[1]}).classList.toggle('fixed');
+          } else {
+            document.elementFromPoint(${data[0]}, ${data[1]}).parentNode.classList.toggle('fixed');
+          }
+        `);
+      }
+    }));
+    navigationContextMenu.popup();
+    navigationContextMenu = Menu.buildFromTemplate(navigationContextMenuTemplate);
   });
   ipcMain.handle('setting.searchEngine', (e, engine) => {
     enginesConfig.update()
@@ -725,7 +746,7 @@ function showBookmark() {
 
 // menu
 // navigation-bar context menu
-const navigationContextMenu = Menu.buildFromTemplate([
+const navigationContextMenuTemplate = [
   {
     label: '戻る',
     click: () => {
@@ -768,7 +789,8 @@ const navigationContextMenu = Menu.buildFromTemplate([
       showBookmark();
     }
   }
-]);
+];
+let navigationContextMenu = Menu.buildFromTemplate(navigationContextMenuTemplate);
 // Menu
 const menuTemplate = [
   {

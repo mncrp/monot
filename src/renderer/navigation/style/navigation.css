@@ -167,6 +167,12 @@ div > span > p:last-child {
   background-image: url('../../../image/close.png');
   transition: all 0.2s ease-in-out;
 }
+div > span > img {
+  display: inline-block;
+  float: left;
+  height: 100%;
+  aspect-ratio: 1/1;
+}
 div > span > p:last-child:hover {
   background-color: var(--closebutton-color);
 }
@@ -196,8 +202,7 @@ tab-el > div > span {
   padding-right: 20px;
   padding-left: 5px;
   width: 100%;
-  margin: 5px;
-  margin-top: 2px;
+  margin: 3px 2px 5px 1px;
   text-align: center;
   padding: 2px;
   padding-right: 15px;
@@ -210,6 +215,14 @@ tab-el > div > span {
   -webkit-user-drag: element;
   -webkit-app-region: none;
   backdrop-filter: blur(15px);
+}
+span.fixed {
+  width: 10px!important;
+  max-width: 10px;
+  min-width: 10px;
+}
+span.fixed > *:not(img) {
+  display: none!important;
 }
 tab-el > a {
   display: block;
@@ -289,7 +302,7 @@ yomikomi-bar#loaded {
   padding-right: 85px;
 }
 .thin tab-el div span {
-  display: inline-block;
+  display: flex;
   width: min-content;
   margin: 0 2px;
   padding-right: 20px;
