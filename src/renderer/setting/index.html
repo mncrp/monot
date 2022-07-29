@@ -11,20 +11,23 @@
     <h1>設定</h1>
   </header>
   <main>
-    <div id="ui">
-      <h2>UI</h2>
-      <a id="default" href="javascript:ui('default');"><img src="../../image/ui-default.png" alt="default"></a>
-      <a id="thin" href="javascript:ui('thin');"><img src="../../image/ui-thin.png" alt="thin"></a>
-    </div>
-    <div id="wallpaper">
-      <h2>壁紙</h2>
-      <p><a href="javascript:node.selectWallpaper();">ファイルを選択...</a></p>
-      <p><a href="javascript:node.resetWallpaper();">壁紙をリセット</a></p>
-    </div>
-    <div id="theme">
-      <h2>テーマ</h2>
-      <p><a href="javascript:node.selectTheme();">ファイルを選択...</a></p>
-      <p><a href="javascript:node.resetTheme();">テーマをリセット</a></p>
+    <div id="appearance">
+      <h2>外観</h2>
+      <div id="ui">
+        <h3>UI</h3>
+        <a id="default" href="javascript:ui('default');"><img src="../../image/ui-default.png" alt="default"></a>
+        <a id="thin" href="javascript:ui('thin');"><img src="../../image/ui-thin.png" alt="thin"></a>
+      </div>
+      <div id="wallpaper">
+        <h3>壁紙</h3>
+        <p><a href="javascript:node.selectWallpaper();">ファイルを選択...</a></p>
+        <p><a href="javascript:node.resetWallpaper();">壁紙をリセット</a></p>
+      </div>
+      <div id="theme">
+        <h3>テーマ</h3>
+        <p><a href="javascript:node.selectTheme();">ファイルを選択...</a></p>
+        <p><a href="javascript:node.resetTheme();">テーマをリセット</a></p>
+      </div>
     </div>
     <div id="engine">
       <h2>検索エンジン</h2>
@@ -43,10 +46,15 @@
     <div id="experiments">
       <h2>実験的な機能</h2>
       <p style="font-size: 12px;">これらは試験的に実装された機能です。標準ではすべてオフですが、この設定はユーザーが変更できます。また、これらの機能を有効にしてもし損害が発生しても責任は負えません。</p>
+      <label><input type="checkbox" value="whiteInDark">ダークモード時でもWebページに明るい背景を使用する (White In Dark)</label>
       <label><input type="checkbox" value="forceDark">強制ダークモード (Force Dark)</label>
       <label><input type="checkbox" value="fontChange">フォント変更 (Font Change)</input></label>
       <input type="text" name="" placeholder="ここに変更するフォント名を入力" disabled id="changedfont">
     </div>
+    <footer>
+      <h3><strong>Monot by monochrome.</strong></h3>
+      <p>v.1.1.0 (Build 8)</p>
+    </footer>
   </main>
   <script src="./script/index.js"></script>
 </body>

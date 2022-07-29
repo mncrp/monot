@@ -1,13 +1,27 @@
+// appearance
+function ui(which) {
+  if (document.getElementsByClassName('selected')[0] === undefined) {
+    document.getElementById(which).classList.add('selected');
+  } else {
+    document.getElementsByClassName('selected')[0].classList.remove('selected');
+    node.changeUI(which);
+    document.getElementById(which).classList.add('selected');
+  }
+}
+
+// engine
 document.getElementsByTagName('select')[0].addEventListener('change', () => {
   node.changeSearchEngine(document.getElementsByTagName('select')[0].value);
 });
 
-function changeExperimental(arg) {
-  node.changeExperimentalFunctions(arg.target.value, arg.target.checked);
+// experimental
+function changeExperimental(e) {
+  node.changeExperimentalFunctions(e.target.value, e.target.checked);
 }
-
-document.getElementsByTagName('input')[0].addEventListener('change', changeExperimental);
-document.getElementsByTagName('input')[1].addEventListener('change', (arg) => {
+const experimentalElement = document.getElementById('experiments');
+experimentalElement.getElementsByTagName('input')[0].addEventListener('change', changeExperimental);
+experimentalElement.getElementsByTagName('input')[1].addEventListener('change', changeExperimental);
+experimentalElement.getElementsByTagName('input')[2].addEventListener('change', (arg) => {
   changeExperimental(arg);
   if (arg.target.checked) {
     document.getElementById('changedfont').removeAttribute('disabled');
@@ -18,14 +32,5 @@ document.getElementsByTagName('input')[1].addEventListener('change', (arg) => {
 document.getElementById('changedfont').addEventListener('input', () => {
   node.changeExperimentalFunctions('changedfont', document.getElementById('changedfont').value);
 });
-document.getElementsByTagName('input')[2].addEventListener('change', changeExperimental);
+experimentalElement.getElementsByTagName('input')[3].addEventListener('change', changeExperimental);
 
-function ui(which) {
-  if (document.getElementsByClassName('selected')[0] === undefined) {
-    document.getElementById(which).classList.add('selected');
-  } else {
-    document.getElementsByClassName('selected')[0].classList.remove('selected');
-    node.changeUI(which);
-    document.getElementById(which).classList.add('selected');
-  }
-}

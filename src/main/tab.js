@@ -252,7 +252,7 @@ class Tab {
         `);
       }
 
-      const experiments = monotConfig.update().get('experiments');
+      const experiments = monotConfig.get('experiments');
       // Force-Dark
       if (experiments.forceDark === true) {
         browserView.webContents.insertCSS(
@@ -287,10 +287,10 @@ class Tab {
     });
     // did-finish-load
     browserView.webContents.on('did-finish-load', () => {
-      if (!nativeTheme.shouldUseDarkColors) {
-        browserView.setBackgroundColor('#efefef');
-      } else {
+      if (nativeTheme.shouldUseDarkColors && !monotConfig.get('experiments').whiteInDark) {
         browserView.setBackgroundColor('#222');
+      } else {
+        browserView.setBackgroundColor('#efefef');
       }
       this.setTabTitle();
       this.setWindowTitle();
