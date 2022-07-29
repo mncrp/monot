@@ -15,17 +15,28 @@ hr {
   margin: 0;
 }
 
+#toggle {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
 main {
   overflow: hidden;
-  position: relative;
+  position: absolute;
   background-color: #efefef;
-  margin-left: 5px;
-  margin-right: 15px;
+  right: 15px;
   padding: 7px 10px;
   border-radius: 13px;
   border: 1px solid #ddd;
   box-shadow: 5px 5px 10px #bfbfbf55;
-  height: 92vh;
+  height: 500px;
+  width: 250px;
+  z-index: +1;
 }
 a {
   color: inherit;
