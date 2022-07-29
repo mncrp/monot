@@ -532,17 +532,17 @@ app.on('ready', () => {
     } else {
       win.addBrowserView(optionView);
       optionView.setBounds({
-        x: win.getSize()[0] - 260,
+        x: 0,
         y: 30,
-        width: 250,
-        height: 450
+        width: win.getSize()[0],
+        height: win.getSize()[1] - 1
       });
       win.on('resize', () => {
         optionView.setBounds({
-          x: win.getSize()[0] - 260,
+          x: 0,
           y: 30,
-          width: 250,
-          height: 450
+          width: win.getSize()[0],
+          height: win.getSize()[1] - 1
         });
       });
       optionView.webContents.executeJavaScript(`
