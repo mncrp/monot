@@ -156,7 +156,7 @@ hr {
 
 @media(prefers-color-scheme: dark) {
   :root {
-    --main-background: #2228;
+    --main-background: #222;
     --text-color: #fff;
     --browsername-color: #ccc;
     --shadow-color: #bfbfbf99;
