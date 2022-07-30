@@ -1,9 +1,13 @@
 main {
+  position: relative;
   border-bottom: 0px solid #fff;
-  height: calc(100vh - 13px);
+  height: calc(100vh - 51px);
   overflow: auto;
   z-index: 0;
-  margin-top: 40px;
+  top: -5px;
+  padding-top: 45px;
+  right: -5px;
+  z-index: 0;
 }
 main > div {
   margin-bottom: 0!important;
@@ -28,7 +32,6 @@ header {
   padding-bottom: 5px;
   backdrop-filter: blur(15px);
   z-index: 9990;
-  background-color: #fff5;
 }
 header h3 {
   z-index: +1;
@@ -82,7 +85,6 @@ header h3 {
 
 @media (prefers-color-scheme: dark) {
   header {
-    background-color: #0006;
     color: #fff;
   }
   #histories > div,

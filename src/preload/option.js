@@ -83,5 +83,8 @@ contextBridge.exposeInMainWorld('node', {
   },
   devTools: () => {
     ipcRenderer.invoke('devTools');
+  },
+  toggle: () => {
+    ipcRenderer.invoke('options');
   }
 });
