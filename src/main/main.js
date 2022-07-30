@@ -527,20 +527,21 @@ app.on('ready', () => {
 
   nw();
   ipcMain.handle('options', () => {
+    optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
     if (BrowserWindow.fromBrowserView(optionView)) {
       win.removeBrowserView(optionView);
     } else {
       win.addBrowserView(optionView);
       optionView.setBounds({
         x: 0,
-        y: 30,
+        y: 0,
         width: win.getSize()[0],
         height: win.getSize()[1] - 1
       });
       win.on('resize', () => {
         optionView.setBounds({
           x: 0,
-          y: 30,
+          y: 0,
           width: win.getSize()[0],
           height: win.getSize()[1] - 1
         });
@@ -582,7 +583,6 @@ function showSetting() {
       scrollBounce: true
     }
   });
-  setting.webContents.toggleDevTools();
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
