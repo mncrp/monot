@@ -14,11 +14,13 @@ const {
   ViewY
 } = require('./tab');
 
-const global = require('./global');
 const {
   aboutContent,
   navigationContextMenuTemplate
 } = require('./menu');
+
+const global = require('./global');
+global.tabs = new TabManager();
 
 // letiables
 let windowSize;
@@ -26,7 +28,6 @@ const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const {History} = require(`${directory}/proprietary/lib/history`);
 const history = new History();
-global.tabs = new TabManager();
 const viewY = new ViewY();
 
 // config setting
