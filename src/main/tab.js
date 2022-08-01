@@ -1,9 +1,15 @@
 const {
-  BrowserWindow,
   BrowserView,
   app,
-  nativeTheme
+  nativeTheme,
+  MenuItem,
+  webContents,
+  Menu
 } = require('electron');
+
+const global = require('./global');
+const {contextTemplate} = require('./menu');
+
 const fs = require('fs');
 const directory = `${__dirname}/..`;
 let viewY = 66;
@@ -59,9 +65,9 @@ class TabManager {
     this.current = 0;
   }
 
-  setCurrent(win, index) {
+  setCurrent(index) {
 
-    win.webContents.executeJavaScript(`
+    global.win.webContents.executeJavaScript(`
       try {
         document.getElementById('opened')?.removeAttribute('id');
         {
@@ -77,7 +83,7 @@ class TabManager {
       }
     `);
 
-    win.setTopBrowserView(this.tabs[index].entity);
+    global.win.setTopBrowserView(this.tabs[index].entity);
     this.tabs[index].setWindowTitle();
     this.current = index;
     this.tabs[index].setTitleUrl();
@@ -85,7 +91,7 @@ class TabManager {
 
   }
 
-  push(win, data) {
+  push(data) {
     this.tabs.push(data);
   }
 
@@ -98,11 +104,11 @@ class TabManager {
     return this.tabs[index];
   }
 
-  removeTab(win, index = this.current) {
+  removeTab(index = this.current) {
 
-    win.removeBrowserView(this.tabs[index].entity);
+    global.win.removeBrowserView(this.tabs[index].entity);
     this.tabs[index].entity.webContents.destroy();
-    win.webContents.executeJavaScript(`
+    global.win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
       .removeAttribute('id');
     `);
@@ -113,21 +119,57 @@ class TabManager {
       index -= 1;
     }
 
-    this.setCurrent(win, index);
+    this.setCurrent(index);
 
   }
 
-  newTab(win, context, shouldMoveCurrent = true, url) {
+  newTab(shouldMoveCurrent = true, url) {
 
-    const tab = new Tab(win, url);
+    const tab = new Tab(url);
     tab.number = () => this.tabs.indexOf(tab);
-    this.push(win, tab);
+    this.push(tab);
     if (shouldMoveCurrent) {
-      this.setCurrent(win, this.length() - 1);
+      this.setCurrent(this.length() - 1);
     }
 
+    tab.entity.webContents.on('context-menu', (e, params) => {
+      const selection = params.selectionText;
+      if (selection !== '') {
+        global.context.closePopup();
+        enginesConfig.update();
+        global.context.insert(0, new MenuItem({
+          label: `"${selection}"を調べる`,
+          id: 'search',
+          click: () => {
+            const selectEngine = enginesConfig.get('engine');
+            const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+            this.newTab(true, `${engineURL}${selection}`);
+          }
+        }));
+      }
+      if (params.mediaType === 'image' && params.srcURL !== '') {
+        global.context.closePopup();
+        global.context.insert(0, new MenuItem({
+          label: `選択した画像を開く`,
+          id: 'openImage',
+          click: () => {
+            this.newTab(true, params.srcURL);
+          }
+        }));
+        global.context.insert(0, new MenuItem({
+          label: `選択した画像をコピー`,
+          id: 'saveImage',
+          click: () => {
+            webContents.getFocusedWebContents().copyImageAt(params.x, params.y);
+          }
+        }));
+      }
+      global.context.popup();
+      global.context = Menu.buildFromTemplate(contextTemplate);
+    });
+
     tab.entity.webContents.setWindowOpenHandler((details) => {
-      this.newTab(win, context, true, details.url);
+      this.newTab(true, details.url);
       return {
         action: 'deny'
       };
@@ -135,17 +177,17 @@ class TabManager {
 
   }
 
-  move(win, target, destination) {
+  move(target, destination) {
 
     this.tabs.splice(destination, 0, this.tabs[target]);
     this.tabs.splice(target > destination ? target + 1 : target, 1);
-    this.setCurrent(win, destination);
+    this.setCurrent(destination);
 
   }
 }
 
 class Tab {
-  constructor(win, url = new URL(`file://${directory}/browser/home.html`)) {
+  constructor(url = new URL(`file://${directory}/browser/home.html`)) {
 
     if (!(url instanceof URL)) {
       url = new URL(url);
@@ -169,7 +211,7 @@ class Tab {
         .replace('Chrome/1.0.0', '')
     );
 
-    win.webContents.executeJavaScript(`
+    global.win.webContents.executeJavaScript(`
       document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
       each();
     `);
@@ -187,7 +229,7 @@ class Tab {
     });
     // dom-ready
     browserView.webContents.on('dom-ready', () => {
-      win.webContents.executeJavaScript(`
+      global.win.webContents.executeJavaScript(`
         document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
           'id',
           'loaded'
@@ -236,7 +278,7 @@ class Tab {
       }
       // favicon-updated
       browserView.webContents.on('page-favicon-updated', (e, favicons) => {
-        win.webContents.executeJavaScript(`
+        global.win.webContents.executeJavaScript(`
           document.getElementsByTagName('span')[${this.number()}]
             .getElementsByTagName('img')[0]
             .src = '${favicons[0]}';
@@ -275,7 +317,7 @@ class Tab {
     // こいつらはタイミング指定しているのでpreloadにしない
     browserView.webContents.on('did-start-loading', () => {
       try {
-        win.webContents.executeJavaScript(`
+        global.win.webContents.executeJavaScript(`
           document.getElementsByTagName('yomikomi-bar')[0].setAttribute(
             'id',
             'loading'
@@ -299,7 +341,7 @@ class Tab {
     browserView.webContents.on('did-stop-loading', () => {
       try {
         // changes the progress
-        win.webContents.executeJavaScript(`
+        global.win.webContents.executeJavaScript(`
           document.getElementsByTagName('yomikomi-bar')[0]
             .removeAttribute('id');
           document.getElementsByTagName('span')[${this.number()}]
@@ -318,18 +360,18 @@ class Tab {
     });
 
     // last init
-    win.addBrowserView(browserView);
+    global.win.addBrowserView(browserView);
     browserView.webContents.setZoomLevel(1);
 
-    windowSize = win.getSize();
+    windowSize = global.win.getSize();
     browserView.setBounds({
       x: 0,
       y: viewY,
       width: windowSize[0],
       height: windowSize[1] - viewY
     });
-    win.on('resize', () => {
-      windowSize = win.getSize();
+    global.win.on('resize', () => {
+      windowSize = global.win.getSize();
       browserView.setBounds({
         x: 0,
         y: viewY,
@@ -359,13 +401,11 @@ class Tab {
     try {
       const url = this.url;
       // If the URL is Monot build-in HTML, the URL is not set in the URL bar.
-      // It gets win variable from myself not to make bugs.
-      const win = BrowserWindow.fromBrowserView(this.entity);
       const srcPath = new URL(`file://${__dirname}/../browser/`);
 
       switch (`${url.protocol}//${url.pathname}`) {
       case `${srcPath}home.html`:
-        return win.webContents.executeJavaScript(`
+        return global.win.webContents.executeJavaScript(`
           document.getElementsByTagName('input')[0].value = '';
         `);
       case `${srcPath}server-notfound.html`:
@@ -374,7 +414,7 @@ class Tab {
       }
 
       // Set URL in the URL bar.
-      return win.webContents.executeJavaScript(`
+      return global.win.webContents.executeJavaScript(`
         document.getElementsByTagName('input')[0].value =
           '${url.host}${url.pathname}${url.search}${url.hash}';
       `);
@@ -386,8 +426,7 @@ class Tab {
   // set tab's title.
   setTabTitle() {
     try {
-      const win = BrowserWindow.fromBrowserView(this.entity);
-      win.webContents.executeJavaScript(`
+      global.win.webContents.executeJavaScript(`
         document.getElementsByTagName('span')[${this.number()}]
           .getElementsByTagName('p')[0]
           .innerText='${this.entity.webContents.getTitle()}';
@@ -401,14 +440,13 @@ class Tab {
   setWindowTitle() {
 
     try {
-      const win = BrowserWindow.fromBrowserView(this.entity);
       const srcPath = new URL(`file://${__dirname}/../`);
       if (this.url.href === `${srcPath}browser/home.html`) {
-        win.webContents.executeJavaScript(`
+        global.win.webContents.executeJavaScript(`
           document.getElementsByTagName('title')[0].innerText = 'Monot by monochrome.';
         `);
       } else {
-        win.webContents.executeJavaScript(`
+        global.win.webContents.executeJavaScript(`
           document.getElementsByTagName('title')[0].innerText = '${this.entity.webContents.getTitle()} - Monot';
         `);
       }
@@ -435,15 +473,14 @@ class Tab {
   replace() {
 
     try {
-      const win = BrowserWindow.fromBrowserView(this.entity);
-      const windowSize = win.getSize();
+      const windowSize = global.win.getSize();
       this.entity.setBounds({
         x: 0,
         y: viewY,
         width: windowSize[0],
         height: windowSize[1] - viewY
       });
-      win.webContents.executeJavaScript(`
+      global.win.webContents.executeJavaScript(`
         if (document.body.classList.contains('mac'))
           document.body.className = 'mac ${new ViewY().getHtmlClass()}';
         else
