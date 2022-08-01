@@ -109,7 +109,6 @@ function nw() {
 `);
 
   // create tab
-  console.log(global);
   global.tabs.newTab();
 }
 

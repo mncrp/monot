@@ -211,7 +211,6 @@ class Tab {
         .replace('Chrome/1.0.0', '')
     );
 
-    console.log(global);
     global.win.webContents.executeJavaScript(`
       document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
       each();
