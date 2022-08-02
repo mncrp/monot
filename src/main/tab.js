@@ -61,8 +61,10 @@ class ViewY {
 
 class TabManager {
   constructor() {
+
     this.tabs = [];
     this.current = 0;
+
   }
 
   setCurrent(index) {
@@ -71,7 +73,7 @@ class TabManager {
       try {
         document.getElementById('opened')?.removeAttribute('id');
         {
-          let tabEl = document.querySelectorAll('div > span');
+          const tabEl = document.querySelectorAll('div > span');
           if (tabEl[${index}] !== undefined) {
             tabEl[${index}].setAttribute('id', 'opened');
           } else {
@@ -100,7 +102,6 @@ class TabManager {
   }
 
   get(index = this.current) {
-
     return this.tabs[index];
   }
 

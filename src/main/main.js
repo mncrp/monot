@@ -68,7 +68,7 @@ function nw() {
   });
   global.win.setBackgroundColor('#efefef');
   global.win.loadFile(
-    process.platform === 'darwin' ?
+    isMac ?
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
