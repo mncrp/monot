@@ -5,6 +5,7 @@ function initEvent() {
 }
 
 function each() {
+  initEvent();
   // when close button clicked
   document.querySelectorAll('div > span > p:last-child').forEach((element, index) => {
     element.addEventListener('click', () => {

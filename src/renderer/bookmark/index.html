@@ -16,6 +16,10 @@
   </main>
   <script>
     window.scrollTo(0, 1);
+    function removeBookmark(e, key) {
+      e.stopPropagation();
+      node.removeBookmark(key);
+    }
   </script>
 </body>
 </html>

@@ -68,7 +68,7 @@ function nw() {
   });
   global.win.setBackgroundColor('#efefef');
   global.win.loadFile(
-    process.platform === 'darwin' ?
+    isMac ?
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
@@ -341,7 +341,7 @@ app.on('ready', () => {
           <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
           <div class="bookmark-details">
             <p id="title">${value.pageTitle}</p>
-            <p id="remove"><a href="#" onclick="node.removeBookmark(${key});">削除</a></p>
+            <p id="remove"><a href="#" onclick="return removeBookmark(arguments[0], ${key});">削除</a></p>
           </div>
         </div>
       `;

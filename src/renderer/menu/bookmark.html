@@ -18,6 +18,11 @@
   <script>
     window.scrollTo(0, 1);
     node.updateBookmark();
+    function removeBookmark(e, key) {
+      e.stopPropagation();
+      node.removeBookmark(key);
+      location.reload();
+    }
   </script>
 </body>
 </html>
