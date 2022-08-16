@@ -237,6 +237,21 @@ app.on('ready', () => {
     enginesConfig.update()
       .set('engine', engine)
       .save();
+    if (enginesConfig.get(`values.${engine}`) === undefined) {
+      enginesConfig.update()
+        .set(
+          `values.${engine}`,
+          JSON.parse(
+            require('fs').readFileSync(
+              `${directory}/default/config/engines.mncfg`,
+              'utf-8'
+            )
+          ).values[engine],
+          true
+        )
+        .save();
+    }
+    enginesConfig.update();
     global.win.webContents.executeJavaScript(`
       engine = '${enginesConfig.get(`values.${engine}`, true)}';
     `);
