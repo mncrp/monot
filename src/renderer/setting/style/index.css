@@ -70,10 +70,10 @@ select, input {
   border-radius: 12px;
   box-shadow: 2px 2px 0px #ddd0;
   transition: all 0.2s ease-in-out;
-  border: 2px solid #0000;
+  border: 1px solid #0000;
 }
 select:hover, input:hover {
-  border: 2px solid #0001;
+  border: 1px solid #0001;
   box-shadow: 2px 2px 15px #ddd;
 }
 input[type="text"] {
@@ -106,7 +106,7 @@ label {
     background-color: #fff1;
   }
   select:hover, input:hover {
-    border: 2px solid #444;
+    border: 1px solid #444;
     box-shadow: 2px 2px 15px #333;
   }
   option {
