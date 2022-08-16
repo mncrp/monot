@@ -64,5 +64,8 @@ contextBridge.exposeInMainWorld('node', {
   },
   resetWallpaper: () => {
     ipcRenderer.invoke('setting.resetWallpaper');
-  }
+  },
+  open: (url) => {
+    ipcRenderer.invoke('openPage', url);
+  },
 });
