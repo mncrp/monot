@@ -106,6 +106,35 @@ const menuTemplate = [
     ]
   },
   {
+    label: 'ファイル',
+    submenu: [
+      {
+        label: '新しいタブ',
+        accelerator: 'CmdOrCtrl+T',
+        click: () => {
+          global.tabs.newTab();
+        }
+      },
+      {
+        label: '設定',
+        accelerator: 'CmdOrCtrl+,',
+        click: () => {
+          global.showSetting();
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'タブを閉じる',
+        accelerator: 'CmdOrCtrl+W',
+        click: () => {
+          global.tabs.removeTab();
+        }
+      }
+    ]
+  },
+  {
     label: '表示',
     id: 'view',
     submenu: [
@@ -182,25 +211,6 @@ const menuTemplate = [
       {
         label: '全て選択',
         role: 'selectAll'
-      }
-    ]
-  },
-  {
-    label: 'ウィンドウ',
-    submenu: [
-      {
-        label: '新しいタブ',
-        accelerator: 'CmdOrCtrl+T',
-        click: () => {
-          global.tabs.newTab();
-        }
-      },
-      {
-        label: '設定',
-        accelerator: 'CmdOrCtrl+,',
-        click: () => {
-          global.showSetting();
-        }
       }
     ]
   },

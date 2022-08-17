@@ -120,7 +120,13 @@ class TabManager {
       index -= 1;
     }
 
-    this.setCurrent(index);
+    try {
+      this.setCurrent(index);
+    } catch (e) {
+      if (this.tabs.length === 0) {
+        global.windowClose();
+      }
+    }
 
   }
 

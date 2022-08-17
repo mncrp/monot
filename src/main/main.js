@@ -202,13 +202,7 @@ app.on('ready', () => {
     global.tabs.move(target, destination);
   });
   ipcMain.handle('removeTab', (e, index) => {
-    try {
-      global.tabs.removeTab(index);
-    } catch (e) {
-      if (global.tabs.length() === 0) {
-        windowClose();
-      }
-    }
+    global.tabs.removeTab(index);
   });
   ipcMain.handle('popupNavigationMenu', () => {
     global.navigationContextMenu.popup();
