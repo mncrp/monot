@@ -80,23 +80,21 @@ const menuTemplate = [
         }
       },
       {
+        label: '設定',
+        accelerator: 'CmdOrCtrl+,',
+        click: () => {
+          global.showSetting();
+        }
+      },
+      {
         type: 'separator'
-      },
-      {
-        role: 'togglefullscreen',
-        accelerator: 'F11',
-        label: '全画面表示'
-      },
-      {
-        role: 'hide',
-        label: '隠す'
       },
       {
         role: 'hideothers',
         label: '他を隠す'
       },
       {
-        label: '終了',
+        label: 'Monot を終了',
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
           global.windowClose();
@@ -116,13 +114,6 @@ const menuTemplate = [
         }
       },
       {
-        label: '設定',
-        accelerator: 'CmdOrCtrl+,',
-        click: () => {
-          global.showSetting();
-        }
-      },
-      {
         type: 'separator'
       },
       {
@@ -131,7 +122,7 @@ const menuTemplate = [
         click: () => {
           global.tabs.removeTab();
         }
-      }
+      },
     ]
   },
   {
@@ -197,6 +188,17 @@ const menuTemplate = [
     label: '編集',
     submenu: [
       {
+        label: '取り消す',
+        role: 'redo'
+      },
+      {
+        label: 'やり直す',
+        role: 'undo'
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'カット',
         role: 'cut'
       },
@@ -207,6 +209,13 @@ const menuTemplate = [
       {
         label: 'ペースト',
         role: 'paste'
+      },
+      {
+        label: '削除',
+        role: 'delete'
+      },
+      {
+        type: 'separator'
       },
       {
         label: '全て選択',
@@ -231,6 +240,20 @@ const menuTemplate = [
         click: () => {
           global.tabs.get().entity.webContents.toggleDevTools();
         }
+      }
+    ]
+  },
+  {
+    label: 'ウィンドウ',
+    submenu: [
+      {
+        role: 'hide',
+        label: '隠す'
+      },
+      {
+        role: 'togglefullscreen',
+        accelerator: 'F11',
+        label: '全画面表示'
       }
     ]
   },
