@@ -295,7 +295,7 @@ const menuTemplate = [
       },
       {
         label: 'タブの固定/解除',
-        accelerator: 'CmdOrCtrl',
+        accelerator: 'CmdOrCtrl+Shift+F',
         click: () => {
           if (global.win !== null) {
             global.win.webContents.executeJavaScript(`

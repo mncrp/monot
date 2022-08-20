@@ -218,9 +218,8 @@ tab-el > div > span {
   backdrop-filter: blur(15px);
 }
 span.fixed {
-  width: 10px!important;
-  max-width: 10px;
-  min-width: 10px;
+  width: auto!important;
+  aspect-ratio : 1/1;
 }
 span.fixed > *:not(img) {
   display: none!important;
