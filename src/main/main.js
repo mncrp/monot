@@ -209,7 +209,7 @@ app.on('ready', () => {
   });
   ipcMain.handle('popupTabMenu', (e, data) => {
     global.navigationContextMenu.insert(0, new MenuItem({
-      label: '選択したタブを固定・解除',
+      label: '選択したタブを固定/解除',
       id: 'tabFix',
       click: () => {
         e.senderFrame.executeJavaScript(`
@@ -712,3 +712,4 @@ global.showSetting = showSetting;
 global.showHistory = showHistory;
 global.showBookmark = showBookmark;
 global.windowClose = windowClose;
+global.windowOpen = nw;

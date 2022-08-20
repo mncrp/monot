@@ -218,10 +218,14 @@ class Tab {
         .replace('Chrome/1.0.0', '')
     );
 
-    global.win.webContents.executeJavaScript(`
-      document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
-      each();
-    `);
+    try {
+      global.win.webContents.executeJavaScript(`
+        document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
+        each();
+      `);
+    } catch (e) {
+      global.windowOpen();
+    }
 
     // events
     // did-fail-load

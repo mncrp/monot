@@ -7,4 +7,5 @@ module.exports = {
   showBookmark: null,
   windowClose: null,
   navigationContextMenu: null,
+  windowOpen: null
 };
