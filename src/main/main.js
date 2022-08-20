@@ -66,6 +66,7 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
+  global.win.webContents.toggleDevTools();
   global.win.setBackgroundColor('#efefef');
   global.win.loadFile(
     isMac ?
@@ -202,20 +203,14 @@ app.on('ready', () => {
     global.tabs.move(target, destination);
   });
   ipcMain.handle('removeTab', (e, index) => {
-    try {
-      global.tabs.removeTab(index);
-    } catch (e) {
-      if (global.tabs.length() === 0) {
-        windowClose();
-      }
-    }
+    global.tabs.removeTab(index);
   });
   ipcMain.handle('popupNavigationMenu', () => {
     global.navigationContextMenu.popup();
   });
   ipcMain.handle('popupTabMenu', (e, data) => {
     global.navigationContextMenu.insert(0, new MenuItem({
-      label: '選択したタブを固定・解除',
+      label: '選択したタブを固定/解除',
       id: 'tabFix',
       click: () => {
         e.senderFrame.executeJavaScript(`
@@ -718,3 +713,4 @@ global.showSetting = showSetting;
 global.showHistory = showHistory;
 global.showBookmark = showBookmark;
 global.windowClose = windowClose;
+global.windowOpen = nw;

@@ -6,9 +6,11 @@ const {
 
 const global = require('./global');
 
+const isMac = process.platform === 'darwin';
+
 const aboutContent = {
   type: 'info',
-  icon: process.platform === 'darwin' ? './src/image/logo-mac.png' : './src/image/logo.png',
+  icon: isMac ? './src/image/logo-mac.png' : './src/image/logo.png',
   title: 'Monotについて',
   message: 'Monotについて',
   detail: `Monot by monochrome. v.1.1.0 (Build 8)
@@ -80,28 +82,102 @@ const menuTemplate = [
         }
       },
       {
+        label: '設定',
+        accelerator: 'CmdOrCtrl+,',
+        click: () => {
+          global.showSetting();
+        }
+      },
+      {
         type: 'separator'
       },
       {
-        role: 'togglefullscreen',
-        accelerator: 'F11',
-        label: '全画面表示'
+        role: 'hideothers',
+        label: 'ほかを非表示'
       },
       {
         role: 'hide',
-        label: '隠す'
+        label: 'Monot を非表示'
       },
       {
-        role: 'hideothers',
-        label: '他を隠す'
+        type: 'separator'
       },
       {
-        label: '終了',
+        label: 'Monot を終了',
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
           global.windowClose();
           app.quit();
         }
+      }
+    ]
+  },
+  {
+    label: 'ファイル',
+    submenu: [
+      {
+        label: '新しいタブ',
+        accelerator: 'CmdOrCtrl+T',
+        click: () => {
+          global.tabs.newTab();
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'タブを閉じる',
+        accelerator: 'CmdOrCtrl+W',
+        click: () => {
+          global.tabs.removeTab();
+        }
+      },
+      {
+        label: 'ウィンドウを閉じる',
+        accelerator: 'CmdOrCtrl+Shift+W',
+        click: () => {
+          global.windowClose();
+        }
+      }
+    ]
+  },
+  {
+    label: '編集',
+    submenu: [
+      {
+        label: '取り消す',
+        role: 'redo'
+      },
+      {
+        label: 'やり直す',
+        role: 'undo'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'カット',
+        role: 'cut'
+      },
+      {
+        label: 'コピー',
+        role: 'copy'
+      },
+      {
+        label: 'ペースト',
+        role: 'paste'
+      },
+      {
+        role: 'pasteAndMatchStyle',
+        label: 'ペーストしてスタイルを合わせる'
+      },
+      {
+        label: '削除',
+        role: 'delete'
+      },
+      {
+        label: '全て選択',
+        role: 'selectAll'
       }
     ]
   },
@@ -161,27 +237,40 @@ const menuTemplate = [
         click: () => {
           global.tabs.get().entity.webContents.send('zoom');
         }
-      }
-    ]
-  },
-  {
-    label: '編集',
-    submenu: [
-      {
-        label: 'カット',
-        role: 'cut'
       },
       {
-        label: 'コピー',
-        role: 'copy'
+        role: 'toggleFullScreen',
+        label: 'フルスクリーンを切り替える'
       },
       {
-        label: 'ペースト',
-        role: 'paste'
+        type: 'separator'
       },
       {
-        label: '全て選択',
-        role: 'selectAll'
+        label: '開発',
+        submenu: [
+          {
+            label: '開発者向けツール',
+            accelerator: 'F12',
+            click: () => {
+              global.tabs.get().entity.webContents.toggleDevTools();
+            }
+          },
+          {
+            label: 'ページのソースを表示',
+            accelerator: 'CmdOrCtrl+Alt+U',
+            click: () => {
+              global.tabs.newTab(true, `view-source:${global.tabs.get().entity.webContents.getURL()}`);
+            }
+          },
+          {
+            label: '開発者向けツール',
+            accelerator: 'CmdOrCtrl+Option+I',
+            visible: false,
+            click: () => {
+              global.tabs.get().entity.webContents.toggleDevTools();
+            }
+          }
+        ]
       }
     ]
   },
@@ -189,37 +278,30 @@ const menuTemplate = [
     label: 'ウィンドウ',
     submenu: [
       {
-        label: '新しいタブ',
-        accelerator: 'CmdOrCtrl+T',
+        label: 'しまう',
+        role: 'minimize'
+      },
+      {
+        label: '拡大/縮小',
         click: () => {
-          global.tabs.newTab();
+          if (isMac)
+            global.win.isFullScreen() ? global.win.fullScreen = false : global.win.fullScreen = true;
+          else
+            global.win.isMaximized() ? global.win.unmaximize() : global.win.maximize();
         }
       },
       {
-        label: '設定',
-        accelerator: 'CmdOrCtrl+,',
-        click: () => {
-          global.showSetting();
-        }
-      }
-    ]
-  },
-  {
-    label: '開発',
-    submenu: [
-      {
-        label: '開発者向けツール',
-        accelerator: 'F12',
-        click: () => {
-          global.tabs.get().entity.webContents.toggleDevTools();
-        }
+        type: 'separator'
       },
       {
-        label: '開発者向けツール',
-        accelerator: 'CmdOrCtrl+Option+I',
-        visible: false,
+        label: 'タブの固定/解除',
+        accelerator: 'CmdOrCtrl+Shift+F',
         click: () => {
-          global.tabs.get().entity.webContents.toggleDevTools();
+          if (global.win !== null) {
+            global.win.webContents.executeJavaScript(`
+              document.getElementsByTagName('span')[${global.tabs.current}].classList.toggle('fixed');
+            `);
+          }
         }
       }
     ]

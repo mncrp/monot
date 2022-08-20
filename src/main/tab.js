@@ -112,6 +112,7 @@ class TabManager {
     global.win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
       .removeAttribute('id');
+      document.getElementsByTagName('span')[${index}].remove();
     `);
     this.tabs[index] = null;
     this.tabs.splice(index, 1);
@@ -120,7 +121,13 @@ class TabManager {
       index -= 1;
     }
 
-    this.setCurrent(index);
+    try {
+      this.setCurrent(index);
+    } catch (e) {
+      if (this.tabs.length === 0) {
+        global.windowClose();
+      }
+    }
 
   }
 
@@ -212,10 +219,14 @@ class Tab {
         .replace('Chrome/1.0.0', '')
     );
 
-    global.win.webContents.executeJavaScript(`
-      document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
-      each();
-    `);
+    try {
+      global.win.webContents.executeJavaScript(`
+        document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
+        each();
+      `);
+    } catch (e) {
+      global.windowOpen();
+    }
 
     // events
     // did-fail-load
