@@ -217,11 +217,16 @@ tab-el > div > span {
   -webkit-app-region: none;
   backdrop-filter: blur(15px);
 }
+tab-el > div > span > * {
+  opacity: 1;
+}
 span.fixed {
-  width: auto!important;
+  width: 6px!important;
+  min-width: 0!important;
   aspect-ratio : 1/1;
 }
 span.fixed > *:not(img) {
+  opacity: 0;
   display: none!important;
 }
 tab-el > a {
@@ -307,6 +312,9 @@ yomikomi-bar#loaded {
   margin: 0 2px;
   padding-right: 20px;
   max-width: 50vw;
+}
+.thin span.fixed {
+  width: 2px!important;
 }
 .thin tab-el > a {
   height: 20px;

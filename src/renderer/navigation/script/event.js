@@ -10,7 +10,6 @@ function each() {
   document.querySelectorAll('div > span > p:last-child').forEach((element, index) => {
     element.addEventListener('click', () => {
       canMove = false;
-      element.parentNode.remove();
       node.removeTab(index).then(() => {
         canMove = true;
       });

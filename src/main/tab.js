@@ -112,6 +112,7 @@ class TabManager {
     global.win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
       .removeAttribute('id');
+      document.getElementsByTagName('span')[${index}].remove();
     `);
     this.tabs[index] = null;
     this.tabs.splice(index, 1);
