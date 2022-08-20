@@ -316,6 +316,9 @@ yomikomi-bar#loaded {
 .thin span.fixed {
   width: 2px!important;
 }
+.thin span > p {
+  overflow: hidden;
+}
 .thin tab-el > a {
   height: 20px;
   width: 20px;
