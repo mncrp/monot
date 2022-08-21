@@ -1,7 +1,7 @@
 {
   "name": "monot",
   "homepage": "https://sorakime.github.io/mncr/project/monot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The new web browser \"Monot\" by monochrome.",
   "main": "src/main/main.js",
   "repository": "https://github.com/Sorakime/monot/",
@@ -13,8 +13,8 @@
   "author": "monochrome Project.",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^17.1.0",
-    "electron-builder": "^23.0.3",
+    "electron": "^20.0.0",
+    "electron-builder": "^23.3.3",
     "eslint": "^8.5.0",
     "eslint-plugin-node": "^11.1.0"
   },
@@ -24,7 +24,7 @@
   "build": {
     "appId": "me.soraki.monot",
     "productName": "Monot",
-    "copyright": "Copyright © 2022 monochrome Project.",
+    "copyright": "Copyright ©2021-2022 monochrome Project.",
     "files": [
       "!.git",
       "!.dist",
@@ -36,7 +36,7 @@
     "win": {
       "icon": "src/image/logo.ico",
       "target": "nsis",
-      "legalTrademarks": "Copyright 2021 monochrome."
+      "legalTrademarks": "Copyright 2021-2022 monochrome."
     },
     "nsis": {
       "oneClick": false,
@@ -49,7 +49,7 @@
     },
     "appImage": {
       "category": "Utility",
-      "synopsis": "Monot v1.0.0 Build7"
+      "synopsis": "Monot v1.0.0 Build8"
     },
     "mac": {
       "identity": null,
@@ -59,7 +59,7 @@
     },
     "dmg": {
       "backgroundColor": "#efefef",
-      "title": "Monot v1.0.0 Build7"
+      "title": "Monot v1.0.0 Build8"
     }
   }
 }

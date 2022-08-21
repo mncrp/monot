@@ -12,7 +12,6 @@
   --input-color: #efefef;
 
   --wallpaper: none;
-  --wallpaper-brightness: brightness(100%);
 }
 
 * {
@@ -27,25 +26,12 @@ body {
   background-color: var(--main-background);
   color: var(--browsername-color);
   font-weight: 100;
-}
-body::before {
-  content: '';
-  display: block;
-  width: calc(100vw + 20px);
-  height: calc(100vh + 20px);
-  position: fixed;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
   background-image: var(--wallpaper);
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center -50px;
+  background-position: center top;
   background-attachment: fixed;
-  filter: blur(10px) var(--wallpaper-brightness);
-  overflow: hidden;
-  z-index: -10;
+
 }
 
 h1 {
@@ -89,7 +75,7 @@ div > div:nth-child(1) * {
   vertical-align: middle;
   box-shadow: 2px 2px 5px var(--shadow-color);
 }
-div > h1 {
+div > h1#shadow {
   text-shadow: 0 0 15px #888;
 }
 div input {
@@ -154,6 +140,12 @@ hr {
   border: 0.1px solid #6669;
 }
 
+.wallpaper {
+  backdrop-filter: blur(30px);
+  padding: 40px;
+  border-radius: 20px;
+}
+
 @media(prefers-color-scheme: dark) {
   :root {
     --main-background: #222;
@@ -165,8 +157,6 @@ hr {
     --border-color: #6668;
     --backgroundcolor: #4448;
     --input-color-unhover: #fff1;
-
-    --wallpaper-brightness: brightness(80%);
   }
   div:nth-child(1) button {
     background-image: url('../../image/search-white.png');
