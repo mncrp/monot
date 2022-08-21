@@ -208,6 +208,7 @@ class Tab {
       webPreferences: {
         scrollBounce: true,
         nodeIntegrationInSubFrames: true,
+        sandbox: false,
         preload: `${directory}/preload/pages.js`
       }
     });

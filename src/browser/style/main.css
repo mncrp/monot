@@ -144,6 +144,7 @@ hr {
   backdrop-filter: blur(30px);
   padding: 40px;
   border-radius: 20px;
+  border: 1px solid #888;
 }
 
 @media(prefers-color-scheme: dark) {
