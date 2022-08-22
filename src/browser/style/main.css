@@ -7,7 +7,7 @@
   --shadow-color-unhover: #0000;
   --border-color: #ddde;
   --border-color-unhover: #4440;
-  --backgroundcolor: #eee;
+  --backgroundcolor: #eee9;
   --input-color-unhover: #bbb3;
   --input-color: #efefef;
 
@@ -22,16 +22,29 @@
   scroll-behavior: smooth;
 }
 
-body {
-  background-color: var(--main-background);
-  color: var(--browsername-color);
-  font-weight: 100;
+body::before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
   background-image: var(--wallpaper);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center top;
   background-attachment: fixed;
+}
 
+body {
+  background-color: var(--main-background);
+  color: var(--browsername-color);
+  font-weight: 100;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100vh;
 }
 
 h1 {
@@ -54,13 +67,6 @@ h1::before {
   position: relative;
   top: 10px;
 }
-
-body {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100vh;
-}
 body > div:nth-child(1) {
   position: absolute;
   display: inline-block;
@@ -75,8 +81,10 @@ div > div:nth-child(1) * {
   vertical-align: middle;
   box-shadow: 2px 2px 5px var(--shadow-color);
 }
-div > h1#shadow {
-  text-shadow: 0 0 15px #888;
+div > h1#shadow,
+div h1#shadow + h5 {
+  color: #000;
+  text-shadow: 0 0 12px #fff;
 }
 div input {
   position: relative;
@@ -138,13 +146,6 @@ p > a {
 
 hr {
   border: 0.1px solid #6669;
-}
-
-.wallpaper {
-  backdrop-filter: blur(30px);
-  padding: 40px;
-  border-radius: 20px;
-  border: 1px solid #888;
 }
 
 @media(prefers-color-scheme: dark) {

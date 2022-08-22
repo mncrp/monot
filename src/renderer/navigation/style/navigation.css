@@ -4,15 +4,15 @@
   --main-background: #efefef;
   --text-color: #000;
   --borderline-color: #ddd8;
-  --opened-tab-color: #bbb3;
+  --opened-tab-color: #bbb;
 
   --border-color-unhover: #ddd0;
   --border-color: #ddd8;
   --shadow-color: #bfbfbf55;
   --shadow-color-unhover: #0000;
-  --backgroundcolor-unhover: #ccc0;
+  --backgroundcolor-unhover: #efefef44;
   --backgroundcolor: #eee8;
-  --input-color-unhover: #bbb3;
+  --input-color-unhover: #efefef44;
   --closebutton-color: #fff4;
   --loading-color: #8888;
 
@@ -39,6 +39,17 @@ script, style {
   width: 0; height: 0;
 }
 
+body::before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--borderline-color);
+}
 body {
   background-color: var(--main-background);
   -webkit-app-region: drag;
@@ -48,7 +59,6 @@ body {
   margin-bottom: 0;
   height: auto;
   overflow: hidden;
-  border-bottom: 1px solid var(--borderline-color);
   background-image: var(--wallpaper);
   background-repeat: no-repeat;
   background-size: cover;
@@ -63,7 +73,7 @@ nav {
   z-index: 0;
 }
 
-body nav * {
+body nav > * {
   user-select: none;
   -webkit-user-drag: none;
   -webkit-app-region: none;
@@ -79,7 +89,6 @@ body nav * {
   transition: all 0.2s ease-in-out;
   border: 1px solid var(--border-color-unhover);
   z-index: +1;
-  backdrop-filter: blur(15px);
 }
 body input {
   -webkit-user-drag: initial;
@@ -88,7 +97,7 @@ body input {
   font-size: 11px;
   background-color: var(--input-color-unhover);
   color: var(--text-color);
-  backdrop-filter: blur(15px) brightness(97%);
+  backdrop-filter: brightness(85%);
 }
 body nav *:hover,
 div > span:hover,
@@ -160,7 +169,6 @@ div > span > p:last-child {
   width: 17px; height: 17px;
   font-size: 12px;
   border-radius: 7px;
-  background-color: var(--backgroundcolor-unhover);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
@@ -180,12 +188,14 @@ div > span > p:last-child:hover {
 div > span#opened {
   background-color: var(--opened-tab-color);
   color: var(--text-color);
+  backdrop-filter: brightness(120%);
 }
 tab-el {
   vertical-align: middle;
   display: flex;
   overflow: hidden;
   height: 32.5px;
+  left: 5px;
 }
 tab-el * {
   -webkit-user-drag: none;
@@ -215,7 +225,6 @@ tab-el > div > span {
   -webkit-font-smoothing: antialiased;
   -webkit-user-drag: element;
   -webkit-app-region: none;
-  backdrop-filter: blur(15px);
 }
 tab-el > div > span > * {
   opacity: 1;

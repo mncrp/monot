@@ -10,6 +10,7 @@ body {
 input {
   user-select: text;
   -webkit-app-region: no-drag;
+  backdrop-filter: blur(15px);
 }
 body > a:hover {
   background-color: #ccc7;

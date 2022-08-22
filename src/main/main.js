@@ -72,6 +72,7 @@ function nw() {
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
+  global.win.webContents.openDevTools();
 
   function getEngine() {
     enginesConfig.update();
