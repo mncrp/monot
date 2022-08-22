@@ -8,7 +8,7 @@ const {
 } = require('electron');
 
 const global = require('./global');
-const {contextTemplate, menuTemplate} = require('./menu');
+const {contextTemplate} = require('./menu');
 
 const fs = require('fs');
 const directory = `${__dirname}/..`;
