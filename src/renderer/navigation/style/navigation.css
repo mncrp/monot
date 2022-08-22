@@ -4,13 +4,13 @@
   --main-background: #efefef;
   --text-color: #000;
   --borderline-color: #ddd8;
-  --opened-tab-color: #bbb;
+  --opened-tab-color: #bbb8;
 
   --border-color-unhover: #ddd0;
   --border-color: #ddd8;
   --shadow-color: #bfbfbf55;
   --shadow-color-unhover: #0000;
-  --backgroundcolor-unhover: #efefef44;
+  --backgroundcolor-unhover: #efefef00;
   --backgroundcolor: #eee8;
   --input-color-unhover: #efefef44;
   --closebutton-color: #fff4;
@@ -42,13 +42,14 @@ script, style {
 body::before {
   content: '';
   display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 2px;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -2px;
+  bottom: -1px;
   backdrop-filter: blur(15px);
   border-bottom: 1px solid var(--borderline-color);
+  background-color: #efefef44;
 }
 body {
   background-color: var(--main-background);
@@ -195,7 +196,6 @@ tab-el {
   display: flex;
   overflow: hidden;
   height: 32.5px;
-  left: 5px;
 }
 tab-el * {
   -webkit-user-drag: none;
@@ -204,6 +204,7 @@ tab-el > div {
   width: 100%;
   overflow: auto;
   display: flex;
+  margin-left: 5px;
 }
 tab-el > div > span {
   min-width: 70px;
@@ -230,7 +231,7 @@ tab-el > div > span > * {
   opacity: 1;
 }
 span.fixed {
-  width: 6px!important;
+  width: 7px!important;
   min-width: 0!important;
   aspect-ratio : 1/1;
 }
@@ -314,6 +315,7 @@ yomikomi-bar#loaded {
   width: 100%;
   height: 25px;
   padding-right: 85px;
+  left: 5px;
 }
 .thin tab-el div span {
   display: flex;
