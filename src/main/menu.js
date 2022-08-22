@@ -303,6 +303,110 @@ const menuTemplate = [
             `);
           }
         }
+      },
+      {
+        label: '1タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+1',
+        click: () => {
+          global.tabs.setCurrent(0);
+        }
+      },
+      {
+        label: '2タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+2',
+        click: () => {
+          try {
+            global.tabs.setCurrent(1);
+          } catch (e) {
+            return;
+          }
+        }
+      },
+      {
+        label: '3タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+3',
+        click: () => {
+          try {
+            global.tabs.setCurrent(2);
+          } catch (e) {
+            return;
+          }
+        }
+      },
+      {
+        label: '4タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+4',
+        click: () => {
+          try {
+            global.tabs.setCurrent(3);
+          } catch (e) {
+            return;
+          }
+        }
+      },
+      {
+        label: '5タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+5',
+        click: () => {
+          try {
+            global.tabs.setCurrent(4);
+          } catch (e) {
+            return;
+          }
+        }
+      },
+      {
+        label: '6タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+6',
+        click: () => {
+          try {
+            global.tabs.setCurrent(5);
+          } catch (e) {
+            return;
+          }
+        }
+      },
+      {
+        label: '7タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+7',
+        click: () => {
+          try {
+            global.tabs.setCurrent(6);
+          } catch (e) {
+            return;
+          }
+        }
+      },
+      {
+        label: '8タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+8',
+        click: () => {
+          try {
+            global.tabs.setCurrent(7);
+          } catch (e) {
+            return;
+          }
+        }
+      },
+      {
+        label: '9タブ',
+        visible: false,
+        accelerator: 'CmdOrCtrl+9',
+        click: () => {
+          try {
+            global.tabs.setCurrent(8);
+          } catch (e) {
+            return;
+          }
+        }
       }
     ]
   },
@@ -399,6 +503,8 @@ Menu.setApplicationMenu(menu);
 
 module.exports = {
   aboutContent,
+  menu,
+  menuTemplate,
   contextTemplate,
   navigationContextMenuTemplate
 };

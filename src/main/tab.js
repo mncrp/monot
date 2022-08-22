@@ -8,7 +8,7 @@ const {
 } = require('electron');
 
 const global = require('./global');
-const {contextTemplate} = require('./menu');
+const {contextTemplate, menuTemplate} = require('./menu');
 
 const fs = require('fs');
 const directory = `${__dirname}/..`;
@@ -182,7 +182,6 @@ class TabManager {
         action: 'deny'
       };
     });
-
   }
 
   move(target, destination) {
