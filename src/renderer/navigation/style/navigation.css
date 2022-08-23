@@ -398,4 +398,7 @@ yomikomi-bar#loaded {
   tab-el > a {
     background-image: url('../../../image/plus-white.png');
   }
+  body::before {
+    background-color: #2222;
+  }
 }

@@ -66,6 +66,7 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
+  global.win.webContents.openDevTools();
   global.win.setBackgroundColor('#efefef');
   global.win.loadFile(
     isMac ?
