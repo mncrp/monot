@@ -83,8 +83,8 @@ div > div:nth-child(1) * {
 }
 div > h1#shadow,
 div h1#shadow + h5 {
-  color: #000;
-  text-shadow: 0 0 12px #fff;
+  color: var(--browsername-color);
+  text-shadow: 0 0 12px var(--shadow-color);
 }
 div input {
   position: relative;
