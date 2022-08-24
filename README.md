@@ -1,8 +1,11 @@
-![image](https://www.monochrome.tk/image/top/monot.jpg)
+![image](https://mncrp.github.io/image/top/monot.jpg)
+### **Monot by monochrome.** <span style="font-size: .8em">v.1.1.0 (Build 8)</span>
 
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
 
 ※まだv.1.1.0リリースされてねぇからな、そこんとこ勘違いすんなよ？
+
+---
 
 ## 概要
 |Monot|について|
@@ -12,8 +15,10 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |バージョン|v.1.1.0|
 |ビルド番号|8|
 |公開日|2022年9月9日(金曜日)|
-|ライセンス|[monochrome. License](https://mncrp.github.io/license)|
+|ライセンス|[monochrome. License](./LICENSE)|
 |言語|日本語, JavaScript, HTML, CSS|
+
+[技術仕様](https://mncrp.github.io/project/monot/technical)
 
 ## 注意
 - 更新頻度がビビるほど遅いです
@@ -52,8 +57,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 - ブックマークウィンドウでブックマークの削除を実装
 - ブックマーク削除時にイベントが親要素に伝播しないように修正
 
-
-## スクショ
+## スクリーンショット
 ### Default - ライトモード
 ![起動直後](https://user-images.githubusercontent.com/69241694/172031044-0d6f360a-d4d7-45c2-9f86-05b7d888001c.png)
 ![オプションを表示](https://user-images.githubusercontent.com/69241694/172031053-1ceb19d5-a65f-4f83-b003-d1d8ed40e85c.png)
@@ -82,17 +86,32 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |ショートカット|キー一覧|
 |:--|:--|
 |Monotについて|Ctrl(Cmd) + Alt + A|
-|隠す|Ctrl(Cmd) + H?|
-|他を隠す|Ctrl(Cmd) + Shift + H?|
-|再起動?|Ctrl(Cmd) + Alt + R|
-|終了|Ctrl(Cmd) + Q|
-|再読み込み|Ctrl(Dmd) + R|
+|設定|Ctrl(Cmd)+,|
+|ほかを非表示|Ctrl(Cmd) + Shift + H|
+|Monot を非表示|Ctrl(Cmd) + H|
+|Monot を終了|Ctrl(Cmd) + Q|
+|新しいタブ|Ctrl(Cmd) + T|
+|タブを閉じる|Ctrl(Cmd) + W|
+|ウィンドウを閉じる|Ctrl(Cmd) + Shift + W|
+|取り消す|Ctrl(Cmd) + Shift + Z|
+|やり直す|Ctrl(Cmd) + Z|
+|カット|Ctrl(Cmd) + X|
+|コピー|Ctrl(Cmd) + C|
+|ペースト|Ctrl(Cmd) + V|
+|ペーストしてスタイルを合わせる|Ctrl(Cmd) + Alt + Shift + V|
+|全て選択|Ctrl(Cmd) + A|
+|再読み込み|Ctrl(Cmd) + R|
 |戻る|Ctrl(Cmd) + Shift + Z|
 |進む|Ctrl(Cmd) + Shift + X|
-|Webサイトの開発者向けツール|F12|
-|Monotの開発者向けツール|Alt + F12|
-|設定ウィンドウ|Ctrl(Cmd) + Alt + S|
+|拡大|Ctrl(Cmd) + ~ もしくは Ctrl(Cmd) + Shift + ;|
+|縮小|Ctrl(Cmd) + -|
+|等倍|Ctrl(Cmd) + 0|
+|フルスクリーンを切り替える|fn+F|
+|開発者向けツール|F12 もしくは Ctrl(Cmd) + Option + I|
+|ページのソースを表示|Ctrl(Cmd) + Option + U|
+|しまう|Ctrl(Cmd) + M|
+|タブの固定/解除|Ctrl(Cmd) + Shift + F|
 
 ---
-Copyright 2021 monochrome Project.
-Licensed by [monochrome. License](https://sorakime.github.io/mncr/license)
+Copyright 2021-2022 monochrome Project.
+Licensed by [monochrome. License](./LICENSE)
