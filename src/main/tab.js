@@ -400,11 +400,20 @@ class Tab {
   load(url = new URL(`file://${directory}/browser/home.html`)) {
     try {
       if (!(url instanceof URL)) {
-        url = new URL(url);
+        try {
+          url = new URL(url);
+        } catch (e) {
+          if (url.match(/\S+\.\S+/)) {
+            url = new URL(`http://${url}`);
+          } else {
+            url = new URL(enginesConfig.update().get(`values.${enginesConfig.get('engine')}`, true) + url);
+          }
+        }
       }
     } catch (e) {
       url = new URL(`file://${directory}/browser/home.html`);
     }
+    console.log(url);
     this.entity.webContents.loadURL(url.href);
   }
 
