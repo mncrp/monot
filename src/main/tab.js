@@ -413,7 +413,6 @@ class Tab {
     } catch (e) {
       url = new URL(`file://${directory}/browser/home.html`);
     }
-    console.log(url);
     this.entity.webContents.loadURL(url.href);
   }
 
