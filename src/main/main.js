@@ -459,8 +459,7 @@ app.on('ready', () => {
   });
   ipcMain.handle('suggest.searchBrowser', (e, txt) => {
     enginesConfig.update();
-    const engine = enginesConfig.get(`values.${enginesConfig.get('engine')}`, true);
-    global.tabs.get().load(`${engine}${txt}`);
+    global.tabs.get().load(`${txt}`);
     global.win.removeBrowserView(suggest);
   });
   ipcMain.handle('suggest.close', () => {

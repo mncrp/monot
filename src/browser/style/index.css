@@ -10,12 +10,13 @@ body {
 input {
   user-select: text;
   -webkit-app-region: no-drag;
+  backdrop-filter: blur(15px);
 }
 body > a:hover {
-  background-color: #ccc7;
+  background-color: var(--backgroundcolor);
 }
 body > a:active {
-  background-color: #ccc;
+  background-color: var(--main-background);
 }
 
 #bookmarks {
@@ -101,7 +102,7 @@ body > a:active {
 
 @media (prefers-color-scheme: dark) {
   #bookmarks > a {
-    color: #bbb;
+    color: var(--text-color);
   }
   #bookmarks > p > a::before {
     background-image: url('../../image/back-white.png');

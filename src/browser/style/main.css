@@ -7,12 +7,11 @@
   --shadow-color-unhover: #0000;
   --border-color: #ddde;
   --border-color-unhover: #4440;
-  --backgroundcolor: #eee;
+  --backgroundcolor: #eee9;
   --input-color-unhover: #bbb3;
   --input-color: #efefef;
 
   --wallpaper: none;
-  --wallpaper-brightness: brightness(100%);
 }
 
 * {
@@ -23,29 +22,29 @@
   scroll-behavior: smooth;
 }
 
+body::before {
+  content: '';
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-image: var(--wallpaper);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+}
+
 body {
   background-color: var(--main-background);
   color: var(--browsername-color);
   font-weight: 100;
-}
-body::before {
-  content: '';
+  position: relative;
   display: block;
-  width: calc(100vw + 20px);
-  height: calc(100vh + 20px);
-  position: fixed;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  background-image: var(--wallpaper);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center -50px;
-  background-attachment: fixed;
-  filter: blur(10px) var(--wallpaper-brightness);
-  overflow: hidden;
-  z-index: -10;
+  width: 100%;
+  height: 100vh;
 }
 
 h1 {
@@ -68,13 +67,6 @@ h1::before {
   position: relative;
   top: 10px;
 }
-
-body {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100vh;
-}
 body > div:nth-child(1) {
   position: absolute;
   display: inline-block;
@@ -89,8 +81,10 @@ div > div:nth-child(1) * {
   vertical-align: middle;
   box-shadow: 2px 2px 5px var(--shadow-color);
 }
-div > h1 {
-  text-shadow: 0 0 15px #888;
+div > h1#shadow,
+div h1#shadow + h5 {
+  color: var(--browsername-color);
+  text-shadow: 0 0 12px var(--shadow-color);
 }
 div input {
   position: relative;
@@ -165,8 +159,6 @@ hr {
     --border-color: #6668;
     --backgroundcolor: #4448;
     --input-color-unhover: #fff1;
-
-    --wallpaper-brightness: brightness(80%);
   }
   div:nth-child(1) button {
     background-image: url('../../image/search-white.png');

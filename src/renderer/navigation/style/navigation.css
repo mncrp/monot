@@ -4,15 +4,15 @@
   --main-background: #efefef;
   --text-color: #000;
   --borderline-color: #ddd8;
-  --opened-tab-color: #bbb3;
+  --opened-tab-color: #bbb8;
 
   --border-color-unhover: #ddd0;
   --border-color: #ddd8;
   --shadow-color: #bfbfbf55;
   --shadow-color-unhover: #0000;
-  --backgroundcolor-unhover: #ccc0;
+  --backgroundcolor-unhover: #efefef00;
   --backgroundcolor: #eee8;
-  --input-color-unhover: #bbb3;
+  --input-color-unhover: #efefef44;
   --closebutton-color: #fff4;
   --loading-color: #8888;
 
@@ -39,6 +39,18 @@ script, style {
   width: 0; height: 0;
 }
 
+body::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -2px;
+  bottom: -1px;
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--borderline-color);
+  background-color: #efefef44;
+}
 body {
   background-color: var(--main-background);
   -webkit-app-region: drag;
@@ -48,7 +60,6 @@ body {
   margin-bottom: 0;
   height: auto;
   overflow: hidden;
-  border-bottom: 1px solid var(--borderline-color);
   background-image: var(--wallpaper);
   background-repeat: no-repeat;
   background-size: cover;
@@ -63,7 +74,7 @@ nav {
   z-index: 0;
 }
 
-body nav * {
+body nav > * {
   user-select: none;
   -webkit-user-drag: none;
   -webkit-app-region: none;
@@ -79,7 +90,6 @@ body nav * {
   transition: all 0.2s ease-in-out;
   border: 1px solid var(--border-color-unhover);
   z-index: +1;
-  backdrop-filter: blur(15px);
 }
 body input {
   -webkit-user-drag: initial;
@@ -88,7 +98,7 @@ body input {
   font-size: 11px;
   background-color: var(--input-color-unhover);
   color: var(--text-color);
-  backdrop-filter: blur(15px) brightness(97%);
+  backdrop-filter: brightness(85%);
 }
 body nav *:hover,
 div > span:hover,
@@ -160,7 +170,6 @@ div > span > p:last-child {
   width: 17px; height: 17px;
   font-size: 12px;
   border-radius: 7px;
-  background-color: var(--backgroundcolor-unhover);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
@@ -180,6 +189,7 @@ div > span > p:last-child:hover {
 div > span#opened {
   background-color: var(--opened-tab-color);
   color: var(--text-color);
+  backdrop-filter: brightness(120%);
 }
 tab-el {
   vertical-align: middle;
@@ -194,6 +204,7 @@ tab-el > div {
   width: 100%;
   overflow: auto;
   display: flex;
+  margin-left: 5px;
 }
 tab-el > div > span {
   min-width: 70px;
@@ -215,13 +226,12 @@ tab-el > div > span {
   -webkit-font-smoothing: antialiased;
   -webkit-user-drag: element;
   -webkit-app-region: none;
-  backdrop-filter: blur(15px);
 }
 tab-el > div > span > * {
   opacity: 1;
 }
 span.fixed {
-  width: 6px!important;
+  width: 7px!important;
   min-width: 0!important;
   aspect-ratio : 1/1;
 }
@@ -305,6 +315,7 @@ yomikomi-bar#loaded {
   width: 100%;
   height: 25px;
   padding-right: 85px;
+  left: 5px;
 }
 .thin tab-el div span {
   display: flex;
@@ -386,5 +397,8 @@ yomikomi-bar#loaded {
   }
   tab-el > a {
     background-image: url('../../../image/plus-white.png');
+  }
+  body::before {
+    background-color: #2222;
   }
 }

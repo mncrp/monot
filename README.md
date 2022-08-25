@@ -1,8 +1,11 @@
-![image](https://www.monochrome.tk/image/top/monot.jpg)
+![image](https://mncrp.github.io/image/top/monot.jpg)
+### **Monot by monochrome.** <span style="font-size: .8em">v.1.1.0 (Build 8)</span>
 
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
 
 ※まだv.1.1.0リリースされてねぇからな、そこんとこ勘違いすんなよ？
+
+---
 
 ## 概要
 |Monot|について|
@@ -11,9 +14,11 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |正式名称|Monot by monochrome. v.1.1.0 (Build 8)|
 |バージョン|v.1.1.0|
 |ビルド番号|8|
-|公開日|2022年6月x日(x)|
-|ライセンス|[monochrome. License](https://sorakime.github.io/mncr/license)|
+|公開日|2022年9月9日(金曜日)|
+|ライセンス|[monochrome. License](./LICENSE)|
 |言語|日本語, JavaScript, HTML, CSS|
+
+[技術仕様](https://mncrp.github.io/project/monot/technical)
 
 ## 注意
 - 更新頻度がビビるほど遅いです
@@ -23,18 +28,36 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 ---
 
 ## アップデート内容
-詳細：https://www.monochrome.tk/news/2
+詳細：https://mncrp.github.io/news/2
 
+- サジェストの実装
 - 設定ウィンドウの項目の追加とデザインの修正等
 - タブ関連のバグを修正
-- UIに"Default"および"Thin"を実装。
+- UIに"Default"および"Thin"を実装
 - 内部の細かな変更
 - 改行コードをLFに統一
 - ブックマーク重複防止
-- Homeを履歴に残さない
+- Homeを履歴に残さないように変更
 - 読み込み関連のバグの修正
+- 壁紙を表示できるように実装
+- Homeでブックマークを表示できるように変更
+- タブの移動を実装
+- タブの固定を実装
+- タブのファビコンを表示できるように変更
+- オーバーフローメニューの挙動を変更
+- オーバーフローメニューの項目を追加
+- ユーザーエージェントを変更
+- コンテキストメニューの変更
+- アプリメニューの内容の変更
+- いくつかのショートカットの追加
+- 設定ウィンドウにバージョン情報などを記載
+- 細かいデザインの修正
+- ダークモード時でもWebページに明るい背景を使用する(White In Dark)を実験的に実装
+- 検索エンジンに"Frea Search"を追加
+- ブックマークウィンドウでブックマークの削除を実装
+- ブックマーク削除時にイベントが親要素に伝播しないように修正
 
-## スクショ
+## スクリーンショット
 ### Default - ライトモード
 ![起動直後](https://user-images.githubusercontent.com/69241694/172031044-0d6f360a-d4d7-45c2-9f86-05b7d888001c.png)
 ![オプションを表示](https://user-images.githubusercontent.com/69241694/172031053-1ceb19d5-a65f-4f83-b003-d1d8ed40e85c.png)
@@ -63,17 +86,32 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |ショートカット|キー一覧|
 |:--|:--|
 |Monotについて|Ctrl(Cmd) + Alt + A|
-|隠す|Ctrl(Cmd) + H?|
-|他を隠す|Ctrl(Cmd) + Shift + H?|
-|再起動?|Ctrl(Cmd) + Alt + R|
-|終了|Ctrl(Cmd) + Q|
-|再読み込み|Ctrl(Dmd) + R|
+|設定|Ctrl(Cmd)+,|
+|ほかを非表示|Ctrl(Cmd) + Shift + H|
+|Monot を非表示|Ctrl(Cmd) + H|
+|Monot を終了|Ctrl(Cmd) + Q|
+|新しいタブ|Ctrl(Cmd) + T|
+|タブを閉じる|Ctrl(Cmd) + W|
+|ウィンドウを閉じる|Ctrl(Cmd) + Shift + W|
+|取り消す|Ctrl(Cmd) + Shift + Z|
+|やり直す|Ctrl(Cmd) + Z|
+|カット|Ctrl(Cmd) + X|
+|コピー|Ctrl(Cmd) + C|
+|ペースト|Ctrl(Cmd) + V|
+|ペーストしてスタイルを合わせる|Ctrl(Cmd) + Alt + Shift + V|
+|全て選択|Ctrl(Cmd) + A|
+|再読み込み|Ctrl(Cmd) + R|
 |戻る|Ctrl(Cmd) + Shift + Z|
 |進む|Ctrl(Cmd) + Shift + X|
-|Webサイトの開発者向けツール|F12|
-|Monotの開発者向けツール|Alt + F12|
-|設定ウィンドウ|Ctrl(Cmd) + Alt + S|
+|拡大|Ctrl(Cmd) + ~ もしくは Ctrl(Cmd) + Shift + ;|
+|縮小|Ctrl(Cmd) + -|
+|等倍|Ctrl(Cmd) + 0|
+|フルスクリーンを切り替える|fn+F|
+|開発者向けツール|F12 もしくは Ctrl(Cmd) + Option + I|
+|ページのソースを表示|Ctrl(Cmd) + Option + U|
+|しまう|Ctrl(Cmd) + M|
+|タブの固定/解除|Ctrl(Cmd) + Shift + F|
 
 ---
-Copyright 2021 monochrome Project.
-Licensed by [monochrome. License](https://sorakime.github.io/mncr/license)
+Copyright 2021-2022 monochrome Project.
+Licensed by [monochrome. License](./LICENSE)

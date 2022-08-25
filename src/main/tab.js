@@ -182,7 +182,6 @@ class TabManager {
         action: 'deny'
       };
     });
-
   }
 
   move(target, destination) {
@@ -208,6 +207,7 @@ class Tab {
       webPreferences: {
         scrollBounce: true,
         nodeIntegrationInSubFrames: true,
+        sandbox: false,
         preload: `${directory}/preload/pages.js`
       }
     });
@@ -216,7 +216,7 @@ class Tab {
       browserView.webContents.getUserAgent()
         .replace('monot', 'Chrome')
         .replace(/Electron\/[0-9 | .]/, '')
-        .replace('Chrome/1.0.0', '')
+        .replace('Chrome/1.1.0', '')
     );
 
     try {
@@ -400,11 +400,20 @@ class Tab {
   load(url = new URL(`file://${directory}/browser/home.html`)) {
     try {
       if (!(url instanceof URL)) {
-        url = new URL(url);
+        try {
+          url = new URL(url);
+        } catch (e) {
+          if (url.match(/\S+\.\S+/)) {
+            url = new URL(`http://${url}`);
+          } else {
+            url = new URL(enginesConfig.update().get(`values.${enginesConfig.get('engine')}`, true) + url);
+          }
+        }
       }
     } catch (e) {
       url = new URL(`file://${directory}/browser/home.html`);
     }
+    console.log(url);
     this.entity.webContents.loadURL(url.href);
   }
 
