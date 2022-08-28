@@ -445,9 +445,9 @@ app.on('ready', () => {
     }
     global.win.addBrowserView(suggest);
     suggest.setBounds({
-      x: 150,
+      x: 100,
       y: viewY.get() / 2 + 5,
-      width: global.win.getSize()[0] - 300,
+      width: global.win.getSize()[0] - 200,
       height: 400
     });
     suggest.setAutoResize({
