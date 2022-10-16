@@ -35,13 +35,15 @@ main {
   right: 15px;
   top: 30px;
   padding: 7px 10px;
-  border-radius: 13px;
   border: 1px solid #ddd;
   box-shadow: 5px 5px 10px #bfbfbf55;
-  height: 500px;
   width: 250px;
   z-index: +1;
   max-height: calc(100vh - 55px);
+}
+#index {
+  border-radius: 13px;
+  height: 500px;
 }
 a {
   color: inherit;
@@ -61,15 +63,17 @@ main > *:not(#menu-last) {
 
 #iframe {
   position: absolute;
-  top: -1px;
+  top: 0;
+  left: 0;
   left: 100%;
-  width: 100vw;
+  width: 100%;
   height: 100%;
   transition: all .6s cubic-bezier(.75,0,.25,1);
   box-shadow: 0 0 0px #0006;
+  border: none;
 }
 #iframe.displaying {
-  left: -6px;
+  left: 0;
   box-shadow: 0 0 15px #0006;
 }
 #iframe > iframe {
