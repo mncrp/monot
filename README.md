@@ -113,5 +113,5 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 その他のショートカットキーは[こちら](https://mncrp.github.io/docs/monot/menu)をご覧ください。
 
 ---
-Copyright 2021-2022 monochrome Project.
+Copyright &copy; 2021-2022 monochrome Project.
 Licensed by [monochrome. License](./LICENSE)
