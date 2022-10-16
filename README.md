@@ -1,9 +1,7 @@
-![image](https://mncrp.github.io/image/top/monot.jpg)
-### **Monot by monochrome.** <span style="font-size: .8em">v.1.1.0 (Build 8)</span>
+![image](https://user-images.githubusercontent.com/69241694/196036027-e052d55c-f43c-4a25-85bd-1fbedd458302.png)
+# **Monot by monochrome.** <span style="font-size: .5em">v.1.1.0 (Build 8)</span>
 
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
-
-※まだv.1.1.0リリースされてねぇからな、そこんとこ勘違いすんなよ？
 
 ---
 
@@ -14,7 +12,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |正式名称|Monot by monochrome. v.1.1.0 (Build 8)|
 |バージョン|v.1.1.0|
 |ビルド番号|8|
-|公開日|2022年9月9日(金曜日)|
+|公開日|2022年10月23日(木曜日)|
 |ライセンス|[monochrome. License](./LICENSE)|
 |言語|日本語, JavaScript, HTML, CSS|
 
@@ -27,35 +25,35 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 
 ---
 
+![アップデート内容](https://user-images.githubusercontent.com/69241694/196036134-737d5eba-baaf-4520-982e-4f2448cae3f4.jpg)
 ## アップデート内容
 詳細：https://mncrp.github.io/news/2
 
-- サジェストの実装
-- 設定ウィンドウの項目の追加とデザインの修正等
-- タブ関連のバグを修正
-- UIに"Default"および"Thin"を実装
-- 内部の細かな変更
-- 改行コードをLFに統一
-- ブックマーク重複防止
-- Homeを履歴に残さないように変更
-- 読み込み関連のバグの修正
-- 壁紙を表示できるように実装
-- Homeでブックマークを表示できるように変更
 - タブの移動を実装
 - タブの固定を実装
-- タブのファビコンを表示できるように変更
+- 検索候補（サジェスト）の実装
+- 壁紙を実装
+- UIに"Thin"を実装
+- 設定ウィンドウの項目の追加とデザイン等の修正
+- 主にタブ関連のバグを修正
+- 読み込み関連のバグの修正
+- 検索エンジンに"Frea Search"を追加
+- タブのファビコンを表示
+- ブックマーク重複防止
+- Homeを履歴に残さないように変更
+- Homeでブックマークを表示できるように変更
+- ブックマーク削除時にイベントが親要素に伝播しないように修正
+- コンテキストメニューの変更
+- アプリメニューの内容の変更・追加
 - オーバーフローメニューの挙動を変更
 - オーバーフローメニューの項目を追加
 - ユーザーエージェントを変更
-- コンテキストメニューの変更
-- アプリメニューの内容の変更
-- いくつかのショートカットの追加
+- ダークモード時でもWebページに明るい背景を使用する(White In Dark)を実験的に実装
 - 設定ウィンドウにバージョン情報などを記載
 - 細かいデザインの修正
-- ダークモード時でもWebページに明るい背景を使用する(White In Dark)を実験的に実装
-- 検索エンジンに"Frea Search"を追加
 - ブックマークウィンドウでブックマークの削除を実装
-- ブックマーク削除時にイベントが親要素に伝播しないように修正
+- 内部の細かな変更
+- 改行コードをLFに統一
 
 ## スクリーンショット
 ### Default - ライトモード
@@ -101,8 +99,8 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |ペーストしてスタイルを合わせる|Ctrl(Cmd) + Alt + Shift + V|
 |全て選択|Ctrl(Cmd) + A|
 |再読み込み|Ctrl(Cmd) + R|
-|戻る|Ctrl(Cmd) + Shift + Z|
-|進む|Ctrl(Cmd) + Shift + X|
+|戻る|Ctrl(Cmd) + ←|
+|進む|Ctrl(Cmd) + →|
 |拡大|Ctrl(Cmd) + ~ もしくは Ctrl(Cmd) + Shift + ;|
 |縮小|Ctrl(Cmd) + -|
 |等倍|Ctrl(Cmd) + 0|
@@ -111,6 +109,8 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |ページのソースを表示|Ctrl(Cmd) + Option + U|
 |しまう|Ctrl(Cmd) + M|
 |タブの固定/解除|Ctrl(Cmd) + Shift + F|
+
+その他のショートカットキーは[こちら](https://mncrp.github.io/docs/monot/menu)をご覧ください。
 
 ---
 Copyright 2021-2022 monochrome Project.
