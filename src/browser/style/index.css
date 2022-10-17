@@ -22,11 +22,14 @@ body > a:active {
 #bookmarks {
   position: absolute;
   top: calc(100vh - 25px);
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   right: 0;
   height: auto;
-  padding: 20px;
-  padding-top: 0;
+  width: 60vw;
+  min-width: 700px;
+  max-width: 70vw;
+  transition: none;
 }
 #bookmarks > p > a {
   color: var(--browsername-color);
@@ -48,25 +51,22 @@ body > a:active {
   height: 20px;
   transform: rotateZ(270deg);
 }
-#bookmarks-content {
-  display: grid;
-  position: relative;
-  margin: 0 calc(50% - 500px);
-  margin-top: 10px;
-  width: 1000px;
-  height: 50px;
-  grid-template-columns: repeat(7, 1fr);
-  overflow-y: hidden;
-  height: 140px;
-}
 
+#bookmarks-content {
+  display: flex;
+  margin-top: 10px;
+  width: inherit;
+  height: 70px;
+  overflow: hidden;
+}
 .one-bookmark {
   display: flex;
   flex-direction: column;
-  width: 130px;
-  height: 130px;
-  padding: 10px;
+  width: 100%;
+  height: 100%;
+  padding-top: 10px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .one-bookmark > .one-image {
   width: 100%;
@@ -90,13 +90,15 @@ body > a:active {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  min-height: 25px;
+  font-size: 12px;
 }
 
 @media (max-width: 1080px) {
-  #bookmarks-content {
-    margin: auto 10px;
-    width: auto;
-    grid-template-columns: repeat(4, 1fr);
+  #bookmarks {
+    width: calc(100vw - 50px);
+    min-width: 0px;
+    max-width: none;
   }
 }
 

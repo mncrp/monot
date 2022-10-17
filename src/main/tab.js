@@ -268,7 +268,7 @@ class Tab {
           if (i < 7)
             i += 1;
           else
-            return;
+            break;
 
           html = `
             ${html}
