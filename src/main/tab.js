@@ -252,7 +252,7 @@ class Tab {
       browserView.webContents.setZoomFactor(1);
 
       this.url = new URL(browserView.webContents.getURL());
-      // 新タブと同じURLなのかどうか
+      // Homeならば
       const fileURL = new URL(`file://${directory}/browser/home.html`);
 
       if (this.url.href === fileURL.href) {
