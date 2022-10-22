@@ -133,10 +133,6 @@ app.on('ready', () => {
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   monotConfig.update();
-  if (monotConfig.get('cssTheme') != null) {
-    const style = monotConfig.get('cssTheme');
-    optionView.webContents.insertCSS(style);
-  }
 
   const suggest = new BrowserView({
     transparent: true,
@@ -146,6 +142,22 @@ app.on('ready', () => {
     }
   });
   suggest.webContents.loadURL(`file://${directory}/renderer/suggest/index.html`);
+
+  if (monotConfig.get('cssTheme') != null) {
+    const style = require('fs').readFileSync(monotConfig.get('cssTheme'), 'utf-8');
+    console.log(style);
+  }
+
+  const style = monotConfig.get('cssTheme') != null ?
+    require('fs').readFileSync(monotConfig.get('cssTheme'), 'utf-8') :
+    null;
+  suggest.webContents.on('did-stop-loading', () => {
+    console.log(style);
+    suggest.webContents.insertCSS(style, {
+      cssOrigin: 'user'
+    });
+  });
+  suggest.webContents.openDevTools();
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, index) => {
@@ -486,6 +498,7 @@ app.on('ready', () => {
   nw();
   ipcMain.handle('options', () => {
     optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
+    optionView.webContents.insertCSS(style);
     if (BrowserWindow.fromBrowserView(optionView)) {
       global.win.removeBrowserView(optionView);
     } else {
