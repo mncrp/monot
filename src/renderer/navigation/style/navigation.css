@@ -3,18 +3,21 @@
 :root {
   --main-background: #efefef;
   --text-color: #000;
-  --borderline-color: #ddd;
-  --opened-tab-color: #bbb3;
+  --borderline-color: #ddd8;
+  --opened-tab-color: #bbb8;
 
   --border-color-unhover: #ddd0;
-  --border-color: #ddde;
+  --border-color: #ddd8;
   --shadow-color: #bfbfbf55;
   --shadow-color-unhover: #0000;
-  --backgroundcolor-unhover: #ccc0;
-  --backgroundcolor: #eee;
-  --input-color-unhover: #bbb3;
+  --backgroundcolor-unhover: #efefef00;
+  --backgroundcolor: #eee8;
+  --input-color-unhover: #efefef44;
   --closebutton-color: #fff4;
-  --loading-color: #888;
+  --loading-color: #8888;
+
+  --wallpaper: none;
+  --wallpaper-brightness: brightness(100%);
 }
 
 * {
@@ -36,6 +39,18 @@ script, style {
   width: 0; height: 0;
 }
 
+body::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -2px;
+  bottom: -1px;
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--borderline-color);
+  background-color: #efefef44;
+}
 body {
   background-color: var(--main-background);
   -webkit-app-region: drag;
@@ -45,16 +60,21 @@ body {
   margin-bottom: 0;
   height: auto;
   overflow: hidden;
-  border-bottom: 1px solid var(--borderline-color);
+  background-image: var(--wallpaper);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top center;
 }
 nav {
   display: flex;
   position: relative;
   height: auto;
   width: 100%;
+  transition: all 0.4s cubic-bezier(.7, 0, .3, 1);
+  z-index: 0;
 }
 
-body nav * {
+body nav > * {
   user-select: none;
   -webkit-user-drag: none;
   -webkit-app-region: none;
@@ -69,6 +89,7 @@ body nav * {
   background-color: var(--backgroundcolor-unhover);
   transition: all 0.2s ease-in-out;
   border: 1px solid var(--border-color-unhover);
+  z-index: +1;
 }
 body input {
   -webkit-user-drag: initial;
@@ -77,6 +98,7 @@ body input {
   font-size: 11px;
   background-color: var(--input-color-unhover);
   color: var(--text-color);
+  backdrop-filter: brightness(85%);
 }
 body nav *:hover,
 div > span:hover,
@@ -130,12 +152,15 @@ nav a:active {
   background-image: url('../../../image/close.png');
 }
 
-div > span > a:first-child {
+div > span > p:first-child {
   color: var(--text-color);
   font-weight: 100;
   cursor: default;
+  display: inline-block;
+  width: 10%;
+  overflow: hidden;
 }
-div > span > a:last-child {
+div > span > p:last-child {
   display: inline-block;
   cursor: default;
   position: absolute;
@@ -145,54 +170,74 @@ div > span > a:last-child {
   width: 17px; height: 17px;
   font-size: 12px;
   border-radius: 7px;
-  background-color: var(--backgroundcolor-unhover);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 65%;
   background-image: url('../../../image/close.png');
   transition: all 0.2s ease-in-out;
 }
-div > span > a:last-child:hover {
+div > span > p:last-child:hover {
   background-color: var(--closebutton-color);
+}
+div > span > img {
+  display: inline-block;
+  float: left;
+  height: 100%;
+  aspect-ratio: 1/1;
+  margin-right: 5px;
 }
 div > span#opened {
   background-color: var(--opened-tab-color);
   color: var(--text-color);
+  backdrop-filter: brightness(120%);
 }
 tab-el {
-  height: auto;
   vertical-align: middle;
   display: flex;
   overflow: hidden;
+  height: 32.5px;
 }
 tab-el * {
   -webkit-user-drag: none;
+  overflow: hidden;
 }
 tab-el > div {
   width: 100%;
   overflow: auto;
   display: flex;
+  margin-left: 5px;
 }
 tab-el > div > span {
   min-width: 70px;
-  overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
   padding-right: 20px;
   padding-left: 5px;
   width: 100%;
-  margin: 5px;
-  margin-top: 2px;
+  margin: 3px 2px 5px 1px;
   text-align: center;
   padding: 2px;
   padding-right: 15px;
   font-size: 12px;
-  -webkit-font-smoothing: antialiased;
   border-radius: 10px;
   border: 1px solid var(--border-color-unhover);
   transition: all 0.2s ease-in-out;
   cursor: default;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-drag: element;
   -webkit-app-region: none;
+}
+tab-el > div > span > * {
+  opacity: 1;
+}
+span.fixed {
+  width: 7px!important;
+  min-width: 0!important;
+  aspect-ratio : 1/1;
+}
+span.fixed > *:not(img) {
+  opacity: 0;
+  display: none!important;
 }
 tab-el > a {
   display: block;
@@ -222,7 +267,7 @@ yomikomi-bar {
   height: 10px;
   background-color: var(--loading-color);
   z-index: 0;
-  filter: blur(5px) brightness(125%);
+  filter: blur(5px) var(--wallpaper-brightness);
   border-radius: 0 5px 0 0;
   transition: all 0.2s ease-in-out;
   opacity: 0;
@@ -236,11 +281,76 @@ yomikomi-bar#loaded {
   opacity: 1;
 }
 
+.thin {
+  display: flex;
+  height: 25px;
+}
+.thin nav {
+  z-index: 9999;
+  width: 500px;
+  min-width: 500px;
+}
+.thin nav .window {
+  position: fixed;
+  margin: 1px;
+  top: 1px;
+}
+.thin .window#close {
+  right: 0;
+}
+.thin .window#maximize {
+  right: 22px;
+}
+.thin .window#minimize {
+  right: 44px;
+}
+.thin .window#menu {
+  right: 66px;
+}
+.thin nav * {
+  height: 20px;
+  margin: 1px;
+}
+.thin tab-el {
+  width: 100%;
+  height: 25px;
+  padding-right: 85px;
+  left: 5px;
+}
+.thin tab-el div span {
+  display: flex;
+  width: min-content;
+  margin: 0 2px;
+  padding-right: 20px;
+  max-width: 50vw;
+}
+.thin span.fixed {
+  width: 2px!important;
+}
+.thin span > p {
+  overflow: hidden;
+}
+.thin tab-el > a {
+  height: 20px;
+  width: 20px;
+  margin: 0px;
+}
+
+@media (max-width: 700px) {
+  .thin nav {
+    width: 230px;
+    min-width: 230px;
+  }
+  .thin nav:is(:focus-within, :hover) {
+    width: 2000px;
+  }
+}
+
 @media (prefers-color-scheme: dark)  {
   :root {
     --main-background: #222;
     --text-color: #fff;
-    --borderline-color: #333;
+    --borderline-color: #3338;
     --opened-tab-color: #fff1;
 
     --border-color-unhover: #ddd0;
@@ -248,10 +358,12 @@ yomikomi-bar#loaded {
     --shadow-color: #bfbfbf55;
     --shadow-color-unhover: #0000;
     --backgroundcolor-unhover: #ccc0;
-    --backgroundcolor: #444;
+    --backgroundcolor: #4448;
     --input-color-unhover: #fff1;
     --closebutton-color: #fff4;
-    --loading-color: #444;  
+    --loading-color: #444c;
+
+    --wallpaper-brightness: brightness(80%);
   }
   #home {
     background-image: url('../../../image/home-white.png');
@@ -280,10 +392,13 @@ yomikomi-bar#loaded {
   #close {
     background-image: url('../../../image/close-white.png');
   }
-  div > span > a:last-child {
+  div > span > p:last-child {
     background-image: url('../../../image/close-white.png');
   }
   tab-el > a {
     background-image: url('../../../image/plus-white.png');
+  }
+  body::before {
+    background-color: #2222;
   }
 }

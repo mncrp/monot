@@ -1,7 +1,19 @@
 @import url('../../../proprietary/style/font.css');
+:root {
+  --main-background: #efefef;
+  --text-color: #000;
+  --shadow-color: #bfbfbf99;
+  --shadow-color-unhover: #0000;
+  --borderline-color: #bbb8;
+  --border-color: #ddde;
+}
+
 
 * {
   margin: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+  color: var(--text-color);
 }
 
 h3 {
@@ -9,22 +21,39 @@ h3 {
 }
 
 hr {
-  border: 1px solid #666;
+  border: 0;
+  border-top: 1px solid var(--borderline-color);
   height: 0;
   margin: 0;
 }
 
+#toggle {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0003;
+}
 main {
   overflow: hidden;
-  position: relative;
-  background-color: #efefef;
-  margin-left: 5px;
-  margin-right: 15px;
+  position: absolute;
+  background-color: var(--main-background);
+  right: 15px;
+  top: 30px;
   padding: 7px 10px;
+  border: 1px solid var(--border-color);
+  box-shadow: 5px 5px 10px var(--shadow-color);
+  width: 250px;
+  z-index: +1;
+  max-height: calc(100vh - 55px);
+}
+#index {
   border-radius: 13px;
-  border: 1px solid #ddd;
-  box-shadow: 5px 5px 10px #bfbfbf55;
-  height: 92vh;
+  height: 500px;
 }
 a {
   color: inherit;
@@ -44,16 +73,18 @@ main > *:not(#menu-last) {
 
 #iframe {
   position: absolute;
-  top: -1px;
+  top: 0;
+  left: 0;
   left: 100%;
-  width: 100vw;
+  width: 100%;
   height: 100%;
   transition: all .6s cubic-bezier(.75,0,.25,1);
-  box-shadow: 0 0 0px #0006;
+  box-shadow: 0 0 0px var(--shadow-color-unhover);
+  border: none;
 }
 #iframe.displaying {
-  left: -6px;
-  box-shadow: 0 0 15px #0006;
+  left: 0;
+  box-shadow: 0 0 15px var(--shadow-color);
 }
 #iframe > iframe {
   display: inline-block;
@@ -76,13 +107,11 @@ main > *:not(#menu-last) {
 
 
 @media (prefers-color-scheme: dark) {
-  main {
-    background-color: #202020;
-    border-color: #666e;
-    color: #fff;
-    box-shadow: 5px 5px 10px #5555;
-  }
-  #prev {
-    background-image: url('../../../image/go-white.png');
+  :root {
+    --main-background: #222;
+    --text-color: #fff;
+    --shadow-color: #bfbfbf55;
+    --borderline-color: #6668;
+    --border-color: #666e;
   }
 }

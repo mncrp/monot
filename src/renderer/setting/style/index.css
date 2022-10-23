@@ -1,6 +1,19 @@
+:root {
+  --main-background: #efefef;
+  --text-color: #000;
+  --shadow-color: #bfbfbf99;
+  --shadow-color-unhover: #0000;
+  --borderline-color: #ddd8;
+  --border-color: #ddde;
+  --border-color-unhover: #4440;
+  --backgroundcolor: #eee9;
+  --input-color-unhover: #bbb3;
+  --input-color: #efefef;
+}
+
 * {
   position: relative;
-  color: #000;
+  color: var(--text-color);
   margin: 0;
   outline: none;
 }
@@ -9,7 +22,7 @@ body {
   margin-top: 60px;
   width: auto;
   height: auto;
-  background-color: #efefef;
+  background-color: var(--main-background);
 }
 b {
   font-size: 1.1rem;
@@ -34,33 +47,31 @@ header {
   padding-left: 20px;
 }
 
-main > * {
+main > div {
   display: block;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+strong {
+  font-weight: 900;
 }
 
-#wallpaper-select {
-  display: flex;
+#appearance > * {
+  margin: 5px 0;
+  padding: 5px 0;
 }
-#wallpaper-select > * {
-  width: 100%;
-  margin: 10px;
-  border-radius: 20px;
-  padding: 20px;
-  height: 20vh;
-  user-select: none;
-  background: #0000;
-  border: 3px solid #ddd;
-  transition: all 0.2s ease-in-out;
+
+#ui a img {
+  width: 20vw;
+  min-width: 300px;
+  border: 1px solid #0000;
+  border-radius: 15px;
+  transition: all .4s ease-in-out;
 }
-#wallpaper-select > *:hover {
-  background-color: #f3f3f3;
-  box-shadow: 2px 2px 15px #ddd;
-}
-#wallpaper-select > * > p {
-  display: inline-block;
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%,-50%);
+#ui a.selected img {
+  border: 1px solid var(--borderline-color);
+  box-shadow: 0 0 15px var(--shadow-color);
 }
 
 #engine > select {
@@ -68,15 +79,15 @@ main > * {
 }
 select, input {
   padding: 2px 5px;
-  background-color: #0001;
+  background-color: var(--input-color);
   border-radius: 12px;
-  box-shadow: 2px 2px 0px #ddd0;
+  box-shadow: 2px 2px 0px var(--shadow-color-unhover);
   transition: all 0.2s ease-in-out;
-  border: 2px solid #0000;
+  border: 1px solid var(--border-color-unhover);
 }
 select:hover, input:hover {
-  border: 2px solid #0001;
-  box-shadow: 2px 2px 15px #ddd;
+  box-shadow: 2px 2px 15px var(--shadow-color);
+  border: 1px solid var(--border-color);
 }
 input[type="text"] {
   width: 40vw;
@@ -97,23 +108,14 @@ label {
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
-    background-color: #202020;
-  }
-  * {
-    color: #eee;
-  }
-
-  select, input {
-    background-color: #fff1;
-  }
-  select:hover, input:hover {
-    border: 2px solid #444;
-    box-shadow: 2px 2px 15px #333;
-  }
-  option {
-    color: #eee;
-    background-color: #222;
-    padding: 0;
+  :root {
+    --main-background: #222;
+    --input-color: #333;
+    --text-color: #fff;
+    --shadow-color: #bfbfbf55;
+    --borderline-color: #aaa;
+    --border-color: #666e;
+    --backgroundcolor: #4448;
+    --input-color-unhover: #fff1;
   }
 }

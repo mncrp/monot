@@ -32,12 +32,12 @@ if (webFrame.parent === null) {
           favicon = document.querySelector('link[rel="shortcut icon" i]').href;
         } catch(e) {
           try {
-            favicon = document.querySelector('meta[property="og:image" i]').content;
+            favicon = \`\${location.origin}/favicon.ico\`;
           } catch(e) {}
         }
         return favicon;
       }();
-      
+
       node.addHistory(
         ${webFrame.routingId},
         document.head.getElementsByTagName('title')[0].innerText,
@@ -93,7 +93,7 @@ ipcRenderer.on('addBookmark', () => {
           favicon = document.querySelector('link[rel="shortcut icon" i]').href;
         } catch(e) {
           try {
-            favicon = document.querySelector('meta[property="og:image" i]').content;
+            favicon = \`\${location.origin}/favicon.ico\`;
           } catch(e) {}
         }
         return favicon;

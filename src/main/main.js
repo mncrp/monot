@@ -6,65 +6,29 @@ const {
   ipcMain,
   Menu,
   BrowserView,
-  MenuItem
+  MenuItem,
 } = require('electron');
 
 const {
-  TabManager
+  TabManager,
+  ViewY
 } = require('./tab');
 
+const {
+  aboutContent,
+  navigationContextMenuTemplate
+} = require('./menu');
+
+const global = require('./global');
+global.tabs = new TabManager();
+
 // letiables
-let win, windowSize, menu, context;
+let windowSize;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
 const {History} = require(`${directory}/proprietary/lib/history`);
 const history = new History();
-const tabs = new TabManager();
-const viewY = 66;
-const navigationContextMenu = Menu.buildFromTemplate([
-  {
-    label: '戻る',
-    click: () => {
-      tabs.get().goBack();
-    }
-  },
-  {
-    label: '進む',
-    click: () => {
-      tabs.get().goForward();
-    }
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: '新規タブ',
-    click: () => {
-      newtab();
-    }
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: '設定',
-    click: () => {
-      showSetting();
-    }
-  },
-  {
-    label: '履歴',
-    click: () => {
-      showHistory();
-    }
-  },
-  {
-    label: 'ブックマーク',
-    click: () => {
-      showBookmark();
-    }
-  }
-]);
+const viewY = new ViewY();
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -84,34 +48,10 @@ const enginesConfig = new LowLevelConfig(
   `${directory}/default/config/engines.mncfg`
 );
 
-function newtab() {
-  tabs.newTab(win);
-  tabs.get().entity.webContents.on('context-menu', (e, params) => {
-    const text = params.selectionText;
-    if (text !== '') {
-      context.closePopup();
-      enginesConfig.update();
-      context.insert(0, new MenuItem({
-        label: `${text}を調べる`,
-        id: 'search',
-        click: () => {
-          const selectEngine = enginesConfig.get('engine');
-          const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
-          tabs.get().load(`${engineURL}${text}`);
-        }
-      }));
-      context.popup();
-      context = Menu.buildFromTemplate(
-        isMac ? contextTemplateMac : menuTemplate
-      );
-    }
-  });
-}
-
 function nw() {
   // create window
   monotConfig.update();
-  win = new BrowserWindow({
+  global.win = new BrowserWindow({
     width: monotConfig.get('width'),
     height: monotConfig.get('height'),
     minWidth: 400,
@@ -126,9 +66,9 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
-  win.setBackgroundColor('#efefef');
-  win.loadFile(
-    process.platform === 'darwin' ?
+  global.win.setBackgroundColor('#efefef');
+  global.win.loadFile(
+    isMac ?
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
@@ -140,41 +80,46 @@ function nw() {
   }
 
   // window's behavior
-  win.on('closed', () => {
-    win = null;
+  global.win.on('closed', () => {
+    global.win = null;
   });
-  win.webContents.on('did-finish-load', () => {
-    win.webContents.executeJavaScript(`
+  global.win.webContents.on('did-finish-load', () => {
+    global.win.webContents.executeJavaScript(`
       engine = '${getEngine()}';
     `);
     monotConfig.update();
-    if (monotConfig.get('cssTheme') != null) {
+    if (monotConfig.get('cssTheme') !== '') {
       const style = monotConfig.get('cssTheme');
-      win.webContents.executeJavaScript(`
-        document.body.innerHTML = \`
-          \${document.body.innerHTML}
-          <style>
-            ${style}
-          </style>
-        \`
-      `);
+      global.win.webContents.executeJavaScript(`
+      document.head.innerHTML += '<link rel="stylesheet" href="${style}">'
+    `);
     }
   });
-  win.on('ready-to-show', () => {
-    win.show();
+  global.win.on('ready-to-show', () => {
+    global.win.show();
   });
+  if (monotConfig.update().get('ui') === 'thin') {
+    global.win.webContents.executeJavaScript(`
+      document.body.classList.add('thin');
+    `);
+  }
+  global.win.webContents.insertCSS(`
+  :root {
+    --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+  }
+`);
 
   // create tab
-  newtab();
+  global.tabs.newTab();
 }
 
 function windowClose() {
-  windowSize = win.getSize();
+  windowSize = global.win.getSize();
   monotConfig.update()
     .set('width', windowSize[0])
     .set('height', windowSize[1])
     .save();
-  win.close();
+  global.win.close();
 }
 
 app.on('ready', () => {
@@ -188,82 +133,135 @@ app.on('ready', () => {
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   monotConfig.update();
+
+  const suggest = new BrowserView({
+    transparent: true,
+    frame: false,
+    webPreferences: {
+      preload: `${directory}/preload/suggest.js`
+    }
+  });
+  suggest.webContents.loadURL(`file://${directory}/renderer/suggest/index.html`);
+
   if (monotConfig.get('cssTheme') != null) {
-    const style = monotConfig.get('cssTheme');
-    optionView.webContents.insertCSS(style);
+    const style = require('fs').readFileSync(monotConfig.get('cssTheme'), 'utf-8');
+    console.log(style);
   }
+
+  const style = monotConfig.get('cssTheme') != null ?
+    require('fs').readFileSync(monotConfig.get('cssTheme'), 'utf-8') :
+    null;
+  suggest.webContents.on('did-stop-loading', () => {
+    console.log(style);
+    suggest.webContents.insertCSS(style, {
+      cssOrigin: 'user'
+    });
+  });
+  suggest.webContents.openDevTools();
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, index) => {
-    tabs.get(index).load(link);
+    global.tabs.get(index).load(link);
   });
   ipcMain.handle('windowClose', () => {
     windowClose();
   });
   ipcMain.handle('windowMaximize', () => {
-    win.maximize();
+    global.win.maximize();
   });
   ipcMain.handle('windowMinimize', () => {
-    win.minimize();
+    global.win.minimize();
   });
   ipcMain.handle('windowUnmaximize', () => {
-    win.unmaximize();
+    global.win.unmaximize();
   });
   ipcMain.handle('windowMaxMin', () => {
-    win.isMaximized() ? win.unmaximize() : win.maximize();
+    global.win.isMaximized() ? global.win.unmaximize() : global.win.maximize();
   });
   ipcMain.handle('windowMaxMinMac', () => {
-    win.fullScreen ? win.fullScreen = false : win.fullScreen = true;
+    global.win.isFullScreen() ? global.win.fullScreen = false : global.win.fullScreen = true;
   });
   ipcMain.handle('moveViewBlank', (e, index) => {
-    tabs.get(index).load(
+    global.tabs.get(index).load(
       `file://${directory}/browser/blank.html`
     );
   });
   ipcMain.handle('reloadBrowser', (e, index) => {
-    tabs.get(index).entity.webContents.reload();
+    global.tabs.get(index).reload();
   });
   ipcMain.handle('browserBack', (e, index) => {
-    tabs.get(index).entity.webContents.goBack();
+    global.tabs.get(index).goBack();
   });
   ipcMain.handle('browserGoes', (e, index) => {
-    tabs.get(index).entity.webContents.goForward();
+    global.tabs.get(index).goForward();
   });
   ipcMain.handle('getBrowserUrl', (e, index) => {
-    return tabs.get(index).entity.webContents.getURL();
+    return global.tabs.get(index).entity.webContents.getURL();
   });
   ipcMain.handle('moveToNewTab', (e, index) => {
-    tabs.get(index).load(`file://${directory}/browser/home.html`);
+    global.tabs.get(index).load(`file://${directory}/browser/home.html`);
   });
   ipcMain.handle('context', () => {
-    context.popup();
+    global.context.popup();
   });
   ipcMain.handle('newtab', () => {
-    newtab();
+    global.tabs.newTab();
   });
-  ipcMain.handle('tabMove', (e, index) => {
-    tabs.setCurrent(win, index);
+  ipcMain.handle('tabSwitch', (e, index) => {
+    global.tabs.setCurrent(index);
+  });
+  ipcMain.handle('tabMove', (e, target, destination) => {
+    global.tabs.move(target, destination);
   });
   ipcMain.handle('removeTab', (e, index) => {
-    try {
-      tabs.removeTab(win, index);
-    } catch (e) {
-      if (tabs.length() === 0) {
-        windowClose();
-      }
-    }
+    global.tabs.removeTab(index);
   });
   ipcMain.handle('popupNavigationMenu', () => {
-    navigationContextMenu.popup();
+    global.navigationContextMenu.popup();
+  });
+  ipcMain.handle('popupTabMenu', (e, data) => {
+    global.navigationContextMenu.insert(0, new MenuItem({
+      label: '選択したタブを固定/解除',
+      id: 'tabFix',
+      click: () => {
+        e.senderFrame.executeJavaScript(`
+          if (
+            document.elementFromPoint(${data[0]}, ${data[1]}).parentNode
+              === document.getElementsByTagName('div')[0]
+          ) {
+            document.elementFromPoint(${data[0]}, ${data[1]}).classList.toggle('fixed');
+          } else {
+            document.elementFromPoint(${data[0]}, ${data[1]}).parentNode.classList.toggle('fixed');
+          }
+        `);
+      }
+    }));
+    global.navigationContextMenu.popup();
+    global.navigationContextMenu = Menu.buildFromTemplate(navigationContextMenuTemplate);
   });
   ipcMain.handle('setting.searchEngine', (e, engine) => {
     enginesConfig.update()
       .set('engine', engine)
       .save();
-    win.webContents.executeJavaScript(`
+    if (enginesConfig.get(`values.${engine}`) === undefined) {
+      enginesConfig.update()
+        .set(
+          `values.${engine}`,
+          JSON.parse(
+            require('fs').readFileSync(
+              `${directory}/default/config/engines.mncfg`,
+              'utf-8'
+            )
+          ).values[engine],
+          true
+        )
+        .save();
+    }
+    enginesConfig.update();
+    global.win.webContents.executeJavaScript(`
       engine = '${enginesConfig.get(`values.${engine}`, true)}';
     `);
-    tabs.get().entity.webContents.executeJavaScript(`
+    global.tabs.get().entity.webContents.executeJavaScript(`
       url = '${enginesConfig.get(`values.${engine}`, true)}';
     `);
   });
@@ -281,8 +279,35 @@ app.on('ready', () => {
       .set('cssTheme', '')
       .save();
   });
+  ipcMain.handle('setting.changeUI', (e, ui) => {
+    monotConfig.update()
+      .set('ui', ui)
+      .save();
+
+    switch (ui) {
+    case 'default':
+      viewY.toDefault();
+      global.tabs.get().replace();
+      global.tabs.tabs.forEach((i) => {
+        i.replace();
+      });
+      break;
+    case 'thin':
+      viewY.toThin();
+      global.tabs.get().replace();
+      global.tabs.tabs.forEach((i) => {
+        i.replace();
+      });
+    }
+  });
+  ipcMain.handle('setting.changeAppearances', (e, content, to) => {
+    monotConfig.update()
+      .update(content, to)
+      .save();
+  });
   ipcMain.handle('addHistory', (e, data) => {
-    history.set(data);
+    const fileURL = new URL(`file://${directory}/browser/home.html`);
+    if (data.pageUrl !== fileURL.href) history.set(data);
   });
   ipcMain.handle('settings.view', () => {
     showSetting();
@@ -309,16 +334,20 @@ app.on('ready', () => {
   });
   ipcMain.handle('openPage', (e, url) => {
     try {
-      tabs.get().load(url);
+      global.tabs.get().load(url);
     } catch (e) {
-      console.log('ウィンドウやタブがないため開けませんでした');
+      console.error('ウィンドウやタブがないため開けませんでした');
     }
   });
   ipcMain.handle('addABookmark', () => {
-    tabs.get().entity.webContents.send('addBookmark');
+    global.tabs.get().entity.webContents.send('addBookmark');
   });
   ipcMain.handle('addBookmark', (e, data) => {
     bookmark.update();
+    // eslint-disable-next-line
+    for (const [key, value] of Object.entries(bookmark.data)) {
+      if (value.pageUrl === data.pageUrl) return;
+    }
     bookmark.data.unshift(data);
     bookmark.save();
   });
@@ -328,13 +357,12 @@ app.on('ready', () => {
     let html = '';
     // eslint-disable-next-line
     for (const [key, value] of Object.entries(bookmarks)) {
-      html = `
-        ${html}
+      html += `
         <div onclick="node.open('${value.pageUrl}');">
           <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
           <div class="bookmark-details">
-            <p id="title">${value.pageTitle}</p>
-            <p id="remove"><a href="#" onclick="node.removeBookmark(${key});">削除</a></p>
+            <p class="title">${value.pageTitle}</p>
+            <p class="remove"><a href="#" onclick="return removeBookmark(arguments[0], ${key});">削除</a></p>
           </div>
         </div>
       `;
@@ -350,29 +378,160 @@ app.on('ready', () => {
     bookmark.data.splice(key, 1);
     bookmark.save();
   });
+  ipcMain.handle('zoom', () => {
+    global.tabs.get().entity.webContents.send('zoom');
+  });
+  ipcMain.handle('shrink', () => {
+    global.tabs.get().entity.webContents.send('shrink');
+  });
+  ipcMain.handle('actual', () => {
+    global.tabs.get().entity.webContents.send('actual');
+  });
+  ipcMain.handle('fullscreen', () => {
+    if (isMac)
+      global.win.isFullScreen() ? global.win.fullScreen = false : global.win.fullScreen = true;
+    else
+      global.win.isMaximized() ? global.win.unmaximize() : global.win.maximize();
+  });
+  ipcMain.handle('hide', () => {
+    global.win.hide();
+  });
+  ipcMain.handle('about', () => {
+    dialog.showMessageBox(null, aboutContent);
+  });
+  ipcMain.handle('devTools', () => {
+    global.tabs.get().entity.webContents.toggleDevTools();
+  });
+  ipcMain.handle('suggest.send', (e, word) => {
+    try {
+      const url = new URL(`http://api.bing.com/qsonhs.aspx?mkt=ja-JP&q=${word}`);
+      const req = require('https').request({
+        hostname: url.hostname,
+        port: url.port,
+        path: url.pathname + url.search,
+        method: 'GET',
+      }, res => {
+        let data = '';
+        res.on('data', (d) => {
+          try {
+            data = JSON.parse(d.toString());
+          } catch (e) {
+            console.error(e);
+          }
+        });
+        res.on('end', () => {
+          let html = ``;
+          try {
+            try {
+              Object.entries(data.AS.Results)[1][1].Suggests.forEach((data) => {
+                html += `
+                  <div onclick="node.moveBrowser('${data.Txt}');">${data.Txt}</div>
+                `;
+              });
+            } catch (e) {
+              Object.entries(data.AS.Results)[0][1].Suggests.forEach((data) => {
+                html += `
+                  <div onclick="node.moveBrowser('${data.Txt}');">${data.Txt}</div>
+                `;
+              });
+            }
+
+            global.win.addBrowserView(suggest);
+            global.win.setTopBrowserView(suggest);
+
+            suggest.webContents.executeJavaScript(`
+              document.getElementsByTagName('main')[0].innerHTML = \`${html}\`;
+            `);
+          } catch (e) {
+            global.win.removeBrowserView(suggest);
+            console.error(e);
+          }
+        });
+      });
+      req.on('error', err => {
+        console.error(err);
+      });
+      req.end();
+    } catch (e) {
+      console.error(e);
+    }
+    global.win.addBrowserView(suggest);
+    suggest.setBounds({
+      x: 100,
+      y: viewY.get() / 2 + 5,
+      width: global.win.getSize()[0] - 200,
+      height: 400
+    });
+    suggest.setAutoResize({
+      x: true,
+      y: true,
+      width: true,
+      height: true
+    });
+  });
+  ipcMain.handle('suggest.searchBrowser', (e, txt) => {
+    enginesConfig.update();
+    global.tabs.get().load(`${txt}`);
+    global.win.removeBrowserView(suggest);
+  });
+  ipcMain.handle('suggest.close', () => {
+    global.win.removeBrowserView(suggest);
+  });
+  ipcMain.handle('suggest.down', () => {
+    suggest.webContents.executeJavaScript(`
+      select(1);
+    `);
+  });
+  ipcMain.handle('suggest.up', () => {
+    suggest.webContents.executeJavaScript(`
+      select(-1);
+    `);
+  });
+  ipcMain.handle('suggest.select', () => {
+    setTimeout(() => {
+      suggest.webContents.executeJavaScript(`
+        document.getElementById('selected').click();
+      `);
+    }, 100);
+  });
 
   nw();
   ipcMain.handle('options', () => {
+    optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
+    optionView.webContents.insertCSS(style);
     if (BrowserWindow.fromBrowserView(optionView)) {
-      win.removeBrowserView(optionView);
+      global.win.removeBrowserView(optionView);
     } else {
-      win.addBrowserView(optionView);
+      global.win.addBrowserView(optionView);
       optionView.setBounds({
-        x: win.getSize()[0] - 270,
-        y: viewY - 35,
-        width: 250,
-        height: 450
+        x: 0,
+        y: 0,
+        width: global.win.getSize()[0],
+        height: global.win.getSize()[1] - 1
       });
-      win.on('resize', () => {
+      global.win.on('resize', () => {
         optionView.setBounds({
-          x: win.getSize()[0] - 270,
-          y: viewY - 35,
-          width: 250,
-          height: 450
+          x: 0,
+          y: 0,
+          width: global.win.getSize()[0],
+          height: global.win.getSize()[1] - 1
         });
       });
-      win.setTopBrowserView(optionView);
+      optionView.webContents.executeJavaScript(`
+        document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+      `);
+      global.win.setTopBrowserView(optionView);
     }
+  });
+  ipcMain.handle('setting.resetWallpaper', () => {
+    monotConfig.update()
+      .set('wallpaper', '')
+      .save();
+    global.win.webContents.insertCSS(`
+      :root {
+        --wallpaper: none!important;
+      }
+    `);
   });
 });
 
@@ -380,7 +539,7 @@ app.on('window-all-closed', () => {
   if (!isMac) app.quit();
 });
 app.on('activate', () => {
-  if (win === null) nw();
+  if (global.win === null) nw();
 });
 
 function showSetting() {
@@ -404,7 +563,17 @@ function showSetting() {
 
   setting.webContents.executeJavaScript(`
     document.getElementsByTagName('select')[0].value = '${enginesConfig.get('engine')}';
+    ui('${monotConfig.get('ui')}');
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
   `);
+
+  if (monotConfig.get('wallpaper') !== '') {
+    setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
+  }
+
+  if (monotConfig.get('cssTheme') !== '') {
+    setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
+  }
 
   if (experiments.forceDark === true) {
     setting.webContents.executeJavaScript(`
@@ -446,6 +615,39 @@ function showSetting() {
       monotConfig.update()
         .set('cssTheme', path.filePaths[0])
         .save();
+      if (path.filePaths[0] !== '')
+        setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
+    });
+  });
+  ipcMain.removeHandler('setting.openWallpaperDialog');
+  ipcMain.handle('setting.openWallpaperDialog', () => {
+    const fileDialog = dialog.showOpenDialog(
+      setting,
+      {
+        title: '壁紙を選択',
+        properties: [
+          'openFile'
+        ],
+        filters: [
+          {
+            name: '画像',
+            extensions: ['png', 'jpg', 'jpeg']
+          }
+        ]
+      }
+    );
+    fileDialog.then((path) => {
+      monotConfig.update()
+        .set('wallpaper', path.filePaths[0])
+        .save();
+      if (path.filePaths[0] !== '') {
+        setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
+        global.win.webContents.insertCSS(`
+          :root {
+            --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+          }
+        `);
+      }
     });
   });
 }
@@ -457,7 +659,8 @@ function showHistory() {
     minHeight: 270,
     icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${directory}/preload/history.js`
+      preload: `${directory}/preload/history.js`,
+      scrollBounce: true
     }
   });
   historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
@@ -478,6 +681,7 @@ function showHistory() {
   }
   historyWin.webContents.executeJavaScript(`
     document.getElementById('histories').innerHTML = \`${html}\`;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
   `);
 }
 function showBookmark() {
@@ -488,7 +692,8 @@ function showBookmark() {
     minHeight: 270,
     icon: `${directory}/image/logo.ico`,
     webPreferences: {
-      preload: `${directory}/preload/bookmark.js`
+      preload: `${directory}/preload/bookmark.js`,
+      scrollBounce: true
     }
   });
   bookmarkWin.webContents.loadFile(`${directory}/renderer/bookmark/index.html`);
@@ -511,404 +716,12 @@ function showBookmark() {
   }
   bookmarkWin.webContents.executeJavaScript(`
     document.getElementById('bookmarks').innerHTML = \`${html}\`;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
   `);
 }
 
-// menu
-// Windows and Linux (menu, contextmenu)
-const menuTemplate = [
-  {
-    label: '表示',
-    submenu: [
-      {
-        role: 'togglefullscreen',
-        accelerator: 'F11',
-        label: '全画面表示'
-      },
-      {
-        role: 'hide',
-        label: '隠す'
-      },
-      {
-        role: 'hideothers',
-        label: '他を隠す'
-      },
-      {
-        label: '終了',
-        accelerator: 'CmdOrCtrl+Q',
-        click: () => {
-          windowClose();
-        }
-      }
-    ]
-  },
-  {
-    label: '移動',
-    id: 'move',
-    submenu: [
-      {
-        label: '再読み込み',
-        accelerator: 'CmdOrCtrl+R',
-        click: () => {
-          tabs.get().reload();
-        }
-      },
-      {
-        label: '戻る',
-        accelerator: 'Alt+Left',
-        click: () => {
-          tabs.get().goBack();
-        }
-      },
-      {
-        label: '進む',
-        accelerator: 'Alt+Right',
-        click: () => {
-          tabs.get().goForward();
-        }
-      }
-    ]
-  },
-  {
-    label: '編集',
-    submenu: [
-      {
-        label: 'カット',
-        role: 'cut'
-      },
-      {
-        label: 'コピー',
-        role: 'copy'
-      },
-      {
-        label: 'ペースト',
-        role: 'paste'
-      },
-      {
-        label: '全て選択',
-        role: 'selectAll'
-      }
-    ]
-  },
-  {
-    label: 'ウィンドウ',
-    submenu: [
-      {
-        label: 'Monotについて',
-        accelerator: 'CmdOrCtrl+Alt+A',
-        click: () => {
-          dialog.showMessageBox(null, {
-            type: 'info',
-            icon: './src/image/logo.png',
-            title: 'Monotについて',
-            message: 'Monotについて',
-            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
-バージョン: 1.0.0 Official Version
-ビルド番号: 7
-開発元: monochrome Project.
-
-リポジトリ: https://github.com/mncrp/monot
-公式サイト: https://www.monochrome.tk/project/monot/
-
-Copyright ©︎ 2021-2022 monochrome Project.`
-          });
-        }
-      },
-      {
-        label: '設定',
-        accelerator: 'CmdOrCtrl+,',
-        click: () => {
-          showSetting();
-        }
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: '新しいタブ',
-        accelerator: 'CmdOrCtrl+T',
-        click: () => {
-          try {
-            newtab();
-          } catch (e) {
-            nw();
-          }
-        }
-      }
-    ]
-  },
-  {
-    label: '開発',
-    submenu: [
-      {
-        label: '開発者向けツール',
-        accelerator: 'F12',
-        click: () => {
-          tabs.get().entity.webContents.toggleDevTools();
-        }
-      },
-      {
-        label: '開発者向けツール',
-        accelerator: 'CmdOrCtrl+Shift+I',
-        visible: false,
-        click: () => {
-          tabs.get().entity.webContents.toggleDevTools();
-        }
-      }
-    ]
-  }
-];
-// macOS (Menu)
-const menuTemplateMac = [
-  {
-    label: 'Monot',
-    submenu: [
-      {
-        label: 'Monotについて',
-        accelerator: 'CmdOrCtrl+Alt+A',
-        click: () => {
-          dialog.showMessageBox(null, {
-            type: 'info',
-            icon: './src/image/logo-mac.png',
-            title: 'Monotについて',
-            message: 'Monotについて',
-            detail: `Monot by monochrome. v.1.0.0 Official Version (Build 7)
-バージョン: 1.0.0 Official Version
-ビルド番号: 7
-開発元: monochrome Project.
-
-リポジトリ: https://github.com/mncrp/monot
-公式サイト: https://www.monochrome.tk/project/monot/
-
-Copyright ©︎ 2021-2022 monochrome Project.`
-          });
-        }
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'togglefullscreen',
-        accelerator: 'F11',
-        label: '全画面表示'
-      },
-      {
-        role: 'hide',
-        label: '隠す'
-      },
-      {
-        role: 'hideothers',
-        label: '他を隠す'
-      },
-      {
-        label: '終了',
-        accelerator: 'CmdOrCtrl+Q',
-        click: () => {
-          windowClose();
-          app.quit();
-        }
-      }
-    ]
-  },
-  {
-    label: '表示',
-    id: 'view',
-    submenu: [
-      {
-        label: '再読み込み',
-        accelerator: 'CmdOrCtrl+R',
-        click: () => {
-          tabs.get().reload();
-        }
-      },
-      {
-        label: '戻る',
-        accelerator: 'Alt+Left',
-        click: () => {
-          tabs.get().goBack();
-        }
-      },
-      {
-        label: '進む',
-        accelerator: 'Alt+Right',
-        click: () => {
-          tabs.get().goForward();
-        }
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: '拡大',
-        accelerator: 'CmdOrCtrl+^',
-        click: () => {
-          tabs.get().entity.webContents.send('zoom');
-        }
-      },
-      {
-        label: '縮小',
-        accelerator: 'CmdOrCtrl+-',
-        click: () => {
-          tabs.get().entity.webContents.send('shrink');
-        }
-      },
-      {
-        label: '等倍',
-        accelerator: 'CmdOrCtrl+0',
-        click: () => {
-          tabs.get().entity.webContents.send('actual');
-        }
-      },
-      {
-        label: '拡大',
-        accelerator: 'CmdOrCtrl+Shift+Plus',
-        visible: false,
-        click: () => {
-          tabs.get().entity.webContents.send('zoom');
-        }
-      }
-    ]
-  },
-  {
-    label: '編集',
-    submenu: [
-      {
-        label: 'カット',
-        role: 'cut'
-      },
-      {
-        label: 'コピー',
-        role: 'copy'
-      },
-      {
-        label: 'ペースト',
-        role: 'paste'
-      },
-      {
-        label: '全て選択',
-        role: 'selectAll'
-      }
-    ]
-  },
-  {
-    label: 'ウィンドウ',
-    submenu: [
-      {
-        label: '新しいタブ',
-        accelerator: 'CmdOrCtrl+T',
-        click: () => {
-          try {
-            newtab();
-          } catch (e) {
-            nw();
-          }
-        }
-      },
-      {
-        label: '設定',
-        accelerator: 'CmdOrCtrl+,',
-        click: () => {
-          showSetting();
-        }
-      }
-    ]
-  },
-  {
-    label: '開発',
-    submenu: [
-      {
-        label: '開発者向けツール',
-        accelerator: 'F12',
-        click: () => {
-          tabs.get().entity.webContents.toggleDevTools();
-        }
-      },
-      {
-        label: '開発者向けツール',
-        accelerator: 'CmdOrCtrl+Option+I',
-        visible: false,
-        click: () => {
-          tabs.get().entity.webContents.toggleDevTools();
-        }
-      }
-    ]
-  },
-  {
-    label: 'ヘルプ',
-    submenu: [
-      {
-        label: '公式サイト',
-        click: () => {
-          if (tabs.get() !== null) {
-            tabs.get().load('https://www.monochrome.tk/project/monot');
-          }
-        }
-      }
-    ]
-  }
-];
-// macOS (context)
-const contextTemplateMac = [
-  {
-    label: '戻る',
-    click: () => {
-      tabs.get().goBack();
-    }
-  },
-  {
-    label: '進む',
-    click: () => {
-      tabs.get().goForward();
-    }
-  },
-  {
-    label: '再読み込み',
-    click: () => {
-      tabs.get().reload();
-    }
-  },
-  {
-    type: 'separator'
-  },
-  {
-    label: '縮小',
-    click: () => {
-      tabs.get().entity.webContents.setZoomLevel(
-        tabs.get().entity.webContents.getZoomLevel() - 1
-      );
-    }
-  },
-  {
-    label: '実際のサイズ',
-    click: () => {
-      tabs.get().entity.webContents.setZoomLevel(
-        1
-      );
-    }
-  },
-  {
-    label: '拡大',
-    click: () => {
-      tabs.get().entity.webContents.setZoomLevel(
-        tabs.get().entity.webContents.getZoomLevel() + 1
-      );
-    }
-  },
-  {
-    label: '開発者向けツール',
-    click: () => {
-      tabs.get().entity.webContents.toggleDevTools();
-    }
-  }
-];
-
-if (isMac) {
-  menu = Menu.buildFromTemplate(menuTemplateMac);
-  // macOS (context menu)
-  context = Menu.buildFromTemplate(contextTemplateMac);
-} else {
-  menu = Menu.buildFromTemplate(menuTemplate);
-  context = menu;
-}
-
-Menu.setApplicationMenu(menu);
+global.showSetting = showSetting;
+global.showHistory = showHistory;
+global.showBookmark = showBookmark;
+global.windowClose = windowClose;
+global.windowOpen = nw;

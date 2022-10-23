@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style/navigation.css">
     <link rel="stylesheet" href="style/navigation-mac.css">
   </head>
-  <body>
+  <body class="mac">
     <nav>
       <a href="javascript:node.winClose()" title="終了" id="close"></a>
       <a href="javascript:node.winMinimize()" title="最小化" id="minimize"></a>
@@ -17,15 +17,32 @@
       <a href="javascript:node.goBrowser()" title="進む" id="next"></a>
       <input type="text" placeholder="検索する単語またはURLを入力" title="検索する単語またはURLを入力" id="textbox">
       <a href="javascript:moveBrowser()" title="移動" id="move"></a>
-      <a href="javascript:node.showMenu()" title="メニュー表示" id="menu"></a>
+      <a href="javascript:node.showMenu()" title="メニュー表示" id="menu" class="window"></a>
     </nav>
     <tab-el>
       <div>
       </div>
-      <a href="javascript:node.newtab()"></a>
+      <a href="javascript:node.newtab()" id="newtab"></a>
     </tab-el>
     <yomikomi-bar></yomikomi-bar>
     <script src="script/moveBrowser.js"></script>
     <script src="script/event.js"></script>
+    <script>
+      document.addEventListener('dblclick', (e) => {
+        if (
+          e.target.parentElement.className === 'mac '
+        ) {
+          node.maxMin();
+        } else if (
+          document.body.className === 'mac thin' &&
+          (
+            e.target.parentElement === document.body ||
+            e.target === document.getElementsByTagName('div')[0]
+          )
+        ) {
+          node.maxMin();
+        }
+      });
+    </script>
   </body>
 </html>

@@ -9,7 +9,7 @@
   display: none;
 }
 ::-webkit-scrollbar-thumb{
-  background-color: #dddc;
+  background-color: #ddde;
   border-radius: 5px;
   border: 1px solid #efefef88;
 }

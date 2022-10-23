@@ -1,7 +1,16 @@
 main {
+  position: relative;
   border-bottom: 0px solid #fff;
-  height: calc(100vh - 13px);
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  box-sizing: border-box;
   overflow: auto;
+  z-index: 0;
+  top: 0;
+  padding: 15px;
+  padding-top: 45px;
+  right: 0;
   z-index: 0;
 }
 main > div {
@@ -27,15 +36,9 @@ header {
   padding-bottom: 5px;
   backdrop-filter: blur(15px);
   z-index: 9990;
-  background-color: #fff5;
 }
 header h3 {
   z-index: +1;
-}
-
-#histories,
-#bookmarks {
-  margin-top: 40px;
 }
 
 #histories > div ,
@@ -74,19 +77,26 @@ header h3 {
 
 .bookmark-details {
   padding-left: 4px;
-  display: flex;
+  position: relative;
 }
-.bookmark-details > #title {
-  width: 100%;
+.bookmark-details > .title {
+  position: absolute;
+  left: 2px;
+  top: 3px;
+  width: calc(100% - 40px);
+  max-width: calc(100% - 40px);
+  min-width: calc(100% - 40px);
 }
-.bookmark-details > #remove {
+.bookmark-details > .remove {
+  position: absolute;
+  top: 3px;
+  right: 2px;
   min-width: 30px;
   max-width: 30px;
 }
 
 @media (prefers-color-scheme: dark) {
   header {
-    background-color: #0006;
     color: #fff;
   }
   #histories > div,

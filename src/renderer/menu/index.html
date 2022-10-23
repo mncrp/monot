@@ -6,13 +6,22 @@
   <title>メニュー</title>
 </head>
 <body>
-  <main>
+  <a id="toggle" href="javascript:node.toggle();"></a>
+  <main id="index">
     <div id="top">
       <a href="javascript:node.addBookmark();">ブックマークに追加</a>
       <hr>
       <a href="javascript:move('history');">履歴</a>
       <a href="javascript:move('bookmark');">ブックマーク</a>
       <hr>
+      <a href="javascript:node.zoom();">拡大</a>
+      <a href="javascript:node.shrink();">縮小</a>
+      <a href="javascript:node.actual();">等倍</a>
+      <hr>
+      <a href="javascript:node.fullScreen();">全画面表示</a>
+      <a href="javascript:node.hide();">隠す</a>
+      <hr>
+      <a href="javascript:move('other');">その他</a>
       <a href="javascript:node.viewSettings();">設定</a>
     </div>
     <div id="iframe">
