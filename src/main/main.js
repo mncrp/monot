@@ -143,21 +143,20 @@ app.on('ready', () => {
   });
   suggest.webContents.loadURL(`file://${directory}/renderer/suggest/index.html`);
 
-  if (monotConfig.get('cssTheme') != null) {
-    const style = require('fs').readFileSync(monotConfig.get('cssTheme'), 'utf-8');
-    console.log(style);
-  }
-
-  const style = monotConfig.get('cssTheme') != null ?
-    require('fs').readFileSync(monotConfig.get('cssTheme'), 'utf-8') :
-    null;
+  const style = (function() {
+    try {
+      return monotConfig.get('cssTheme') != null ?
+        require('fs').readFileSync(monotConfig.get('cssTheme'), 'utf-8') :
+        null;
+    } catch (e) {
+      return '';
+    }
+  })();
   suggest.webContents.on('did-stop-loading', () => {
-    console.log(style);
     suggest.webContents.insertCSS(style, {
       cssOrigin: 'user'
     });
   });
-  suggest.webContents.openDevTools();
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, index) => {
