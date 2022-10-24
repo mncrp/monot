@@ -21,9 +21,14 @@ jobs:
       - name: Install Packages
         if: ${{ steps.setup_node_id.outputs.cache-hit != 'true' }}
         run: npm install
-      - name: Build
+      - name: Build MacOS
         if: ${{ matrix.platform == 'macos-latest' }}
-        run: npx electron-builder
+        run: npm run build:mac
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build Other
+        if: ${{ matrix.platform != 'macos-latest' }}
+        run: npm run build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
