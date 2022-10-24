@@ -18,10 +18,16 @@ h1::before {
   display: none;
 }
 h1 {
+  font-weight: 800;
   font-size: 30px;
 }
 h2 {
+  font-weight: 700;
   font-size: 30px;
+}
+h3 {
+  font-size: 25px;
+  font-weight: 600;
 }
 header {
   position: fixed;
@@ -45,8 +51,8 @@ strong {
 }
 
 #appearance > * {
-  margin: 5px 0;
-  padding: 5px 0;
+  margin: 4px 0;
+  padding: 4px 0;
 }
 
 #ui a img {
@@ -54,7 +60,7 @@ strong {
   min-width: 300px;
   border: 1px solid #8880;
   border-radius: 15px;
-  transition: all .4s ease-in-out;
+  transition: all 0.4s ease-in-out;
 }
 #ui a.selected img {
   border: 1px solid #888;
@@ -64,7 +70,8 @@ strong {
 #engine > select {
   width: 160px;
 }
-select, input {
+select,
+input {
   padding: 2px 5px;
   background-color: #0001;
   border-radius: 12px;
@@ -72,7 +79,8 @@ select, input {
   transition: all 0.2s ease-in-out;
   border: 1px solid #0000;
 }
-select:hover, input:hover {
+select:hover,
+input:hover {
   border: 1px solid #0001;
   box-shadow: 2px 2px 15px #ddd;
 }
@@ -102,10 +110,12 @@ label {
     color: #eee;
   }
 
-  select, input {
+  select,
+  input {
     background-color: #fff1;
   }
-  select:hover, input:hover {
+  select:hover,
+  input:hover {
     border: 1px solid #444;
     box-shadow: 2px 2px 15px #333;
   }
