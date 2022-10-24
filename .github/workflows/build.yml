@@ -23,14 +23,15 @@ jobs:
         run: npm install
       - name: Build
         run: npx electron-builder
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             dist/Monot-*.dmg
-            dist/Monot-*.dmg.blockmap
-            dist/Monot-*.exe
+            dist/*.exe
             dist/Monot-*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

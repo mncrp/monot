@@ -44,7 +44,7 @@
       "installerIcon": "src/image/logo.ico"
     },
     "linux": {
-      "icon": "src/image/icon.png",
+      "icon": "src/image/logo.png",
       "target": "AppImage"
     },
     "appImage": {
