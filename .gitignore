@@ -5,4 +5,5 @@ temp/
 !.gitignore
 !.eslintrc.json
 !.prettierrc
+!.github/
 .docs
