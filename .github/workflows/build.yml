@@ -22,6 +22,7 @@ jobs:
         if: ${{ steps.setup_node_id.outputs.cache-hit != 'true' }}
         run: npm install
       - name: Build
+        if: ${{ matrix.platform == 'macos-latest' }}
         run: npx electron-builder
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

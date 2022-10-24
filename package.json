@@ -8,6 +8,7 @@
   "scripts": {
     "test": "npx electron .",
     "build": "npx electron-builder",
+    "build:mac": "npx electron-builder --mac --universal",
     "format": "npx eslint --fix ."
   },
   "author": "monochrome Project.",
