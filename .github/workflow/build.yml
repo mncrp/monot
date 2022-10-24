@@ -1,0 +1,32 @@
+name: Main
+on:
+  release:
+    types:
+      - published
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [macos-latest, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.platform }}
+    steps: 
+      - uses: actions/checkout@v3
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        id: setup_node_id
+        with:
+          node-version: 16.x
+          cache: npm
+      - name: Install Packages
+        if: ${{ steps.setup_node_id.outputs.cache-hit != 'true' }}
+        run: npm install
+      - name: Build
+        run: npx electron-builder
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dist/Monot-*.dmg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
