@@ -1,12 +1,16 @@
 main {
   position: relative;
   border-bottom: 0px solid #fff;
-  height: calc(100vh - 51px);
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  box-sizing: border-box;
   overflow: auto;
   z-index: 0;
-  top: -5px;
+  top: 0;
+  padding: 15px;
   padding-top: 45px;
-  right: -5px;
+  right: 0;
   z-index: 0;
 }
 main > div {
@@ -73,12 +77,20 @@ header h3 {
 
 .bookmark-details {
   padding-left: 4px;
-  display: flex;
+  position: relative;
 }
-.bookmark-details > #title {
-  width: 100%;
+.bookmark-details > .title {
+  position: absolute;
+  left: 2px;
+  top: 3px;
+  width: calc(100% - 40px);
+  max-width: calc(100% - 40px);
+  min-width: calc(100% - 40px);
 }
-.bookmark-details > #remove {
+.bookmark-details > .remove {
+  position: absolute;
+  top: 3px;
+  right: 2px;
   min-width: 30px;
   max-width: 30px;
 }

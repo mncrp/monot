@@ -1,6 +1,19 @@
+:root {
+  --main-background: #efefef;
+  --text-color: #000;
+  --shadow-color: #bfbfbf99;
+  --shadow-color-unhover: #0000;
+  --borderline-color: #ddd8;
+  --border-color: #ddde;
+  --border-color-unhover: #4440;
+  --backgroundcolor: #eee9;
+  --input-color-unhover: #bbb3;
+  --input-color: #efefef;
+}
+
 * {
   position: relative;
-  color: #000;
+  color: var(--text-color);
   margin: 0;
   outline: none;
 }
@@ -9,7 +22,7 @@ body {
   margin-top: 60px;
   width: auto;
   height: auto;
-  background-color: #efefef;
+  background-color: var(--main-background);
 }
 b {
   font-size: 1.1rem;
@@ -44,7 +57,7 @@ main > div {
   display: block;
   margin-bottom: 15px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #666;
+  border-bottom: 1px solid var(--border-color);
 }
 strong {
   font-weight: 900;
@@ -58,13 +71,13 @@ strong {
 #ui a img {
   width: 20vw;
   min-width: 300px;
-  border: 1px solid #8880;
+  border: 1px solid #0000;
   border-radius: 15px;
   transition: all 0.4s ease-in-out;
 }
 #ui a.selected img {
-  border: 1px solid #888;
-  box-shadow: 0 0 15px #bfbfbf55;
+  border: 1px solid var(--borderline-color);
+  box-shadow: 0 0 15px var(--shadow-color);
 }
 
 #engine > select {
@@ -73,16 +86,15 @@ strong {
 select,
 input {
   padding: 2px 5px;
-  background-color: #0001;
+  background-color: var(--input-color);
   border-radius: 12px;
-  box-shadow: 2px 2px 0px #ddd0;
+  box-shadow: 2px 2px 0px var(--shadow-color-unhover);
   transition: all 0.2s ease-in-out;
-  border: 1px solid #0000;
+  border: 1px solid var(--border-color-unhover);
 }
-select:hover,
-input:hover {
-  border: 1px solid #0001;
-  box-shadow: 2px 2px 15px #ddd;
+select:hover, input:hover {
+  box-shadow: 2px 2px 15px var(--shadow-color);
+  border: 1px solid var(--border-color);
 }
 input[type="text"] {
   width: 40vw;
@@ -103,25 +115,14 @@ label {
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
-    background-color: #202020;
-  }
-  * {
-    color: #eee;
-  }
-
-  select,
-  input {
-    background-color: #fff1;
-  }
-  select:hover,
-  input:hover {
-    border: 1px solid #444;
-    box-shadow: 2px 2px 15px #333;
-  }
-  option {
-    color: #eee;
-    background-color: #222;
-    padding: 0;
+  :root {
+    --main-background: #222;
+    --input-color: #333;
+    --text-color: #fff;
+    --shadow-color: #bfbfbf55;
+    --borderline-color: #aaa;
+    --border-color: #666e;
+    --backgroundcolor: #4448;
+    --input-color-unhover: #fff1;
   }
 }

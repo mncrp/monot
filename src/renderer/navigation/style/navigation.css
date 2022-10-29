@@ -157,7 +157,7 @@ div > span > p:first-child {
   font-weight: 100;
   cursor: default;
   display: inline-block;
-  width: 100%;
+  width: 10%;
   overflow: hidden;
 }
 div > span > p:last-child {
@@ -176,15 +176,15 @@ div > span > p:last-child {
   background-image: url('../../../image/close.png');
   transition: all 0.2s ease-in-out;
 }
+div > span > p:last-child:hover {
+  background-color: var(--closebutton-color);
+}
 div > span > img {
   display: inline-block;
   float: left;
   height: 100%;
   aspect-ratio: 1/1;
   margin-right: 5px;
-}
-div > span > p:last-child:hover {
-  background-color: var(--closebutton-color);
 }
 div > span#opened {
   background-color: var(--opened-tab-color);
@@ -199,6 +199,7 @@ tab-el {
 }
 tab-el * {
   -webkit-user-drag: none;
+  overflow: hidden;
 }
 tab-el > div {
   width: 100%;
@@ -208,7 +209,6 @@ tab-el > div {
 }
 tab-el > div > span {
   min-width: 70px;
-  overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
   padding-right: 20px;
