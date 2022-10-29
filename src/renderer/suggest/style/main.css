@@ -1,3 +1,24 @@
+:root {
+  --main-background: #efefef;
+  --text-color: #000;
+  --shadow-color: #bfbfbf55;
+  --shadow-color-unhover: #0000;
+  --backgroundcolor: #eee8;
+  --border-color: #ddd8;
+  --backgroundcolor-unhover: #efefef00;
+  --border-color-unhover: #ddd0;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --main-background: #222;
+    --text-color: #fff;
+    --shadow-color: #bfbfbf55;
+    --shadow-color-unhover: #0000;
+    --backgroundcolor: #8884;
+    --border-color: #666;
+  }
+}
+
 body {
   position: relative;
   padding: 0;
@@ -5,46 +26,32 @@ body {
 }
 * {
   transition: all .3s ease-in-out;
+  color: var(--text-color);
 }
 main {
   position: absolute;
   width: calc(100% - 20px);
   aspect-ratio: 3/1;
   max-height: 300px;
-  background-color: #efefef;
-  box-shadow: 5px 5px 15px #bfbfbf66;
+  background-color: var(--main-background);
+  box-shadow: 5px 5px 15px var(--shadow-color);
   border-radius: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
 }
 
 div {
   margin: 5px;
   border-radius: 13px;
   padding: 2px 4px;
-  background-color: #ccc0;
-  border: 1px solid #ddd0;
-  box-shadow: 5px 5px 10px #bfbfbf00;
+  background-color: var(--backgroundcolor-unhover);
+  border: 1px solid var(--border-color-unhover);
+  box-shadow: 5px 5px 10px var(--shadow-color-unhover);
   font-size: 15px;
 }
 
 div:hover,
 div#selected {
-  background-color: #ccc4;
-  border: 1px solid #bbb4;
-  box-shadow: 2px 2px 5px #bfbfbf44;
-}
-
-@media (prefers-color-scheme: dark) {
-  * {
-    color: #fff;
-  }
-  main {
-    background-color: #222;
-    border: 1px solid #666;
-  }
-  div:hover,
-  div#selected {
-    background-color: #8884;
-    border: 1px solid #666;
-  }
+  background-color: var(--backgroundcolor);
+  border: 1px solid var(--border-color);
+  box-shadow: 2px 2px 5px var(--shadow-color);
 }

@@ -133,10 +133,6 @@ app.on('ready', () => {
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   monotConfig.update();
-  if (monotConfig.get('cssTheme') != null) {
-    const style = monotConfig.get('cssTheme');
-    optionView.webContents.insertCSS(style);
-  }
 
   const suggest = new BrowserView({
     transparent: true,
@@ -146,6 +142,21 @@ app.on('ready', () => {
     }
   });
   suggest.webContents.loadURL(`file://${directory}/renderer/suggest/index.html`);
+
+  const style = (function() {
+    try {
+      return monotConfig.get('cssTheme') != null ?
+        require('fs').readFileSync(monotConfig.get('cssTheme'), 'utf-8') :
+        null;
+    } catch (e) {
+      return '';
+    }
+  })();
+  suggest.webContents.on('did-stop-loading', () => {
+    suggest.webContents.insertCSS(style, {
+      cssOrigin: 'user'
+    });
+  });
 
   // ipc channels
   ipcMain.handle('moveView', (e, link, index) => {
@@ -349,8 +360,8 @@ app.on('ready', () => {
         <div onclick="node.open('${value.pageUrl}');">
           <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
           <div class="bookmark-details">
-            <p id="title">${value.pageTitle}</p>
-            <p id="remove"><a href="#" onclick="return removeBookmark(arguments[0], ${key});">削除</a></p>
+            <p class="title">${value.pageTitle}</p>
+            <p class="remove"><a href="#" onclick="return removeBookmark(arguments[0], ${key});">削除</a></p>
           </div>
         </div>
       `;
@@ -486,6 +497,7 @@ app.on('ready', () => {
   nw();
   ipcMain.handle('options', () => {
     optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
+    optionView.webContents.insertCSS(style);
     if (BrowserWindow.fromBrowserView(optionView)) {
       global.win.removeBrowserView(optionView);
     } else {
