@@ -14,9 +14,9 @@
   "author": "monochrome Project.",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^21.1.1",
-    "electron-builder": "^23.3.3",
-    "eslint": "^8.5.0",
+    "electron": "^22.0.0",
+    "electron-builder": "^23.6.0",
+    "eslint": "^8.29.0",
     "eslint-plugin-node": "^11.1.0"
   },
   "engines": {
