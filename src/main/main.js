@@ -26,6 +26,7 @@ global.tabs = new TabManager();
 let windowSize;
 const isMac = process.platform === 'darwin';
 const directory = `${__dirname}/..`;
+const lang = require(`${directory}/proprietary/lib/lang`);
 const {History} = require(`${directory}/proprietary/lib/history`);
 const history = new History();
 const viewY = new ViewY();
