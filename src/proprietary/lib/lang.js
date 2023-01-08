@@ -16,24 +16,12 @@ const monotConfig = new LowLevelConfig(
 
 app.whenReady().then(initLang);
 
-function sysLocale() {
-  return langs.some(v => v === app.getLocale()) ?
-    app.getLocale() :
-    'ja';
-}
-
 function initLang(lang) {
   const locale = app.getLocale().substring(0, 2);
   lang = langs.some(v => v === locale) &&
     lang === undefined ?
     locale :
     'ja';
-
-  console.log(lang);
-
-  // set language if "lang" matches "langs"
-  // if (langs.some(v => v === lang))
-  // monotConfig.update().set('lang', lang).save();
 
   // set language if not already set
   if (monotConfig.update().get('lang') === undefined)
