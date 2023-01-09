@@ -7,7 +7,6 @@ const langs = [
   'en',
   'ja'
 ];
-let translation;
 const monotConfig = new LowLevelConfig(
   'config.mncfg'
 ).copyFileIfNeeded(
@@ -15,6 +14,27 @@ const monotConfig = new LowLevelConfig(
 );
 
 app.whenReady().then(initLang);
+
+function translation() {
+  function get() {
+    return JSON.parse(
+      fs.readFileSync(
+        `${
+          directory
+        }/default/language/${
+          monotConfig.update().get('lang')
+        }.json`,
+        'utf-8'
+      )
+    ).translations;
+  }
+  try {
+    return get();
+  } catch (e) {
+    initLang();
+    return get();
+  }
+}
 
 function initLang(lang) {
   const locale = app.getLocale().substring(0, 2);
@@ -26,18 +46,6 @@ function initLang(lang) {
   // set language if not already set
   if (monotConfig.update().get('lang') === undefined)
     monotConfig.set('lang', lang).save();
-
-  // load translations
-  translation = JSON.parse(
-    fs.readFileSync(
-      `${
-        directory
-      }/default/language/${
-        monotConfig.get('lang')
-      }.json`,
-      'utf-8'
-    )
-  ).translations;
 }
 
 module.exports = {
@@ -48,9 +56,9 @@ module.exports = {
     initLang(lang);
   },
   getAboutText: (inEn) => {
-    return translation.about[inEn];
+    return translation().about[inEn];
   },
   getText: (inEn) => {
-    return translation[inEn];
+    return translation()[inEn];
   }
 };

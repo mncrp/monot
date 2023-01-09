@@ -142,7 +142,6 @@ app.on('ready', () => {
       preload: `${directory}/preload/suggest.js`
     }
   });
-  // console.log(lang.getText('go_back'));
   suggest.webContents.loadURL(`file://${directory}/renderer/suggest/index.html`);
 
   const style = (function() {
