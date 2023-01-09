@@ -221,7 +221,7 @@ app.on('ready', () => {
   });
   ipcMain.handle('popupTabMenu', (e, data) => {
     global.navigationContextMenu.insert(0, new MenuItem({
-      label: '選択したタブを固定/解除',
+      label: lang.get('fix_selected'),
       id: 'tabFix',
       click: () => {
         e.senderFrame.executeJavaScript(`
@@ -362,7 +362,7 @@ app.on('ready', () => {
           <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
           <div class="bookmark-details">
             <p class="title">${value.pageTitle}</p>
-            <p class="remove"><a href="#" onclick="return removeBookmark(arguments[0], ${key});">削除</a></p>
+            <p class="remove"><a href="#" onclick="return removeBookmark(arguments[0], ${key});">${lang.get('delete')}</a></p>
           </div>
         </div>
       `;
@@ -599,7 +599,7 @@ function showSetting() {
     const fileDialog = dialog.showOpenDialog(
       setting,
       {
-        title: 'CSSテーマを選択',
+        title: lang.get('select_theme'),
         properties: [
           'openFile'
         ],
@@ -624,13 +624,13 @@ function showSetting() {
     const fileDialog = dialog.showOpenDialog(
       setting,
       {
-        title: '壁紙を選択',
+        title: lang.get('wallpaper'),
         properties: [
           'openFile'
         ],
         filters: [
           {
-            name: '画像',
+            name: lang.get('image'),
             extensions: ['png', 'jpg', 'jpeg']
           }
         ]
@@ -709,7 +709,7 @@ function showBookmark() {
         <div class="bookmark-favicon" style="background-image: url('${value.pageIcon}');"></div>
         <div class="bookmark-details">
           <p>${value.pageTitle}</p>
-          <p><a href="javascript:node.removeBookmark(${key});">削除</a></p>
+          <p><a href="javascript:node.removeBookmark(${key});">${lang.get('delete')}</a></p>
         </div>
       </div>
     `;

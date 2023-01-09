@@ -55,10 +55,10 @@ module.exports = {
   setLang: (lang) => {
     initLang(lang);
   },
-  getAboutText: (inEn) => {
+  getAbout: (inEn) => {
     return translation().about[inEn];
   },
-  getText: (inEn) => {
+  get: (inEn) => {
     return translation()[inEn];
   }
 };

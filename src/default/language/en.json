@@ -10,7 +10,7 @@
       "repository": "Repository",
       "official_website": "Official Website"
     },
-    "fix_selected": "Fix/unfix selected tabs",
+    "fix_selected": "Fix/unfix this tabs",
     "go_back": "Back",
     "go_forward": "Forward",
     "new_tab": "New Tab",

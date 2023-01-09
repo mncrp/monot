@@ -9,9 +9,9 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|正式名称|Monot by monochrome. v.2.0.0 (Build 9)|
+|正式名称|Monot by monochrome. v.2.0.0 Beta 1 (Build 10)|
 |バージョン|v.2.0.0 Beta 1|
-|ビルド番号|9|
+|ビルド番号|10|
 |公開日|2023年1月23日(木曜日)|
 |ライセンス|[monochrome. License](./LICENSE)|
 |言語|日本語, JavaScript, HTML, CSS|
