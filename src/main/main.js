@@ -142,6 +142,7 @@ app.on('ready', () => {
       preload: `${directory}/preload/suggest.js`
     }
   });
+  // console.log(lang.getText('go_back'));
   suggest.webContents.loadURL(`file://${directory}/renderer/suggest/index.html`);
 
   const style = (function() {
@@ -664,7 +665,7 @@ function showHistory() {
     }
   });
   historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
-  // objectからHTMLに変換
+  // Convert object to html
   const histories = history.getAll();
   let html = '';
   // eslint-disable-next-line
@@ -698,7 +699,7 @@ function showBookmark() {
   });
   bookmarkWin.webContents.loadFile(`${directory}/renderer/bookmark/index.html`);
   bookmark.update();
-  // objectからHTMLに変換
+  // Convert object to html
   const bookmarks = bookmark.data;
   let html = '';
   // eslint-disable-next-line

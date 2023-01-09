@@ -21,7 +21,7 @@ const aboutContent = {
 リポジトリ: https://github.com/mncrp/monot
 公式サイト: https://mncrp.github.io/project/monot/
 
-Copyright ©︎ 2021-2022 monochrome Project.`
+Copyright ©︎ 2021 monochrome Project.`
 };
 
 const navigationContextMenuTemplate = [

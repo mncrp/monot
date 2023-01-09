@@ -45,9 +45,12 @@ module.exports = {
     return app.getLocale();
   },
   setLang: (lang) => {
-    initLang();
+    initLang(lang);
   },
-  getText: (lang, inEn) => {
-    return translation;
+  getAboutText: (inEn) => {
+    return translation.about[inEn];
+  },
+  getText: (inEn) => {
+    return translation[inEn];
   }
 };
