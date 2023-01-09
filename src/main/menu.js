@@ -3,6 +3,7 @@ const {
   dialog,
   app,
 } = require('electron');
+const lang = require('../proprietary/lib/lang');
 
 const global = require('./global');
 
@@ -11,28 +12,28 @@ const isMac = process.platform === 'darwin';
 const aboutContent = {
   type: 'info',
   icon: isMac ? './src/image/logo-mac.png' : './src/image/logo.png',
-  title: 'Monotについて',
-  message: 'Monotについて',
-  detail: `Monot by monochrome. v.1.1.0 (Build 8)
-バージョン: 1.1.0
-ビルド番号: 8
+  title: lang.getAbout('title'),
+  message: lang.getAbout('title'),
+  detail: `Monot by monochrome. v.2.0.0 Beta 1 (Build 10)
+バージョン: 2.0.0 Beta 1
+ビルド番号: 10
 開発元: monochrome Project.
 
 リポジトリ: https://github.com/mncrp/monot
 公式サイト: https://mncrp.github.io/project/monot/
 
-Copyright ©︎ 2021-2022 monochrome Project.`
+Copyright ©︎ 20212-2023 monochrome Project.`
 };
 
 const navigationContextMenuTemplate = [
   {
-    label: '戻る',
+    label: lang.get('go_back'),
     click: () => {
       global.tabs.get().goBack();
     }
   },
   {
-    label: '進む',
+    label: lang.get('go_forward'),
     click: () => {
       global.tabs.get().goForward();
     }
@@ -41,7 +42,7 @@ const navigationContextMenuTemplate = [
     type: 'separator'
   },
   {
-    label: '新規タブ',
+    label: lang.get('new_tab'),
     click: () => {
       global.tabs.newTab();
     }
@@ -50,19 +51,19 @@ const navigationContextMenuTemplate = [
     type: 'separator'
   },
   {
-    label: '設定',
+    label: lang.get('setting'),
     click: () => {
       global.showSetting();
     }
   },
   {
-    label: '履歴',
+    label: lang.get('history'),
     click: () => {
       global.showHistory();
     }
   },
   {
-    label: 'ブックマーク',
+    label: lang.get('bookmark'),
     click: () => {
       global.showBookmark();
     }
@@ -75,14 +76,14 @@ const menuTemplate = [
     label: 'Monot',
     submenu: [
       {
-        label: 'Monotについて',
+        label: lang.getAbout('title'),
         accelerator: 'CmdOrCtrl+Alt+A',
         click: () => {
           dialog.showMessageBox(null, aboutContent);
         }
       },
       {
-        label: '設定',
+        label: lang.get('setting'),
         accelerator: 'CmdOrCtrl+,',
         click: () => {
           global.showSetting();
@@ -93,17 +94,17 @@ const menuTemplate = [
       },
       {
         role: 'hideothers',
-        label: 'ほかを非表示'
+        label: lang.get('hideothers')
       },
       {
         role: 'hide',
-        label: 'Monot を非表示'
+        label: lang.get('hide')
       },
       {
         type: 'separator'
       },
       {
-        label: 'Monot を終了',
+        label: lang.get('quit'),
         accelerator: 'CmdOrCtrl+Q',
         click: () => {
           global.windowClose();
@@ -113,10 +114,10 @@ const menuTemplate = [
     ]
   },
   {
-    label: 'ファイル',
+    label: lang.get('file'),
     submenu: [
       {
-        label: '新しいタブ',
+        label: lang.get('new_tab'),
         accelerator: 'CmdOrCtrl+T',
         click: () => {
           global.tabs.newTab();
@@ -126,14 +127,14 @@ const menuTemplate = [
         type: 'separator'
       },
       {
-        label: 'タブを閉じる',
+        label: lang.get('close_tab'),
         accelerator: 'CmdOrCtrl+W',
         click: () => {
           global.tabs.removeTab();
         }
       },
       {
-        label: 'ウィンドウを閉じる',
+        label: lang.get('close_window'),
         accelerator: 'CmdOrCtrl+Shift+W',
         click: () => {
           global.windowClose();
@@ -142,65 +143,65 @@ const menuTemplate = [
     ]
   },
   {
-    label: '編集',
+    label: lang.get('edit'),
     submenu: [
       {
-        label: '取り消す',
+        label: lang.get('redo'),
         role: 'redo'
       },
       {
-        label: 'やり直す',
+        label: lang.get('undo'),
         role: 'undo'
       },
       {
         type: 'separator'
       },
       {
-        label: 'カット',
+        label: lang.get('cut'),
         role: 'cut'
       },
       {
-        label: 'コピー',
+        label: lang.get('copy'),
         role: 'copy'
       },
       {
-        label: 'ペースト',
+        label: lang.get('paste'),
         role: 'paste'
       },
       {
-        role: 'pasteAndMatchStyle',
+        role: lang.get('pasteAndMatchStyle'),
         label: 'ペーストしてスタイルを合わせる'
       },
       {
-        label: '削除',
+        label: lang.get('delete'),
         role: 'delete'
       },
       {
-        label: '全て選択',
+        label: lang.get('selectAll'),
         role: 'selectAll'
       }
     ]
   },
   {
-    label: '表示',
+    label: lang.get('view'),
     id: 'view',
     submenu: [
       {
-        label: '再読み込み',
+        label: lang.get('reload'),
         accelerator: 'CmdOrCtrl+R',
         click: () => {
           global.tabs.get().reload();
         }
       },
       {
-        label: '戻る',
+        label: lang.get('go_back'),
         accelerator: 'Alt+Left',
         click: () => {
           global.tabs.get().goBack();
         }
       },
       {
-        label: '進む',
+        label: lang.get('go_forward'),
         accelerator: 'Alt+Right',
         click: () => {
           global.tabs.get().goForward();
@@ -210,28 +211,28 @@ const menuTemplate = [
         type: 'separator'
       },
       {
-        label: '拡大',
+        label: lang.get('zoom'),
         accelerator: 'CmdOrCtrl+^',
         click: () => {
           global.tabs.get().entity.webContents.send('zoom');
         }
       },
       {
-        label: '縮小',
+        label: lang.get('shrink'),
         accelerator: 'CmdOrCtrl+-',
         click: () => {
           global.tabs.get().entity.webContents.send('shrink');
         }
       },
       {
-        label: '等倍',
+        label: lang.get('actual'),
         accelerator: 'CmdOrCtrl+0',
         click: () => {
           global.tabs.get().entity.webContents.send('actual');
         }
       },
       {
-        label: '拡大',
+        label: lang.get('zoom'),
         accelerator: 'CmdOrCtrl+Shift+Plus',
         visible: false,
         click: () => {
@@ -240,30 +241,30 @@ const menuTemplate = [
       },
       {
         role: 'toggleFullScreen',
-        label: 'フルスクリーンを切り替える'
+        label: lang.get('toggleFullScreen')
       },
       {
         type: 'separator'
       },
       {
-        label: '開発',
+        label: lang.get('develop'),
         submenu: [
           {
-            label: '開発者向けツール',
+            label: lang.get('devTools'),
             accelerator: 'F12',
             click: () => {
               global.tabs.get().entity.webContents.toggleDevTools();
             }
           },
           {
-            label: 'ページのソースを表示',
+            label: lang.get('view_source'),
             accelerator: 'CmdOrCtrl+Alt+U',
             click: () => {
               global.tabs.newTab(true, `view-source:${global.tabs.get().entity.webContents.getURL()}`);
             }
           },
           {
-            label: '開発者向けツール',
+            label: lang.get('devTools'),
             accelerator: 'CmdOrCtrl+Option+I',
             visible: false,
             click: () => {
@@ -275,14 +276,14 @@ const menuTemplate = [
     ]
   },
   {
-    label: 'ウィンドウ',
+    label: lang.get('window'),
     submenu: [
       {
-        label: 'しまう',
+        label: lang.get('minimize'),
         role: 'minimize'
       },
       {
-        label: '拡大/縮小',
+        label: lang.get('zoom_shrink'),
         click: () => {
           if (isMac)
             global.win.isFullScreen() ? global.win.fullScreen = false : global.win.fullScreen = true;
@@ -294,7 +295,7 @@ const menuTemplate = [
         type: 'separator'
       },
       {
-        label: 'タブの固定/解除',
+        label: lang.get('fix_tab'),
         accelerator: 'CmdOrCtrl+Shift+F',
         click: () => {
           if (global.win !== null) {
@@ -411,10 +412,11 @@ const menuTemplate = [
     ]
   },
   {
-    label: 'ヘルプ',
+    label: lang.get('help'),
+    role: 'help',
     submenu: [
       {
-        label: '公式サイト',
+        label: lang.getAbout('official_website'),
         click: () => {
           if (global.tabs.get() !== null) {
             global.tabs.get().load('https://mncrp.github.io/project/monot/');
@@ -422,7 +424,7 @@ const menuTemplate = [
         }
       },
       {
-        label: 'ドキュメント',
+        label: lang.get('document'),
         click: () => {
           if (global.tabs.get() !== null) {
             global.tabs.get().load('https://mncrp.github.io/document/monot/');
@@ -435,19 +437,19 @@ const menuTemplate = [
 // context
 const contextTemplate = [
   {
-    label: '戻る',
+    label: lang.get('go_back'),
     click: () => {
       global.tabs.get().goBack();
     }
   },
   {
-    label: '進む',
+    label: lang.get('go_forward'),
     click: () => {
       global.tabs.get().goForward();
     }
   },
   {
-    label: '再読み込み',
+    label: lang.get('reload'),
     click: () => {
       global.tabs.get().reload();
     }
@@ -456,23 +458,7 @@ const contextTemplate = [
     type: 'separator'
   },
   {
-    label: '縮小',
-    click: () => {
-      global.tabs.get().entity.webContents.setZoomLevel(
-        global.tabs.get().entity.webContents.getZoomLevel() - 1
-      );
-    }
-  },
-  {
-    label: '実際のサイズ',
-    click: () => {
-      global.tabs.get().entity.webContents.setZoomLevel(
-        1
-      );
-    }
-  },
-  {
-    label: '拡大',
+    label: lang.get('zoom'),
     click: () => {
       global.tabs.get().entity.webContents.setZoomLevel(
         global.tabs.get().entity.webContents.getZoomLevel() + 1
@@ -480,16 +466,32 @@ const contextTemplate = [
     }
   },
   {
+    label: lang.get('shrink'),
+    click: () => {
+      global.tabs.get().entity.webContents.setZoomLevel(
+        global.tabs.get().entity.webContents.getZoomLevel() - 1
+      );
+    }
+  },
+  {
+    label: lang.get('actual'),
+    click: () => {
+      global.tabs.get().entity.webContents.setZoomLevel(
+        1
+      );
+    }
+  },
+  {
     type: 'separator'
   },
   {
-    label: '開発者向けツール',
+    label: lang.get('devTools'),
     click: () => {
       global.tabs.get().entity.webContents.toggleDevTools();
     }
   },
   {
-    label: 'ソースコードを表示',
+    label: lang.get('view_source'),
     click: () => {
       global.tabs.newTab(true, `view-source:${global.tabs.get().entity.webContents.getURL()}`);
     }
