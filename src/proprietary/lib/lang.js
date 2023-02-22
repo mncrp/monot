@@ -22,7 +22,7 @@ function translation() {
         `${
           directory
         }/default/language/${
-          monotConfig.update().get('lang')
+          monotConfig.update().get('lang') || 'ja'
         }.json`,
         'utf-8'
       )
