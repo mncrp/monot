@@ -84,5 +84,8 @@ contextBridge.exposeInMainWorld('node', {
   },
   suggestSelect: () => {
     ipcRenderer.invoke('suggest.select');
+  },
+  translate: (inEn) => {
+    return ipcRenderer.invoke('translate.get', inEn);
   }
 });

@@ -2,7 +2,7 @@
 <html lang="ja" dir="ltr">
 <head>
   <meta charset="utf-8">
-  <title>サーバーが見つかりませんでした</title>
+  <title>${server_not_found}</title>
   <link rel="stylesheet" href="style/main.css">
   <link rel="stylesheet" href="../proprietary/style/font.css">
   <style>
@@ -29,9 +29,10 @@
   </style>
 </head>
 <body>
-<div>
-  <h1>サーバーが見つかりませんでした</h1>
-  <p>ウェブサイト "<span></span>" は見つかりませんでした。インターネット接続をご確認の上、もう一度ウェブサイトをご参照ください。</p>
-</div>
+  <div>
+    <h1>${server_not_found}</h1>
+    <p>${not_found1} "<span></span>" ${not_found2}</p>
+  </div>
+  <script src="../proprietary/renderer/lang.js"></script>
 </body>
 </html>

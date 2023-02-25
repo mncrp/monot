@@ -67,6 +67,7 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
+  global.win.webContents.openDevTools();
   global.win.setBackgroundColor('#efefef');
   global.win.loadFile(
     isMac ?
@@ -532,6 +533,9 @@ app.on('ready', () => {
         --wallpaper: none!important;
       }
     `);
+  });
+  ipcMain.handle('translate.get', (e, inEn) => {
+    return lang.get(inEn);
   });
 });
 

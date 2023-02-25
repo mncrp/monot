@@ -8,16 +8,16 @@
   </head>
   <body class="mac">
     <nav>
-      <a href="javascript:node.winClose()" title="終了" id="close"></a>
-      <a href="javascript:node.winMinimize()" title="最小化" id="minimize"></a>
-      <a href="javascript:node.maxMinMac()" title="最大化" id="maximize"></a>
-      <a href="javascript:node.moveToNewTab()" title="ホーム" id="home"></a>
-      <a href="javascript:node.reloadBrowser()" title="再読み込み" id="reload"></a>
-      <a href="javascript:node.backBrowser()" title="戻る" id="prev"></a>
-      <a href="javascript:node.goBrowser()" title="進む" id="next"></a>
-      <input type="text" placeholder="検索する単語またはURLを入力" title="検索する単語またはURLを入力" id="textbox">
-      <a href="javascript:moveBrowser()" title="移動" id="move"></a>
-      <a href="javascript:node.showMenu()" title="メニュー表示" id="menu" class="window"></a>
+      <a href="javascript:node.winClose()" title="${close}" id="close"></a>
+      <a href="javascript:node.winMinimize()" title="${minimize}" id="minimize"></a>
+      <a href="javascript:node.maxMinMac()" title="${maximize}" id="maximize"></a>
+      <a href="javascript:node.moveToNewTab()" title="Home" id="home"></a>
+      <a href="javascript:node.reloadBrowser()" title="${reload}" id="reload"></a>
+      <a href="javascript:node.backBrowser()" title="${go_back}" id="prev"></a>
+      <a href="javascript:node.goBrowser()" title="${go_forward}" id="next"></a>
+      <input type="text" placeholder="${enter_url_word}" id="textbox" onkeyup="textKey(arguments[0])">
+      <a href="javascript:moveBrowser()" title="${go}" id="move"></a>
+      <a href="javascript:node.showMenu()" title="${view_menu}" id="menu" class="window"></a>
     </nav>
     <tab-el>
       <div>
@@ -44,5 +44,6 @@
         }
       });
     </script>
+    <script src="../../proprietary/renderer/lang.js"></script>
   </body>
 </html>
