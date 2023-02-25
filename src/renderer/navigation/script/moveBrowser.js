@@ -5,7 +5,7 @@ function moveBrowser() {
   node.moveBrowser(word);
 }
 
-const textKey = (e) => {
+function textKey(e) {
   const word = e.target.value;
   console.log(word === '');
   if (word !== '')
@@ -26,5 +26,4 @@ const textKey = (e) => {
     // <span#opened>
     moveBrowser();
   }
-};
-
+}
