@@ -7,10 +7,10 @@ function moveBrowser() {
 
 function textKey(e) {
   const word = e.target.value;
-  console.log(word === '');
-  if (word !== '')
+
+  if (word !== '' && e.key.length === 1)
     node.suggest(word);
-  else
+  else if (e.key.length === 1)
     node.suggestClose();
 
   if (!e.isComposing && e.key === 'ArrowUp') {
