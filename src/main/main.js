@@ -537,6 +537,9 @@ app.on('ready', () => {
   ipcMain.handle('translate.get', (e, inEn) => {
     return lang.get(inEn);
   });
+  ipcMain.handle('translate.getAbout', (e, inEn) => {
+    return lang.getAbout(inEn);
+  });
 });
 
 app.on('window-all-closed', () => {

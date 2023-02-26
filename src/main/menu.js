@@ -15,14 +15,14 @@ const aboutContent = {
   title: lang.getAbout('title'),
   message: lang.getAbout('title'),
   detail: `Monot by monochrome. v.2.0.0 Beta 1 (Build 10)
-バージョン: 2.0.0 Beta 1
-ビルド番号: 10
-開発元: monochrome Project.
+${lang.getAbout('version')}: 2.0.0 Beta 1
+${lang.getAbout('build_no')}: 10
+${lang.getAbout('developer')}: monochrome Project.
 
-リポジトリ: https://github.com/mncrp/monot
-公式サイト: https://mncrp.github.io/project/monot/
+${lang.getAbout('repository')}: https://github.com/mncrp/monot
+${lang.getAbout('official_website')}: https://mncrp.github.io/project/monot/
 
-Copyright ©︎ 20212-2023 monochrome Project.`
+Copyright ©︎ 2021-2023 monochrome Project.`
 };
 
 const navigationContextMenuTemplate = [

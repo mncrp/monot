@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="./style/main.css">
   <link rel="stylesheet" href="./style/contents.css">
-  <title>メニュー</title>
+  <title>${menu}</title>
 </head>
 <body id="history">
-  <header><h3>履歴</h3></header>
+  <header><h3>${history}</h3></header>
   <main>
     <div>
       <div id="histories">
-        <a id="window" href="javascript:node.viewHistory();">ウィンドウを表示...</a>
+        <a id="window" href="javascript:node.viewHistory();">${show_window}...</a>
       </div>
     </div>
   </main>
@@ -19,5 +19,6 @@
     window.scrollTo(0, 1);
     node.updateHistory();
   </script>
+  <script src="../../proprietary/renderer/lang.js"></script>
 </body>
 </html>
