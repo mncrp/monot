@@ -9,5 +9,8 @@ contextBridge.exposeInMainWorld('node', {
   },
   removeBookmark: (key) => {
     ipcRenderer.invoke('removeBookmark', key);
+  },
+  translate: (inEn) => {
+    return ipcRenderer.invoke('translate.get', inEn);
   }
 });
