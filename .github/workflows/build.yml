@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v3
         id: setup_node_id
         with:
-          node-version: 16.x
+          node-version: 15.x
           cache: npm
       - name: Install Packages
         if: ${{ steps.setup_node_id.outputs.cache-hit != 'true' }}
