@@ -45,6 +45,9 @@
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "src/image/logo.ico"
     },
+    "portable": {
+            "artifactName": "Monot-v1.1.1-portable.exe"
+    },
     "linux": {
       "icon": "src/image/logo.png",
       "target": "AppImage"
