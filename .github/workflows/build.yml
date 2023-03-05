@@ -23,13 +23,12 @@ jobs:
         run: npm install
       - name: Build MacOS
         if: ${{ matrix.platform == 'macos-latest' }}
-        run: npm run build
+        run: npm run build:mac
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       - name: Build Windows
         if: ${{ matrix.platform == 'windows-latest' }}
-        run: |
-          npm run build
+        run: npm run build
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       - name: Build Linux
