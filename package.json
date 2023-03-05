@@ -37,11 +37,6 @@
     ],
     "win": {
       "icon": "src/image/logo.ico",
-      "arch": [
-          "x64",
-          "ia32",
-          "arm64"
-        ],
       "target": ["nsis", "zip"],
       "legalTrademarks": "Copyright 2021-2022 monochrome."
     },
