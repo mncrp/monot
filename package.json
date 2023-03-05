@@ -60,8 +60,7 @@
     "mac": {
       "identity": null,
       "icon": "src/image/logo.icns",
-      "category": "public.app-category.reference",
-      "arch": ["x64", "arm64"],
+      "category": "public.app-category.reference"
       "target": "dmg"
     },
     "dmg": {
