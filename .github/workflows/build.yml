@@ -23,19 +23,18 @@ jobs:
         run: npm install
       - name: Build MacOS
         if: ${{ matrix.platform == 'macos-latest' }}
-        run: npm run build:mac
+        run: npm run build
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       - name: Build Windows
         if: ${{ matrix.platform == 'windows-latest' }}
         run: |
-          npm run build -wl
-          npm run build:portable -wl
+          npm run build
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       - name: Build Linux
         if: ${{ matrix.platform == 'ubuntu-latest' }}
-        run: npm run build -wl
+        run: npm run build
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       - name: Release
@@ -45,6 +44,7 @@ jobs:
           files: |
             dist/Monot-*.dmg
             dist/*.exe
+            dist/*.zip
             dist/Monot-*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
