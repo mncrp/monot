@@ -37,7 +37,7 @@
     ],
     "win": {
       "icon": "src/image/logo.ico",
-      "target": ["nsis", "zip"],
+      "target": ["nsis", "zip", "portable"],
       "legalTrademarks": "Copyright 2021-2022 monochrome."
     },
     "nsis": {
@@ -46,7 +46,7 @@
       "installerIcon": "src/image/logo.ico"
     },
     "portable": {
-            "artifactName": "Monot-v1.1.1-portable.exe"
+      "artifactName": "Monot-v1.1.1-portable.exe"
     },
     "linux": {
       "icon": "src/image/logo.png",
