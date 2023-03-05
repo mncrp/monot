@@ -29,9 +29,7 @@ jobs:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       - name: Build Windows
         if: ${{ matrix.platform == 'windows-latest' }}
-        run: |
-          npm run build
-          npm run build:portable
+        run: npm run build
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
       - name: Build Linux
