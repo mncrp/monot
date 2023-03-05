@@ -8,7 +8,6 @@
   "scripts": {
     "test": "npx electron .",
     "build": "npx electron-builder",
-    "build:mac": "npx electron-builder --mac --universal",
     "build:portable": "npx electron-builder --dir",
     "format": "npx eslint --fix ."
   },
@@ -42,7 +41,7 @@
           "ia32",
           "arm64"
         ],
-      "target": "nsis",
+      "target": ["nsis", "zip"],
       "legalTrademarks": "Copyright 2021-2022 monochrome."
     },
     "nsis": {
@@ -52,12 +51,7 @@
     },
     "linux": {
       "icon": "src/image/logo.png",
-      "target": "AppImage",
-      "arch": [
-          "x64",
-          "ia32",
-          "arm64"
-       ]
+      "target": "AppImage"
     },
     "appImage": {
       "category": "Utility",
@@ -67,6 +61,7 @@
       "identity": null,
       "icon": "src/image/logo.icns",
       "category": "public.app-category.reference",
+      arch: ["x64", "arm64"],
       "target": "dmg"
     },
     "dmg": {
