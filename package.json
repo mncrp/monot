@@ -61,7 +61,7 @@
     "mac": {
       "identity": null,
       "icon": "src/image/logo.icns",
-      "category": "public.app-category.reference"
+      "category": "public.app-category.reference",
       "target": "dmg"
     },
     "dmg": {
