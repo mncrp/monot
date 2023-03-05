@@ -9,6 +9,7 @@
     "test": "npx electron .",
     "build": "npx electron-builder",
     "build:mac": "npx electron-builder --mac --universal",
+    "build:portable": "npx electron-builder --dir",
     "format": "npx eslint --fix ."
   },
   "author": "monochrome Project.",
@@ -36,6 +37,11 @@
     ],
     "win": {
       "icon": "src/image/logo.ico",
+      "arch": [
+          "x64",
+          "ia32",
+          "arm64"
+        ],
       "target": "nsis",
       "legalTrademarks": "Copyright 2021-2022 monochrome."
     },
@@ -46,7 +52,12 @@
     },
     "linux": {
       "icon": "src/image/logo.png",
-      "target": "AppImage"
+      "target": "AppImage",
+      "arch": [
+          "x64",
+          "ia32",
+          "arm64"
+       ]
     },
     "appImage": {
       "category": "Utility",
