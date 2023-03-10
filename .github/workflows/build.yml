@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         platform: [macos-latest, ubuntu-latest, windows-latest]
+      fail-fast: false
 
     runs-on: ${{ matrix.platform }}
     steps: 
@@ -16,7 +17,7 @@ jobs:
         uses: actions/setup-node@v3
         id: setup_node_id
         with:
-          node-version: 16.x
+          node-version: 15.x
           cache: npm
       - name: Install Packages
         if: ${{ steps.setup_node_id.outputs.cache-hit != 'true' }}
@@ -26,8 +27,13 @@ jobs:
         run: npm run build:mac
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
-      - name: Build Other
-        if: ${{ matrix.platform != 'macos-latest' }}
+      - name: Build Windows
+        if: ${{ matrix.platform == 'windows-latest' }}
+        run: npm run build
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+      - name: Build Linux
+        if: ${{ matrix.platform == 'ubuntu-latest' }}
         run: npm run build
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
@@ -38,6 +44,7 @@ jobs:
           files: |
             dist/Monot-*.dmg
             dist/*.exe
+            dist/*.zip
             dist/Monot-*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
