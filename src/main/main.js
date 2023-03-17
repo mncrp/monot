@@ -134,7 +134,6 @@ app.on('ready', () => {
   });
   optionView.webContents.loadURL(`file://${directory}/renderer/menu/index.html`);
   monotConfig.update();
-  optionView.webContents.openDevTools();
 
   const suggest = new BrowserView({
     transparent: true,
