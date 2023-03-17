@@ -3,7 +3,7 @@ const frameTop = () => document.getElementById('iframe');
 
 // eslint-disable-next-line
 function prev() {
-  frameTop.className = '';
+  frameTop().className = '';
 }
 
 // eslint-disable-next-line

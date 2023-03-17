@@ -58,6 +58,7 @@
     "server_not_found": "サーバーが見つかりませんでした",
     "not_found1": "ウェブサイト \"",
     "not_found2": "\" が見つかりませんでした。インターネット接続をご確認の上、再度お試しください。",
+    "appearance": "外観",
     "select_theme": "CSSテーマを選択",
     "select_wallpaper": "壁紙を選択",
     "select_file": "ファイルを選択",
