@@ -21,20 +21,20 @@
         <a id="thin" href="javascript:ui('thin');"><img src="../../image/ui-thin.png" alt="thin"></a>
       </div>
       <div id="wallpaper">
-        <h3>壁紙</h3>
-        <p><a href="javascript:node.selectWallpaper();">ファイルを選択...</a></p>
-        <p><a href="javascript:node.resetWallpaper();">壁紙をリセット</a></p>
+        <h3>${wallpaper}</h3>
+        <p><a href="javascript:node.selectWallpaper();">${select_file}...</a></p>
+        <p><a href="javascript:node.resetWallpaper();">${reset_wallpaper}</a></p>
       </div>
       <div id="theme">
-        <h3>テーマ</h3>
-        <p><a href="javascript:node.selectTheme();">ファイルを選択...</a></p>
-        <p><a href="javascript:node.resetTheme();">テーマをリセット</a></p>
+        <h3>${theme}</h3>
+        <p><a href="javascript:node.selectTheme();">${select_file}...</a></p>
+        <p><a href="javascript:node.resetTheme();">${reset_theme}</a></p>
       </div>
     </div>
     <div id="engine">
-      <h2>検索エンジン</h2>
+      <h2>${searchEngine}</h2>
       <select>
-        <option value="ddg">DuckDuckGo (標準)</option>
+        <option value="ddg">DuckDuckGo (${default})</option>
         <option value="google">Google</option>
         <option value="yahoo-jp">Yahoo! Japan</option>
         <option value="bing">Bing</option>
@@ -43,25 +43,25 @@
       </select>
     </div>
     <div id="history">
-      <h2>履歴</h2>
-      <a href="javascript:node.deleteHistory();">履歴を削除</a>
+      <h2>${history}</h2>
+      <a href="javascript:node.deleteHistory();">${remove_history}</a>
     </div>
     <div id="experiments">
-      <h2>実験的な機能</h2>
-      <p style="font-size: 12px;">これらは試験的に実装された機能です。標準ではすべてオフですが、この設定はユーザーが変更できます。また、これらの機能を有効にしてもし損害が発生しても責任は負えません。</p>
-      <label><input type="checkbox" value="whiteInDark">ダークモード時でもWebページに明るい背景を使用する (White In Dark)</label>
-      <label><input type="checkbox" value="forceDark">強制ダークモード (Force Dark)</label>
-      <label><input type="checkbox" value="fontChange">フォント変更 (Font Change)</input></label>
-      <input type="text" placeholder="ここに変更するフォント名を入力" disabled id="changedfont">
+      <h2>${experimental_function}</h2>
+      <p style="font-size: 12px;">${experimental_note}</p>
+      <label><input type="checkbox" value="whiteInDark">${whiteInDark} (White In Dark)</label>
+      <label><input type="checkbox" value="forceDark">${forceDark} (Force Dark)</label>
+      <label><input type="checkbox" value="fontChange">${fontChange} (Font Change)</input></label>
+      <input type="text" placeholder="${changedfont}" disabled id="changedfont">
     </div>
     <footer>
       <h3><strong>Monot by monochrome.</strong></h3>
       <p>v.1.1.0 (Build 8)</p>
       <small>Copyright &copy; 2021-2022 monochrome Project.</small><br>
-      <small>開発者: <a
+      <small>$[developer]: <a
           href="javascript:node.open('https://mncrp.github.io/project/monot/#developers')">https://mncrp.github.io/project/monot/#developers</a></small>
       <br>
-      <p>謝辞</p>
+      <p>${acknowledgements}</p>
       <ul>
         <li><a href="javascript:node.open('https://electronjs.org');">Electron</a></li>
         <li><a href="javascript:node.open('https://electron.build');">electron-builder</a></li>
@@ -71,6 +71,7 @@
     </footer>
   </main>
   <script src="./script/index.js"></script>
+  <script src="../../proprietary/renderer/lang.js"></script>
 </body>
 
 </html>
