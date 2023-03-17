@@ -680,14 +680,14 @@ function showHistory() {
       <div onclick="node.open('${value.pageUrl}');">
         <div class="history-favicon" style="background-image: url('${value.pageIcon}');"></div>
         <div class="history-details">
-          <p>${value.pageTitle}</p>
+          <p>${value.pageTitle.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}</p>
         </div>
       </div>
     `;
   }
   historyWin.webContents.executeJavaScript(`
     document.getElementById('histories').innerHTML = \`${html}\`;
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
   `);
 }
 function showBookmark() {
