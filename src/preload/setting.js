@@ -23,21 +23,13 @@ ipcRenderer.on('updateTheme', (e, filepath) => {
 });
 
 ipcRenderer.on('updateWallpaper', (e, filepath) => {
-  let setWallpaperMessage = '';
-  if (filepath === undefined) {
-    setWallpaperMessage = '${wallpaper_set1}';
-  } else {
-    setWallpaperMessage = `\${wallpaper_set1} ${filepath} \${wallpaper_set2}`;
+  if (filepath !== undefined) {
+    (async function() {
+      webFrame.executeJavaScript(`
+      document.getElementById('wallpaper-msg').innerHTML = \`
+      ${await ipcRenderer.invoke('translate.get', 'wallpaper_set1')} ${filepath} ${await ipcRenderer.invoke('translate.get', 'wallpaper_set2')}\`;`);
+    })();
   }
-
-  webFrame.executeJavaScript(`
-    document.getElementById('wallpaper').innerHTML = \`
-    <h2>\${wallpaper}</h2>
-    <p>${setWallpaperMessage}</p>
-    <p><a href="javascript:node.selectWallpaper();">\${select_file}...</a></p>
-    <p><a href="javascript:node.resetWallpaper();">\${reset_wallpaper}</a></p>
-  \`;
-  `);
 });
 
 contextBridge.exposeInMainWorld('node', {
@@ -70,5 +62,11 @@ contextBridge.exposeInMainWorld('node', {
   },
   translate: (inEn) => {
     return ipcRenderer.invoke('translate.get', inEn);
+  },
+  translateAbout: (inEn) => {
+    return ipcRenderer.invoke('translate.getAbout', inEn);
+  },
+  setLang: (lang) => {
+    ipcRenderer.invoke('setLang', lang);
   }
 });

@@ -36,16 +36,18 @@ function translation() {
   }
 }
 
-function initLang(lang) {
+function initLang(lang = undefined) {
   const locale = app.getLocale().substring(0, 2);
-  lang = langs.some(v => v === locale) &&
-    lang === undefined ?
-    locale :
-    'ja';
+  if (lang === undefined &&
+    monotConfig.update().get('lang') === undefined)
+    lang = langs.some(v => v === locale) ?
+      locale :
+      'en';
 
-  // set language if not already set
-  if (monotConfig.update().get('lang') === undefined)
-    monotConfig.set('lang', lang).save();
+  console.log(lang);
+
+  if (lang !== undefined)
+    monotConfig.update().set('lang', lang).save();
 }
 
 module.exports = {

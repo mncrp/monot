@@ -22,6 +22,7 @@
       </div>
       <div id="wallpaper">
         <h3>${wallpaper}</h3>
+        <p id="wallpaper-msg"></p>
         <p><a href="javascript:node.selectWallpaper();">${select_file}...</a></p>
         <p><a href="javascript:node.resetWallpaper();">${reset_wallpaper}</a></p>
       </div>
@@ -31,9 +32,17 @@
         <p><a href="javascript:node.resetTheme();">${reset_theme}</a></p>
       </div>
     </div>
+    <div id="language">
+      <h2>${language}</h2>
+      <select id="lang-select" onchange="node.setLang(document.getElementById('lang-select').value);">
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+      </select>
+    </div>
     <div id="engine">
       <h2>${searchEngine}</h2>
-      <select>
+      <select id="engine-select" onchange="engine(arguments[0]);
+      ">
         <option value="ddg">DuckDuckGo (${default})</option>
         <option value="google">Google</option>
         <option value="yahoo-jp">Yahoo! Japan</option>
@@ -49,10 +58,10 @@
     <div id="experiments">
       <h2>${experimental_function}</h2>
       <p style="font-size: 12px;">${experimental_note}</p>
-      <label><input type="checkbox" value="whiteInDark">${whiteInDark} (White In Dark)</label>
-      <label><input type="checkbox" value="forceDark">${forceDark} (Force Dark)</label>
-      <label><input type="checkbox" value="fontChange">${fontChange} (Font Change)</input></label>
-      <input type="text" placeholder="${changedfont}" disabled id="changedfont">
+      <label><input type="checkbox" value="whiteInDark" onclick="experimental(arguments[0])">${whiteInDark} (White In Dark)</label>
+      <label><input type="checkbox" value="forceDark" onclick="experimental(arguments[0])">${forceDark} (Force Dark)</label>
+      <label><input type="checkbox" value="fontChange" onclick="experimental(arguments[0])">${fontChange} (Font Change)</input></label>
+      <input type="text" placeholder="${changedfont}" disabled id="changedfont" onclick="experimental(arguments[0])">
     </div>
     <footer>
       <h3><strong>Monot by monochrome.</strong></h3>
@@ -73,5 +82,4 @@
   <script src="./script/index.js"></script>
   <script src="../../proprietary/renderer/lang.js"></script>
 </body>
-
 </html>
