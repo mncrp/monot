@@ -12,15 +12,16 @@
   <div id="top">
     <h1>Monot<h5> by monochrome.</h5></h1>
     <div>
-      <input id="search" type="search" placeholder="検索する単語を入力">
+      <input id="search" type="search" placeholder="${type_search}">
       <button id="searchButton"></button>
     </div>
   </div>
   <div id="bookmarks">
-    <p><a href="#bookmarks">ブックマーク</a></p>
+    <p><a href="#bookmarks">${bookmark}</a></p>
     <div id="bookmarks-content"></div>
   </div>
   <script src="script/search.js"></script>
   <script src="script/design.js"></script>
+  <script src="../proprietary/renderer/lang.js"></script>
 </body>
 </html>

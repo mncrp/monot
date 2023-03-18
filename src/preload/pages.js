@@ -138,5 +138,8 @@ contextBridge.exposeInMainWorld('node', {
         pageIcon: icon
       });
     }
+  },
+  translate: (inEn) => {
+    return ipcRenderer.invoke('translate.get', inEn);
   }
 });

@@ -105,6 +105,25 @@ main > *:not(#menu-last) {
   transform: rotate(180deg);
 }
 
+.arrow {
+  position: relative;
+}
+.arrow::after {
+  content: '';
+  float: right;
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  left: auto;
+  height: 100%;
+  aspect-ratio: 1/1;
+  background-image: url('../../../image/prev.png');
+  background-size: 65%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -114,4 +133,8 @@ main > *:not(#menu-last) {
     --borderline-color: #6668;
     --border-color: #666e;
   }
+  .arrow::after {
+    background-image: url('../../../image/prev-white.png');
+  }
+  
 }

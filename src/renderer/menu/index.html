@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="./style/main.css">
-  <title>メニュー</title>
+  <title>${menu}</title>
 </head>
 <body>
   <a id="toggle" href="javascript:node.toggle();"></a>
   <main id="index">
     <div id="top">
-      <a href="javascript:node.addBookmark();">ブックマークに追加</a>
+      <a href="javascript:node.addBookmark();">${add_bookmark}</a>
       <hr>
-      <a href="javascript:move('history');">履歴</a>
-      <a href="javascript:move('bookmark');">ブックマーク</a>
+      <a href="javascript:move('history');" class="arrow">${history}</a>
+      <a href="javascript:move('bookmark');" class="arrow">${bookmark}</a>
       <hr>
-      <a href="javascript:node.zoom();">拡大</a>
-      <a href="javascript:node.shrink();">縮小</a>
-      <a href="javascript:node.actual();">等倍</a>
+      <a href="javascript:node.zoom();">${zoom}</a>
+      <a href="javascript:node.shrink();">${shrink}</a>
+      <a href="javascript:node.actual();">${actual}</a>
       <hr>
-      <a href="javascript:node.fullScreen();">全画面表示</a>
-      <a href="javascript:node.hide();">隠す</a>
+      <a href="javascript:node.fullScreen();">${toggleFullScreen}</a>
+      <a href="javascript:node.hide();">${hide}</a>
       <hr>
-      <a href="javascript:move('other');">その他</a>
-      <a href="javascript:node.viewSettings();">設定</a>
+      <a href="javascript:move('other');" class="arrow">${other}</a>
+      <a href="javascript:node.viewSettings();">${setting}</a>
     </div>
     <div id="iframe">
       <a href="javascript:prev()" id="prev"></a>
@@ -30,5 +30,6 @@
     </div>
   </main>
   <script src="./script/menu.js"></script>
+  <script src="../../proprietary/renderer/lang.js"></script>
 </body>
 </html>

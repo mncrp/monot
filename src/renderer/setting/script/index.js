@@ -10,27 +10,15 @@ function ui(which) {
 }
 
 // engine
-document.getElementsByTagName('select')[0].addEventListener('change', () => {
-  node.changeSearchEngine(document.getElementsByTagName('select')[0].value);
-});
+function engine(e) {
+  node.changeSearchEngine(e.target.value);
+}
 
 // experimental
-function changeExperimental(e) {
-  node.changeExperimentalFunctions(e.target.value, e.target.checked);
-}
-const experimentalElement = document.getElementById('experiments');
-experimentalElement.getElementsByTagName('input')[0].addEventListener('change', changeExperimental);
-experimentalElement.getElementsByTagName('input')[1].addEventListener('change', changeExperimental);
-experimentalElement.getElementsByTagName('input')[2].addEventListener('change', (arg) => {
-  changeExperimental(arg);
-  if (arg.target.checked) {
-    document.getElementById('changedfont').removeAttribute('disabled');
-  } else {
-    document.getElementById('changedfont').setAttribute('disabled', '');
-  }
-});
-document.getElementById('changedfont').addEventListener('input', () => {
-  node.changeExperimentalFunctions('changedfont', document.getElementById('changedfont').value);
-});
-experimentalElement.getElementsByTagName('input')[3].addEventListener('change', changeExperimental);
+function experimental(e) {
+  const value = e.target.value;
+  const checked = e.target.checked;
 
+  // Communicate change (main)
+  node.changeExperimentalFunctions(value, checked);
+}

@@ -5,8 +5,13 @@ function moveBrowser() {
   node.moveBrowser(word);
 }
 
-document.getElementById('textbox').addEventListener('keydown', (e) => {
-  const word = document.getElementById('textbox').value;
+function textKey(e) {
+  const word = e.target.value;
+
+  if (word !== '' && e.key.length === 1)
+    node.suggest(word);
+  else if (e.key.length === 1)
+    node.suggestClose();
 
   if (!e.isComposing && e.key === 'ArrowUp') {
     node.suggestUp();
@@ -17,8 +22,8 @@ document.getElementById('textbox').addEventListener('keydown', (e) => {
   }
 
   if (!e.isComposing && e.key === 'Enter' && word != null) {
+    console.log(e);
     // <span#opened>
     moveBrowser();
   }
-});
-
+}

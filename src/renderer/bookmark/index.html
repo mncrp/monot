@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="./style/bookmark.css">
-  <title>ブックマーク</title>
+  <title>${bookmark}</title>
 </head>
 <body>
-  <header><h1>ブックマーク</h1></header>
+  <header><h1>${bookmark}</h1></header>
   <main>
     <div>
       <div id="bookmarks">
@@ -21,5 +21,7 @@
       node.removeBookmark(key);
     }
   </script>
+  <script src="../../proprietary/renderer/lang.js"></script>
+
 </body>
 </html>

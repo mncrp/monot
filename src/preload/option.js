@@ -86,5 +86,11 @@ contextBridge.exposeInMainWorld('node', {
   },
   toggle: () => {
     ipcRenderer.invoke('options');
+  },
+  translate: (inEn) => {
+    return ipcRenderer.invoke('translate.get', inEn);
+  },
+  translateAbout: (inEn) => {
+    return ipcRenderer.invoke('translate.getAbout', inEn);
   }
 });

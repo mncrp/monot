@@ -7,37 +7,29 @@ const {
 ipcRenderer.on('updateTheme', (e, filepath) => {
   let setThemeMessage = '';
   if (filepath === undefined) {
-    setThemeMessage = '現在テーマは設定されてません';
+    setThemeMessage = '${theme_notset}';
   } else {
-    setThemeMessage = `現在のテーマは ${filepath} です`;
+    setThemeMessage = `\${theme_set1} ${filepath} \${theme_set2}`;
   }
 
   webFrame.executeJavaScript(`
     document.getElementById('theme').innerHTML = \`
-    <h2>テーマ</h2>
+    <h2>\${theme}</h2>
     <p>${setThemeMessage}</p>
-    <p><a href="javascript:node.selectTheme();">ファイルを選択...</a></p>
-    <p><a href="javascript:node.resetTheme();">テーマをリセット</a></p>
+    <p><a href="javascript:node.selectTheme();">\${select_file}...</a></p>
+    <p><a href="javascript:node.resetTheme();">$\{reset_theme}</a></p>
   \`;
   `);
 });
 
 ipcRenderer.on('updateWallpaper', (e, filepath) => {
-  let setWallpaperMessage = '';
-  if (filepath === undefined) {
-    setWallpaperMessage = '現在の壁紙は設定されてません';
-  } else {
-    setWallpaperMessage = `現在の壁紙は ${filepath} です`;
+  if (filepath !== undefined) {
+    (async function() {
+      webFrame.executeJavaScript(`
+      document.getElementById('wallpaper-msg').innerHTML = \`
+      ${await ipcRenderer.invoke('translate.get', 'wallpaper_set1')} ${filepath} ${await ipcRenderer.invoke('translate.get', 'wallpaper_set2')}\`;`);
+    })();
   }
-
-  webFrame.executeJavaScript(`
-    document.getElementById('wallpaper').innerHTML = \`
-    <h2>壁紙</h2>
-    <p>${setWallpaperMessage}</p>
-    <p><a href="javascript:node.selectWallpaper();">ファイルを選択...</a></p>
-    <p><a href="javascript:node.resetWallpaper();">壁紙をリセット</a></p>
-  \`;
-  `);
 });
 
 contextBridge.exposeInMainWorld('node', {
@@ -68,4 +60,13 @@ contextBridge.exposeInMainWorld('node', {
   open: (url) => {
     ipcRenderer.invoke('openPage', url);
   },
+  translate: (inEn) => {
+    return ipcRenderer.invoke('translate.get', inEn);
+  },
+  translateAbout: (inEn) => {
+    return ipcRenderer.invoke('translate.getAbout', inEn);
+  },
+  setLang: (lang) => {
+    ipcRenderer.invoke('setLang', lang);
+  }
 });

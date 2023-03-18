@@ -4,19 +4,18 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="./style/main.css">
   <link rel="stylesheet" href="./style/contents.css">
-  <title>メニュー</title>
+  <title>${menu}</title>
 </head>
 <body id="bookmark">
-  <header><h3>ブックマーク</h3></header>
+  <header><h3>${bookmark}</h3></header>
   <main>
     <div>
       <div id="bookmarks">
-        <a id="window" href="javascript:node.viewBookmark();">ウィンドウを表示...</a>
+        <a id="window" href="javascript:node.viewBookmark();">${show_window}...</a>
       </div>
     </div>
   </main>
   <script>
-    window.scrollTo(0, 1);
     node.updateBookmark();
     function removeBookmark(e, key) {
       e.stopPropagation();
@@ -24,5 +23,6 @@
       location.reload();
     }
   </script>
+  <script src="../../proprietary/renderer/lang.js"></script>
 </body>
 </html>

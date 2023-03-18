@@ -325,7 +325,7 @@ app.on('ready', () => {
         <div onclick="node.open('${value.pageUrl}');">
           <div class="history-favicon" style="background-image: url('${value.pageIcon}');"></div>
           <div class="history-details">
-            <p>${value.pageTitle}</p>
+            <p>${value.pageTitle.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}</p>
           </div>
         </div>
       `;
@@ -533,6 +533,15 @@ app.on('ready', () => {
       }
     `);
   });
+  ipcMain.handle('translate.get', (e, inEn) => {
+    return lang.get(inEn);
+  });
+  ipcMain.handle('translate.getAbout', (e, inEn) => {
+    return lang.getAbout(inEn);
+  });
+  ipcMain.handle('setLang', (e, language) => {
+    lang.setLang(language);
+  });
 });
 
 app.on('window-all-closed', () => {
@@ -562,18 +571,19 @@ function showSetting() {
   const experiments = monotConfig.get('experiments');
 
   setting.webContents.executeJavaScript(`
-    document.getElementsByTagName('select')[0].value = '${enginesConfig.get('engine')}';
+    document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
+    document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
     ui('${monotConfig.get('ui')}');
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
   `);
 
   if (monotConfig.get('wallpaper') !== '') {
     setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
   }
-
   if (monotConfig.get('cssTheme') !== '') {
     setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
   }
+  setting.webContents.send('lang', (monotConfig.get('lang')));
 
   if (experiments.forceDark === true) {
     setting.webContents.executeJavaScript(`
@@ -674,14 +684,14 @@ function showHistory() {
       <div onclick="node.open('${value.pageUrl}');">
         <div class="history-favicon" style="background-image: url('${value.pageIcon}');"></div>
         <div class="history-details">
-          <p>${value.pageTitle}</p>
+          <p>${value.pageTitle.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}</p>
         </div>
       </div>
     `;
   }
   historyWin.webContents.executeJavaScript(`
     document.getElementById('histories').innerHTML = \`${html}\`;
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
   `);
 }
 function showBookmark() {
