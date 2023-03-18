@@ -9,6 +9,7 @@
     "test": "npx electron .",
     "build": "npx electron-builder",
     "build:mac": "npx electron-builder --mac --universal",
+    "build:portable": "npx electron-builder --dir",
     "format": "npx eslint --fix ."
   },
   "author": "monochrome Project.",
@@ -36,13 +37,16 @@
     ],
     "win": {
       "icon": "src/image/logo.ico",
-      "target": "nsis",
+      "target": ["nsis", "zip", "portable"],
       "legalTrademarks": "Copyright 2021-2022 monochrome."
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "src/image/logo.ico"
+    },
+    "portable": {
+      "artifactName": "Monot-v1.1.1-portable.exe"
     },
     "linux": {
       "icon": "src/image/logo.png",
