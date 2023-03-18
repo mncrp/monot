@@ -1,10 +1,10 @@
 {
   "name": "monot",
-  "homepage": "https://sorakime.github.io/mncr/project/monot",
-  "version": "1.1.1",
+  "homepage": "https://mncrp.github.io/project/monot",
+  "version": "2.0.0",
   "description": "The new web browser \"Monot\" by monochrome.",
   "main": "src/main/main.js",
-  "repository": "https://github.com/Sorakime/monot/",
+  "repository": "https://github.com/mncrp/monot/",
   "scripts": {
     "test": "npx electron .",
     "build": "npx electron-builder",
@@ -15,9 +15,9 @@
   "author": "monochrome Project.",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^23.1.0",
-    "electron-builder": "^23.6.0",
-    "eslint": "^8.29.0",
+    "electron": "^21.1.1",
+    "electron-builder": "^23.3.3",
+    "eslint": "^8.5.0",
     "eslint-plugin-node": "^11.1.0"
   },
   "engines": {
@@ -26,7 +26,7 @@
   "build": {
     "appId": "me.soraki.monot",
     "productName": "Monot",
-    "copyright": "Copyright ©2021-2022 monochrome Project.",
+    "copyright": "Copyright ©2021-2023 monochrome Project.",
     "files": [
       "!.git",
       "!.dist",
@@ -38,7 +38,7 @@
     "win": {
       "icon": "src/image/logo.ico",
       "target": ["nsis", "zip", "portable"],
-      "legalTrademarks": "Copyright 2021-2022 monochrome."
+      "legalTrademarks": "Copyright 2021-2023 monochrome."
     },
     "nsis": {
       "oneClick": false,
@@ -46,7 +46,7 @@
       "installerIcon": "src/image/logo.ico"
     },
     "portable": {
-      "artifactName": "Monot-v1.1.1-portable.exe"
+      "artifactName": "Monot-v2.0.0-beta1-portable.exe"
     },
     "linux": {
       "icon": "src/image/logo.png",
@@ -54,7 +54,7 @@
     },
     "appImage": {
       "category": "Utility",
-      "synopsis": "Monot v1.1.1 Build9"
+      "synopsis": "Monot v2.0.0 Beta1 Build11"
     },
     "mac": {
       "identity": null,
@@ -64,7 +64,7 @@
     },
     "dmg": {
       "backgroundColor": "#efefef",
-      "title": "Monot v1.1.1 Build9"
+      "title": "Monot v2.0.0 Beta 1 (Build11)"
     }
   }
 }
