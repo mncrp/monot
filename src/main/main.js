@@ -109,7 +109,6 @@ function nw() {
       document.body.classList.add('thin');
     `);
   }
-  global.win.openDevTools();
   global.win.webContents.insertCSS(`
     :root {
       --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
