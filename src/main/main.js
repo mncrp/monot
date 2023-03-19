@@ -58,7 +58,12 @@ function nw() {
     minWidth: 400,
     minHeight: 400,
     show: false,
-    frame: false,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: true,
+    trafficLightPosition: {
+      x: 8,
+      y: 8
+    },
     transparent: false,
     backgroundColor: '#efefef',
     title: 'Monot by monochrome.',
@@ -112,7 +117,6 @@ function nw() {
 
   // create tab
   global.tabs.newTab();
-  global.win.webContents.openDevTools();
 }
 
 function windowClose() {

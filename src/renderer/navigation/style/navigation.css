@@ -100,7 +100,7 @@ body input {
   color: var(--text-color);
   backdrop-filter: brightness(85%);
 }
-body nav *:hover,
+body nav *:hover:not(#window-btn),
 div > span:hover,
 tab-el > a:hover,
 body nav input:focus {
@@ -108,10 +108,10 @@ body nav input:focus {
   background-color: var(--backgroundcolor);
   border: 1px solid var(--border-color);
 }
-body nav a:first-child {
+body nav *:first-child {
   margin-left: 30px;
 }
-body nav a:last-child {
+body nav *:last-child {
   margin-right: 4px;
 }
 nav a {
@@ -123,6 +123,12 @@ nav a {
 nav a:active {
   background-color: var(--backgroundcolor-unhover);
   box-shadow: 0 0 0 var(--shadow-color-unhover);
+}
+.mac #window-btn,
+.thin.mac #window-btn {
+  min-width: 30px;
+  max-width: 30px;
+  -webkit-app-region: drag;
 }
 #home {
   background-image: url('../../../image/home.png');
