@@ -3,10 +3,13 @@ function moveBrowser() {
   document.activeElement.blur();
 
   node.moveBrowser(word);
+  node.suggestClose();
 }
 
 function textKey(e) {
   const word = e.target.value;
+
+  console.log(e);
 
   if (word !== '' && e.key.length === 1)
     node.suggest(word);
@@ -26,4 +29,6 @@ function textKey(e) {
     // <span#opened>
     moveBrowser();
   }
+
+  if (word.length === 0) node.suggestClose();
 }
