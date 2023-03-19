@@ -300,7 +300,9 @@ const menuTemplate = [
         click: () => {
           if (global.win !== null) {
             global.win.webContents.executeJavaScript(`
-              document.getElementsByTagName('span')[${global.tabs.current}].classList.toggle('fixed');
+              document.getElementsByTagName('tab-el')[0]
+                .getElementsByTagName('span')[${global.tabs.current}]
+                .classList.toggle('fixed');
             `);
           }
         }

@@ -58,7 +58,12 @@ function nw() {
     minWidth: 400,
     minHeight: 400,
     show: false,
-    frame: false,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: true,
+    trafficLightPosition: {
+      x: 8,
+      y: 8
+    },
     transparent: false,
     backgroundColor: '#efefef',
     title: 'Monot by monochrome.',
@@ -105,14 +110,16 @@ function nw() {
     `);
   }
   global.win.webContents.insertCSS(`
-  :root {
-    --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
-  }
-`);
+    :root {
+      --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+    }
+  `);
+
+  global.win.on('enter-full-screen', () => global.win.webContents.executeJavaScript(`document.body.classList.add('full')`));
+  global.win.on('leave-full-screen', () => global.win.webContents.executeJavaScript(`document.body.classList.remove('full')`));
 
   // create tab
   global.tabs.newTab();
-  global.win.webContents.openDevTools();
 }
 
 function windowClose() {
