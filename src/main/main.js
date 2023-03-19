@@ -109,14 +109,19 @@ function nw() {
       document.body.classList.add('thin');
     `);
   }
+  global.win.openDevTools();
   global.win.webContents.insertCSS(`
-  :root {
-    --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
-  }
-`);
+    :root {
+      --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+    }
+  `);
+
+  global.win.on('enter-full-screen', () => global.win.webContents.executeJavaScript(`document.body.classList.add('full')`));
+  global.win.on('leave-full-screen', () => global.win.webContents.executeJavaScript(`document.body.classList.remove('full')`));
 
   // create tab
   global.tabs.newTab();
+  global.win.webContents.openDevTools();
 }
 
 function windowClose() {

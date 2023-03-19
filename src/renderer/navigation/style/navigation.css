@@ -124,11 +124,17 @@ nav a:active {
   background-color: var(--backgroundcolor-unhover);
   box-shadow: 0 0 0 var(--shadow-color-unhover);
 }
-.mac #window-btn,
-.thin.mac #window-btn {
+.mac:not(.full) #window-btn,
+.thin.mac:not(.full) #window-btn {
   min-width: 30px;
   max-width: 30px;
   -webkit-app-region: drag;
+}
+.mac.full #window-btn,
+.thin.mac.full #window-btn {
+  min-width: 0;
+  max-width: 0;
+  margin-left: 0;
 }
 #home {
   background-image: url('../../../image/home.png');
@@ -236,12 +242,12 @@ tab-el > div > span {
 tab-el > div > span > * {
   opacity: 1;
 }
-span.fixed {
+tab-el span.fixed {
   width: 7px!important;
   min-width: 0!important;
   aspect-ratio : 1/1;
 }
-span.fixed > *:not(img) {
+tab-el span.fixed > *:not(img) {
   opacity: 0;
   display: none!important;
 }
