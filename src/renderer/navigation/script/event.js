@@ -85,7 +85,6 @@ document.getElementById('textbox').addEventListener('input', () => {
   node.suggest(document.getElementById('textbox').value);
 });
 document.getElementById('textbox').addEventListener('blur', () => {
-  alert('GHOGE');
   setTimeout(node.suggestClose, 100);
 });
 
