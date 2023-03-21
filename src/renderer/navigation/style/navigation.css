@@ -315,7 +315,7 @@ yomikomi-bar#loaded {
 .thin nav .window {
   position: fixed;
   margin: 1px;
-  top: 1px;
+  top: 3px;
 }
 .thin .window#close {
   right: 0;
@@ -327,7 +327,7 @@ yomikomi-bar#loaded {
   right: 44px;
 }
 .thin .window#menu {
-  right: 66px;
+  right: 140px;
 }
 .thin nav * {
   height: 20px;
