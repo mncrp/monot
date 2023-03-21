@@ -69,6 +69,8 @@ class TabManager {
 
   setCurrent(index) {
 
+    console.log(index);
+
     global.win.webContents.executeJavaScript(`
       try {
         document.getElementById('opened')?.removeAttribute('id');
@@ -85,6 +87,7 @@ class TabManager {
       }
     `);
 
+    console.log(this.tabs[index]);
     global.win.setTopBrowserView(this.tabs[index].entity);
     this.tabs[index].setWindowTitle();
     this.current = index;
@@ -186,6 +189,8 @@ class TabManager {
 
   move(target, destination) {
 
+    console.log(target, destination);
+    if (destination > this.tabs.length - 1) destination = this.tabs.length - 1
     this.tabs.splice(destination, 0, this.tabs[target]);
     this.tabs.splice(target > destination ? target + 1 : target, 1);
     this.setCurrent(destination);
