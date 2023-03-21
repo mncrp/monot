@@ -18,7 +18,7 @@ const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${direc
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 const bookmark = new LowLevelConfig('bookmark.mndata').copyFileIfNeeded(`${directory}/default/data/bookmark.mndata`);
 let windowSize;
-if (monotConfig.update().get('ui') === 'thin') viewY = 28;
+if (monotConfig.update().get('ui') === 'thin') viewY = 31;
 
 class ViewY {
   constructor() {
@@ -39,13 +39,13 @@ class ViewY {
   }
 
   toThin() {
-    viewY = 28;
+    viewY = 31;
     monotConfig
       .update()
       .set('ui', 'thin')
       .save();
     this.type = 'thin';
-    return 28;
+    return 31;
   }
 
   toDefault() {
@@ -112,7 +112,7 @@ class TabManager {
     global.win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
       .removeAttribute('id');
-      document.getElementsByTagName('span')[${index}].remove();
+      document.querySelectorAll('tab-el span')[${index}].remove();
     `);
     this.tabs[index] = null;
     this.tabs.splice(index, 1);
@@ -221,7 +221,7 @@ class Tab {
 
     try {
       global.win.webContents.executeJavaScript(`
-        document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
+        document.querySelectorAll('tab-el div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
         each();
       `);
     } catch (e) {
@@ -291,7 +291,7 @@ class Tab {
       // favicon-updated
       browserView.webContents.on('page-favicon-updated', (e, favicons) => {
         global.win.webContents.executeJavaScript(`
-          document.getElementsByTagName('span')[${this.number()}]
+          document.querySelectorAll('tab-el span')[${this.number()}]
             .getElementsByTagName('img')[0]
             .src = '${favicons[0]}';
         `);
@@ -356,9 +356,9 @@ class Tab {
         global.win.webContents.executeJavaScript(`
           document.getElementsByTagName('yomikomi-bar')[0]
             .removeAttribute('id');
-          document.getElementsByTagName('span')[${this.number()}]
+          document.querySelectorAll('tab-el span')[${this.number()}]
             .getElementsByTagName('img')[0]
-            .src = '';  
+            .src = '';
         `);
         this.setTitleUrl();
       } catch (e) {
@@ -447,7 +447,7 @@ class Tab {
   setTabTitle() {
     try {
       global.win.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[${this.number()}]
+        document.querySelectorAll('tab-el span')[${this.number()}]
           .getElementsByTagName('p')[0]
           .innerText='${this.entity.webContents.getTitle()}';
       `);

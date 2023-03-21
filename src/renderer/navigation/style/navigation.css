@@ -73,7 +73,15 @@ nav {
   transition: all 0.4s cubic-bezier(.7, 0, .3, 1);
   z-index: 0;
 }
-
+#window-btn {
+  -webkit-app-region: drag;
+  min-width: 130px;
+  max-width: 130px;
+}
+.thin #window-btn {
+  min-width: 0;
+  width: 0;
+}
 body nav > * {
   user-select: none;
   -webkit-user-drag: none;
@@ -296,6 +304,8 @@ yomikomi-bar#loaded {
 .thin {
   display: flex;
   height: 25px;
+  padding-top: 2px;
+  padding: 1px;
 }
 .thin nav {
   z-index: 9999;
@@ -328,6 +338,7 @@ yomikomi-bar#loaded {
   height: 25px;
   padding-right: 85px;
   left: 5px;
+  flex-direction: row-reverse;
 }
 .thin tab-el div span {
   display: flex;
@@ -345,7 +356,7 @@ yomikomi-bar#loaded {
 .thin tab-el > a {
   height: 20px;
   width: 20px;
-  margin: 0px;
+  margin: 1px;
 }
 
 @media (max-width: 700px) {
