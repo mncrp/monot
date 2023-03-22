@@ -49,7 +49,7 @@ function each() {
       };
       let direction;
       const els = document.getElementsByTagName('span');
-      const target = [].slice.call(els).indexOf(e.target);
+      const target = [].slice.call(els).indexOf(e.target) - 1;
       const destination = [].slice.call(els).indexOf(el());
       const value = (
         pointerX - el().getBoundingClientRect().left
@@ -85,7 +85,6 @@ document.getElementById('textbox').addEventListener('input', () => {
   node.suggest(document.getElementById('textbox').value);
 });
 document.getElementById('textbox').addEventListener('blur', () => {
-  alert('GHOGE');
   setTimeout(node.suggestClose, 100);
 });
 

@@ -120,6 +120,7 @@ function nw() {
 
   // create tab
   global.tabs.newTab();
+  global.win.webContents.openDevTools();
 }
 
 function windowClose() {
