@@ -15,7 +15,7 @@
   "author": "monochrome Project.",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^21.1.1",
+    "electron": "^24.1.1",
     "electron-builder": "^23.3.3",
     "eslint": "^8.5.0",
     "eslint-plugin-node": "^11.1.0"
@@ -37,7 +37,11 @@
     ],
     "win": {
       "icon": "src/image/logo.ico",
-      "target": ["nsis", "zip", "portable"],
+      "target": [
+        "nsis",
+        "zip",
+        "portable"
+      ],
       "legalTrademarks": "Copyright 2021-2023 monochrome."
     },
     "nsis": {
