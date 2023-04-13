@@ -13,7 +13,7 @@
       <a href="javascript:node.reloadBrowser()" title="${reload}" id="reload"></a>
       <a href="javascript:node.backBrowser()" title="${go_back}" id="prev"></a>
       <a href="javascript:node.goBrowser()" title="${go_forward}" id="next"></a>
-      <input type="text" placeholder="${enter_url_word}" id="textbox" onkeyup="textKey(arguments[0])">
+      <input type="text" placeholder="${enter_url_word}" id="textbox" onkeyup="textKey(arguments[0])" onblur="node.suggestClose()">
       <a href="javascript:moveBrowser()" title="${go}" id="move"></a>
       <a href="javascript:node.showMenu()" title="${view_menu}" id="menu" class="window"></a>
     </nav>

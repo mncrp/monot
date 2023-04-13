@@ -735,7 +735,7 @@ function showBookmark() {
   }
   bookmarkWin.webContents.executeJavaScript(`
     document.getElementById('bookmarks').innerHTML = \`${html}\`;
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
   `);
 }
 
