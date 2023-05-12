@@ -22,3 +22,13 @@ function experimental(e) {
   // Communicate change (main)
   node.changeExperimentalFunctions(value, checked);
 }
+
+function setSearchList(array) {
+  let searctList = document.getElementsByTagName('select')[1];
+  for (let i = 0; i < array.length; i++) {
+    const list = document.createElement('option');
+    list.value = array[i].id;
+    list.textContent = array[i].name;
+    searctList.appendChild(list);
+  }
+}

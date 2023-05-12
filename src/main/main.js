@@ -49,6 +49,11 @@ const enginesConfig = new LowLevelConfig(
   `${directory}/default/config/engines.mncfg`
 );
 
+if (enginesConfig.data.version !== 2) {
+  enginesConfig.data = JSON.parse(require('fs').readFileSync(`${directory}/default/config/engines.mncfg`, 'utf-8'));
+  enginesConfig.save();
+}
+
 function nw() {
   // create window
   monotConfig.update();
@@ -82,7 +87,11 @@ function nw() {
   function getEngine() {
     enginesConfig.update();
     const selectEngine = enginesConfig.get('engine');
-    return enginesConfig.get(`values.${selectEngine}`, true);
+    return enginesConfig.get(
+      `values`, true
+    ).find(
+      (item) => item.id === selectEngine
+    ).url;
   }
 
   // window's behavior
@@ -574,13 +583,16 @@ function showSetting() {
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
+  setting.webContents.openDevTools();
 
   // Apply of changes
   const experiments = monotConfig.get('experiments');
 
   setting.webContents.executeJavaScript(`
-    document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
+    let searchJson = \`${JSON.stringify(enginesConfig.get('values'))}\`;
+    setSearchList(JSON.parse(searchJson));
     document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
+
     ui('${monotConfig.get('ui')}');
     document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
   `);

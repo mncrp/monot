@@ -11,6 +11,7 @@ const global = require('./global');
 const {contextTemplate} = require('./menu');
 
 const fs = require('fs');
+const { log } = require('console');
 const directory = `${__dirname}/..`;
 let viewY = 66;
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -150,7 +151,7 @@ class TabManager {
           id: 'search',
           click: () => {
             const selectEngine = enginesConfig.get('engine');
-            const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+            const engineURL = enginesConfig.get(`values`, true).find((item) => item.id === selectEngine).url;
             this.newTab(true, `${engineURL}${selection}`);
           }
         }));
@@ -219,6 +220,8 @@ class Tab {
         .replace('Chrome/2.0.0', '')
     );
 
+    browserView.webContents.openDevTools();
+
     try {
       global.win.webContents.executeJavaScript(`
         document.getElementsByTagName('div')[0].innerHTML += '<span><img src=""><p>Home</p><p></p></span>';
@@ -259,7 +262,7 @@ class Tab {
         enginesConfig.update();
         const wallpaper = monotConfig.update().get('wallpaper');
         const selectEngine = enginesConfig.get('engine');
-        const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+        const engineURL = enginesConfig.get(`values`, true).find((item) => item.id === selectEngine).url;
         const bookmarks = bookmark.update().data;
         let html = '';
         let i = 0;
@@ -398,6 +401,7 @@ class Tab {
   }
 
   load(url = new URL(`file://${directory}/browser/home.html`)) {
+    const originalURL = url;
     try {
       if (!(url instanceof URL)) {
         try {
@@ -406,7 +410,7 @@ class Tab {
           if (url.match(/\S+\.\S+/)) {
             url = new URL(`http://${url}`);
           } else {
-            url = new URL(enginesConfig.update().get(`values.${enginesConfig.get('engine')}`, true) + url);
+            url = new URL(enginesConfig.update().get(`values`, true).find((item) => item.id === enginesConfig.get('engine')).url.replace('%s', originalURL));
           }
         }
       }
