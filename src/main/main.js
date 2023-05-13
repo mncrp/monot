@@ -132,12 +132,14 @@ function nw() {
 }
 
 function windowClose() {
-  windowSize = global.win.getSize();
-  monotConfig.update()
-    .set('width', windowSize[0])
-    .set('height', windowSize[1])
-    .save();
-  global.win.close();
+  if (global.win) {
+    windowSize = global.win.getSize();
+    monotConfig.update()
+      .set('width', windowSize[0])
+      .set('height', windowSize[1])
+      .save();
+    global.win.close();
+  }
 }
 
 app.on('ready', () => {
