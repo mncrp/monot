@@ -18,7 +18,7 @@ const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${direc
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 const bookmark = new LowLevelConfig('bookmark.mndata').copyFileIfNeeded(`${directory}/default/data/bookmark.mndata`);
 let windowSize;
-if (monotConfig.update().get('ui') === 'thin') viewY = 28;
+if (monotConfig.update().get('ui') === 'thin') viewY = 29;
 
 class ViewY {
   constructor() {
@@ -39,13 +39,13 @@ class ViewY {
   }
 
   toThin() {
-    viewY = 28;
+    viewY = 29;
     monotConfig
       .update()
       .set('ui', 'thin')
       .save();
     this.type = 'thin';
-    return 28;
+    return 29;
   }
 
   toDefault() {
