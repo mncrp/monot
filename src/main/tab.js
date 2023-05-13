@@ -11,7 +11,6 @@ const global = require('./global');
 const {contextTemplate} = require('./menu');
 
 const fs = require('fs');
-const { log } = require('console');
 const directory = `${__dirname}/..`;
 let viewY = 66;
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -219,8 +218,6 @@ class Tab {
         .replace(/Electron\/[0-9 | .]/, '')
         .replace('Chrome/2.0.0', '')
     );
-
-    browserView.webContents.openDevTools();
 
     try {
       global.win.webContents.executeJavaScript(`

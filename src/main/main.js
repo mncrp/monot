@@ -583,7 +583,6 @@ function showSetting() {
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
-  setting.webContents.openDevTools();
 
   // Apply of changes
   const experiments = monotConfig.get('experiments');
