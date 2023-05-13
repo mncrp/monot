@@ -12,8 +12,8 @@
   <div id="top">
     <h1>Monot<h5> by monochrome.</h5></h1>
     <div>
-      <input id="search" type="search" placeholder="${type_search}">
-      <button id="searchButton"></button>
+      <input id="search" type="search" placeholder="${type_search}" onkeydown="searchEnter(arguments[0])">
+      <button id="searchButton" onclick="searchBrowser()"></button>
     </div>
   </div>
   <div id="bookmarks">
