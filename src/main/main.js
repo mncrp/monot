@@ -49,7 +49,7 @@ const enginesConfig = new LowLevelConfig(
   `${directory}/default/config/engines.mncfg`
 );
 
-if (enginesConfig.data.version !== 2) {
+if (enginesConfig.update().data.version !== 2) {
   enginesConfig.data = JSON.parse(require('fs').readFileSync(`${directory}/default/config/engines.mncfg`, 'utf-8'));
   enginesConfig.save();
 }
@@ -278,10 +278,11 @@ app.on('ready', () => {
     }
     enginesConfig.update();
     global.win.webContents.executeJavaScript(`
-      engine = '${enginesConfig.get(`values.${engine}`, true)}';
+      engine = '${enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url}';
     `);
+    console.log(enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url);
     global.tabs.get().entity.webContents.executeJavaScript(`
-      url = '${enginesConfig.get(`values.${engine}`, true)}';
+      url = '${enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url}';
     `);
   });
   ipcMain.handle('setting.changeExperimental', (e, change, to) => {
@@ -593,6 +594,8 @@ function showSetting() {
     let searchJson = \`${JSON.stringify(enginesConfig.get('values'))}\`;
     setSearchList(JSON.parse(searchJson));
     document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
+
+    document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
 
     ui('${monotConfig.get('ui')}');
     document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
