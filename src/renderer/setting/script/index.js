@@ -1,3 +1,6 @@
+let searchJson;
+node.init();
+
 // appearance
 function ui(which) {
   if (document.getElementsByClassName('selected')[0] === undefined) {
@@ -30,5 +33,19 @@ function setSearchList(array) {
     list.value = array[i].id;
     list.textContent = array[i].name;
     searctList.appendChild(list);
+  }
+}
+
+async function addEngine() {
+  if (
+    document.getElementById('engine-url').value === '' ||
+    document.getElementById('engine-name').value === ''
+  ) {
+    alert(await node.translate('addEngine_none'));
+  } else {
+    node.addEngine(document.getElementById('engine-url').value, document.getElementById('engine-name').value);
+    if (confirm(await node.translate('success'))) {
+      location.reload();
+    }
   }
 }

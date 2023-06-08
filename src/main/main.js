@@ -49,7 +49,7 @@ const enginesConfig = new LowLevelConfig(
   `${directory}/default/config/engines.mncfg`
 );
 
-if (enginesConfig.data.version !== 2) {
+if (enginesConfig.update().data.version !== 2) {
   enginesConfig.data = JSON.parse(require('fs').readFileSync(`${directory}/default/config/engines.mncfg`, 'utf-8'));
   enginesConfig.save();
 }
@@ -278,10 +278,11 @@ app.on('ready', () => {
     }
     enginesConfig.update();
     global.win.webContents.executeJavaScript(`
-      engine = '${enginesConfig.get(`values.${engine}`, true)}';
+      engine = '${enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url}';
     `);
+    console.log(enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url);
     global.tabs.get().entity.webContents.executeJavaScript(`
-      url = '${enginesConfig.get(`values.${engine}`, true)}';
+      url = '${enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url}';
     `);
   });
   ipcMain.handle('setting.changeExperimental', (e, change, to) => {
@@ -561,6 +562,16 @@ app.on('ready', () => {
   ipcMain.handle('setLang', (e, language) => {
     lang.setLang(language);
   });
+  ipcMain.handle('addEngine', (e, url, name) => {
+    enginesConfig
+      .update()
+      .data.values.push({
+        id: name.slice(0, 3) + name.slice(-3),
+        url: url,
+        name: name
+      });
+    enginesConfig.save();
+  });
 });
 
 app.on('window-all-closed', () => {
@@ -585,18 +596,10 @@ function showSetting() {
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
+  setting.webContents.openDevTools();
 
   // Apply of changes
   const experiments = monotConfig.get('experiments');
-
-  setting.webContents.executeJavaScript(`
-    let searchJson = \`${JSON.stringify(enginesConfig.get('values'))}\`;
-    setSearchList(JSON.parse(searchJson));
-    document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
-
-    ui('${monotConfig.get('ui')}');
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
-  `);
 
   if (monotConfig.get('wallpaper') !== '') {
     setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
@@ -649,6 +652,19 @@ function showSetting() {
       if (path.filePaths[0] !== '')
         setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
     });
+  });
+  ipcMain.removeHandler('init');
+  ipcMain.handle('init', () => {
+    setting.webContents.executeJavaScript(`
+    searchJson = \`${JSON.stringify(enginesConfig.get('values'))}\`;
+    setSearchList(JSON.parse(searchJson));
+    document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
+
+    document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
+
+    ui('${monotConfig.get('ui')}');
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+  `);
   });
   ipcMain.removeHandler('setting.openWallpaperDialog');
   ipcMain.handle('setting.openWallpaperDialog', () => {

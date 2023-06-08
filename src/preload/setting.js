@@ -68,5 +68,11 @@ contextBridge.exposeInMainWorld('node', {
   },
   setLang: (lang) => {
     ipcRenderer.invoke('setLang', lang);
+  },
+  addEngine: (url, name) => {
+    ipcRenderer.invoke('addEngine', url, name);
+  },
+  init: () => {
+    ipcRenderer.invoke('init');
   }
 });

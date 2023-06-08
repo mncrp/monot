@@ -63,10 +63,13 @@
     "select_wallpaper": "壁紙を選択",
     "wallpaper": "壁紙",
     "select_file": "ファイルを選択",
+    "add": "追加",
     "reset_wallpaper": "壁紙をリセット",
     "reset_theme": "テーマをリセット",
     "language": "言語",
     "searchEngine": "検索エンジン",
+    "searchEngineAdd": "エンジンを追加する場合は、以下の入力欄に入力してください。また、検索語句を%sで表してください。<br>例：https://duckduckgo.com/?q=%s",
+    "addEngine_none": "検索エンジンのURLか名前を入力してください。",
     "default": "標準",
     "remove_history": "全ての履歴を削除",
     "experimental_function": "実験的な機能",
@@ -87,6 +90,7 @@
     "overflowMenu": "オーバーフローメニュー",
     "show_window": "ウィンドウを表示",
     "other": "その他",
-    "fullScreen": "全画面表示にする"
+    "fullScreen": "全画面表示にする",
+    "success": "成功しました。設定を再読み込みします。"
   }
 }
