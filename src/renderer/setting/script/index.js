@@ -32,3 +32,7 @@ function setSearchList(array) {
     searctList.appendChild(list);
   }
 }
+
+function addEngine() {
+  node.addEngine(document.getElementById('engine-url').value, document.getElementById('engine-name').value);
+}
