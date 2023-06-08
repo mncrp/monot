@@ -601,17 +601,6 @@ function showSetting() {
   // Apply of changes
   const experiments = monotConfig.get('experiments');
 
-  setting.webContents.executeJavaScript(`
-    let searchJson = \`${JSON.stringify(enginesConfig.get('values'))}\`;
-    setSearchList(JSON.parse(searchJson));
-    document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
-
-    document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
-
-    ui('${monotConfig.get('ui')}');
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
-  `);
-
   if (monotConfig.get('wallpaper') !== '') {
     setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
   }
@@ -663,6 +652,19 @@ function showSetting() {
       if (path.filePaths[0] !== '')
         setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
     });
+  });
+  ipcMain.removeHandler('init');
+  ipcMain.handle('init', () => {
+    setting.webContents.executeJavaScript(`
+    searchJson = \`${JSON.stringify(enginesConfig.get('values'))}\`;
+    setSearchList(JSON.parse(searchJson));
+    document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
+
+    document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
+
+    ui('${monotConfig.get('ui')}');
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+  `);
   });
   ipcMain.removeHandler('setting.openWallpaperDialog');
   ipcMain.handle('setting.openWallpaperDialog', () => {

@@ -71,5 +71,8 @@ contextBridge.exposeInMainWorld('node', {
   },
   addEngine: (url, name) => {
     ipcRenderer.invoke('addEngine', url, name);
+  },
+  init: () => {
+    ipcRenderer.invoke('init');
   }
 });

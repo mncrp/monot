@@ -68,6 +68,7 @@
     "reset_theme": "Reset a theme",
     "language": "language",
     "searchEngine": "Search Engine",
+    "addEngine_none": "Enter the URL or name of a search engine.",
     "default": "Default",
     "remove_history": "Remove All History",
     "experimental_function": "Experimental Functions",
@@ -89,6 +90,7 @@
     "overflowMenu": "Overflow Menu",
     "show_window": "Show a Window",
     "other": "Others",
-    "fullScreen": "Enter Full Screen"
+    "fullScreen": "Enter Full Screen",
+    "success": "Succeeded. Reload the settings."
   }
 }

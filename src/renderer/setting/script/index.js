@@ -1,3 +1,6 @@
+let searchJson;
+node.init();
+
 // appearance
 function ui(which) {
   if (document.getElementsByClassName('selected')[0] === undefined) {
@@ -33,6 +36,16 @@ function setSearchList(array) {
   }
 }
 
-function addEngine() {
-  node.addEngine(document.getElementById('engine-url').value, document.getElementById('engine-name').value);
+async function addEngine() {
+  if (
+    document.getElementById('engine-url').value === '' ||
+    document.getElementById('engine-name').value === ''
+  ) {
+    alert(await node.translate('addEngine_none'));
+  } else {
+    node.addEngine(document.getElementById('engine-url').value, document.getElementById('engine-name').value);
+    if (confirm(await node.translate('success'))) {
+      location.reload();
+    }
+  }
 }
