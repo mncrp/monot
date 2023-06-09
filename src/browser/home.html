@@ -9,17 +9,18 @@
   <link rel="shortcut icon" href="../image/logo.ico">
 </head>
 <body>
-  <div id="top">
-    <h1>Monot<h5> by monochrome.</h5></h1>
-    <div>
-      <input id="search" type="search" placeholder="${type_search}" onkeydown="searchEnter(arguments[0])">
-      <button id="searchButton" onclick="searchBrowser()"></button>
+  <main>
+    <div id="left">
+      <h2 id="clock">
+      </h2>
     </div>
-  </div>
-  <div id="bookmarks">
-    <p><a href="#bookmarks">${bookmark}</a></p>
-    <div id="bookmarks-content"></div>
-  </div>
+    <div id="right">
+      <div id="bookmarks">
+        <h3>${bookmark}</h3>
+        <div id="bookmarks-content"></div>
+      </div>
+    </div>
+  </main>
   <script src="script/search.js"></script>
   <script src="script/design.js"></script>
   <script src="../proprietary/renderer/lang.js"></script>

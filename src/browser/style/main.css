@@ -79,12 +79,6 @@ body > div:nth-child(1) {
 }
 div > div:nth-child(1) * {
   vertical-align: middle;
-  box-shadow: 2px 2px 5px var(--shadow-color);
-}
-div > h1#shadow,
-div h1#shadow + h5 {
-  color: var(--browsername-color);
-  text-shadow: 0 0 12px var(--shadow-color);
 }
 div input {
   position: relative;
@@ -97,7 +91,6 @@ div input {
   font-size: 17px;
   margin: 0; top: 0;
   color: var(--text-color);
-  box-shadow: 0 0 0 var(--shadow-color-unhover);
   border: 1px solid var(--border-color-unhover);
   transition: all 0.2s ease-in-out;
   background-color: var(--input-color-unhover);
@@ -119,12 +112,6 @@ div:nth-child(1) button {
   border: 1px solid var(--border-color-unhover);
   background-color: var(--backgroundcolor-unhover);
 }
-div:nth-child(1) > div *:hover,
-input:focus {
-  box-shadow: 1px 1px 5px var(--shadow-color);
-  background-color: var(--backgroundcolor);
-  border: 1px solid var(--border-color);
-}
 div:nth-child(1) > div button:hover {
   background-color: var(--backgroundcolor);
 }
@@ -139,7 +126,6 @@ p > a {
   display: inline;
   position: relative;
   background: none;
-  box-shadow: none;
   color: var(--text-color);
   text-decoration: none;
 }

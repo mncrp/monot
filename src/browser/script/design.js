@@ -1,7 +1,6 @@
-window.onload = () => {
-  if (getComputedStyle(document.documentElement).getPropertyValue('--wallpaper') === ' url("file://")') {
-    document.getElementsByTagName('h1')[0].id = '';
-  } else {
-    document.getElementsByTagName('h1')[0].id = 'shadow';
-  }
-};
+setInterval(() => {
+  const date = new Date();
+  document.getElementById('clock').innerText = `${date.getHours()}:${
+    date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()}:${
+    date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()}`;
+}, 250);
