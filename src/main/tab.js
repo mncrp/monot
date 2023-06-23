@@ -112,7 +112,7 @@ class TabManager {
     global.win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
       .removeAttribute('id');
-      document.getElementsByTagName('span')[${index}].remove();
+      document.getElementsByTagName('tab-el')[0].getElementsByTagName('span')[${index}].remove();
     `);
     this.tabs[index] = null;
     this.tabs.splice(index, 1);
@@ -448,7 +448,7 @@ class Tab {
   setTabTitle() {
     try {
       global.win.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[${this.number()}]
+        document.getElementsByTagName('tab-el')[0].getElementsByTagName('span')[${this.number()}]
           .getElementsByTagName('p')[0]
           .innerText='${this.entity.webContents.getTitle()}';
       `);

@@ -60,8 +60,8 @@ function nw() {
   global.win = new BrowserWindow({
     width: monotConfig.get('width'),
     height: monotConfig.get('height'),
-    minWidth: 400,
-    minHeight: 400,
+    minWidth: 450,
+    minHeight: 450,
     show: false,
     titleBarStyle: 'hidden',
     titleBarOverlay: true,
@@ -83,6 +83,7 @@ function nw() {
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
+  global.win.webContents.openDevTools();
 
   function getEngine() {
     enginesConfig.update();

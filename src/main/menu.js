@@ -14,8 +14,8 @@ const aboutContent = {
   icon: isMac ? './src/image/logo-mac.png' : './src/image/logo.png',
   title: lang.getAbout('title'),
   message: lang.getAbout('title'),
-  detail: `Monot by monochrome. v.2.0.0 Beta 2 (Build 12)
-${lang.getAbout('version')}: 2.0.0 Beta 2
+  detail: `Monot by monochrome. v.2.0.0 (Build 12)
+${lang.getAbout('version')}: 2.0.0
 ${lang.getAbout('build_no')}: 12
 ${lang.getAbout('developer')}: monochrome Project.
 
