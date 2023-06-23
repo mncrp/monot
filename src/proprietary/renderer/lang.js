@@ -1,6 +1,3 @@
-const translateEvent = document.createEvent('Event');
-translateEvent.initEvent('translated', true, true);
-
 !async function() {
   [...(
     (
@@ -25,4 +22,7 @@ translateEvent.initEvent('translated', true, true);
     document.body.innerHTML = document.body.innerHTML.replace(el, res);
     document.head.innerHTML = document.head.innerHTML.replace(el, res);
   });
+  if (window.translated) {
+    window.translated();
+  }
 }();
