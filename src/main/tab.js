@@ -236,7 +236,9 @@ class Tab {
         `file://${directory}/browser/server-notfound.html`
       );
       browserView.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[0].innerText='${browserView.webContents.getURL().toLowerCase()}';
+        document.addEventListener('translated', () => {
+          document.getElementsByTagName('span')[0].innerText='${browserView.webContents.getURL().toLowerCase()}';
+        });
       `);
     });
     // dom-ready
