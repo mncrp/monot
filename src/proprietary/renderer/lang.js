@@ -1,3 +1,7 @@
+if (window.translated !== undefined) {
+  window.translated();
+}
+
 !async function() {
   [...(
     (
@@ -22,7 +26,4 @@
     document.body.innerHTML = document.body.innerHTML.replace(el, res);
     document.head.innerHTML = document.head.innerHTML.replace(el, res);
   });
-  if (window.translated) {
-    window.translated();
-  }
 }();

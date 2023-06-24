@@ -21,15 +21,9 @@ class History {
     let data;
     history.update();
     try {
-      data = history.slice(arrayStart, arrayBegin);
+      data = history.data.slice(arrayStart, arrayBegin);
     } catch (e) {
-      return (
-        console.error(
-          `historyに${arrayBegin}番目の要素はありません。
-          historyの最後の要素は${history.length - 1}です。`
-        ),
-        -1
-      );
+      data = history.data;
     }
     return data;
   }

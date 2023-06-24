@@ -32,7 +32,7 @@ main {
   height: 100%;
 }
 main * {
-  text-shadow: 0 0 7px var(--text-color);
+  text-shadow: 0 0 7px var(--shadow-color);
 }
 #clock {
   top: 50%;
@@ -62,7 +62,9 @@ main * {
   height: 50px;
   box-sizing: border-box;
   text-overflow: hidden;
-  background-color: var(--main-background);
+  margin: 1px;
+  background-color: var(--shadow-color);
+  backdrop-filter: blur(15px);
   border-radius: 15px;
   transition: all  .5s ease-in-out;
   border: 1px solid var(--border-color);

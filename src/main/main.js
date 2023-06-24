@@ -337,7 +337,7 @@ app.on('ready', () => {
     showHistory();
   });
   ipcMain.handle('updateHistory', () => {
-    const histories = history.getAll();
+    const histories = history.get(0, 20);
     let html = '';
     // eslint-disable-next-line
     for (const [key, value] of Object.entries(histories)) {
@@ -711,26 +711,31 @@ function showHistory() {
       scrollBounce: true
     }
   });
-  historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
+
   // Convert object to html
   const histories = history.getAll();
+  historyWin.webContents.toggleDevTools();
   let html = '';
   // eslint-disable-next-line
   for (const [key, value] of Object.entries(histories)) {
     html = `
       ${html}
-      <div onclick="node.open('${value.pageUrl}');">
-        <div class="history-favicon" style="background-image: url('${value.pageIcon}');"></div>
+      <div onclick="node.open('${value.pageUrl.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}');">
+        <div class="history-favicon" style="background-image: url('${value.pageIcon.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}');"></div>
         <div class="history-details">
           <p>${value.pageTitle.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}</p>
         </div>
       </div>
     `;
   }
-  historyWin.webContents.executeJavaScript(`
-    document.getElementById('histories').innerHTML = \`${html}\`;
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+  ipcMain.removeHandler('update.History');
+  ipcMain.handle('update.History', () => {
+    historyWin.webContents.executeJavaScript(`
+      document.getElementById('histories').innerHTML = \`${html}\`;
+      document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
   `);
+  });
+  historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
 }
 function showBookmark() {
   const bookmarkWin = new BrowserWindow({
