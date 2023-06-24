@@ -43,14 +43,19 @@ body::before {
   content: '';
   display: block;
   position: fixed;
-  top: -10px;
-  left: -10px;
-  right: -20px;
-  bottom: -1px;
-  width: 120vw;
+  top: -7px;
+  left: -5px;
+  right: -5px;
+  bottom: 1px;
+  padding: 5px;
+  width: auto;
+  height: 62px;
   backdrop-filter: blur(15px);
   border-bottom: 1px solid var(--borderline-color);
   background-color: #efefef44;
+}
+body.thin::before {
+  height: 25px!important;
 }
 body {
   background-color: var(--main-background);
