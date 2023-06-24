@@ -77,13 +77,13 @@ function nw() {
       preload: `${directory}/preload/navigation.js`
     }
   });
+  global.win.webContents.openDevTools();
   global.win.setBackgroundColor('#efefef');
   global.win.loadFile(
     isMac ?
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
-  global.win.webContents.openDevTools();
 
   function getEngine() {
     enginesConfig.update();
@@ -597,7 +597,6 @@ function showSetting() {
   monotConfig.update();
   enginesConfig.update();
   setting.loadFile(`${directory}/renderer/setting/index.html`);
-  setting.webContents.openDevTools();
 
   // Apply of changes
   const experiments = monotConfig.get('experiments');
@@ -714,7 +713,6 @@ function showHistory() {
 
   // Convert object to html
   const histories = history.getAll();
-  historyWin.webContents.toggleDevTools();
   let html = '';
   // eslint-disable-next-line
   for (const [key, value] of Object.entries(histories)) {
