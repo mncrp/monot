@@ -1,5 +1,5 @@
 ![image](https://user-images.githubusercontent.com/69241694/196036027-e052d55c-f43c-4a25-85bd-1fbedd458302.png)
-# **Monot by monochrome.** <span style="font-size: .5em">v.1.1.0 (Build 8)</span>
+# **Monot by monochrome.** <span style="font-size: .5em">v.2.0.0 (Build 12)</span>
 
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
 
@@ -12,7 +12,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |正式名称|Monot by monochrome. v.2.0.0 (Build 12)|
 |バージョン|v.2.0.0|
 |ビルド番号|10|
-|公開日|2023年1月23日(木曜日)|
+|公開日|2023年7月23日(木曜日)|
 |ライセンス|[monochrome. License](./LICENSE)|
 |言語|日本語, JavaScript, HTML, CSS|
 
