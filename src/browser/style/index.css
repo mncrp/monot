@@ -58,7 +58,7 @@ main * {
 .one-bookmark {
   display: flex;
   flex-direction: row;
-  width: 50%;
+  width: 100%;
   height: 50px;
   box-sizing: border-box;
   text-overflow: hidden;

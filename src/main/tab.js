@@ -293,7 +293,7 @@ class Tab {
       // favicon-updated
       browserView.webContents.on('page-favicon-updated', (e, favicons) => {
         global.win.webContents.executeJavaScript(`
-          document.getElementsByTagName('span')[${this.number()}]
+          document.getElementsByTagName('tab-el')[0].getElementsByTagName('span')[${this.number()}]
             .getElementsByTagName('img')[0]
             .src = '${favicons[0]}';
         `);
