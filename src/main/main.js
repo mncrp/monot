@@ -684,7 +684,7 @@ function showSetting() {
     );
     fileDialog.then((path) => {
       monotConfig.update()
-        .set('wallpaper', path.filePaths[0])
+        .set('wallpaper', path.filePaths[0].replace(/\\/g, '/'))
         .save();
       if (path.filePaths[0] !== '') {
         setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
@@ -693,6 +693,11 @@ function showSetting() {
             --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
           }
         `);
+        console.log(`
+        :root {
+          --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+        }
+      `);
       }
     });
   });
