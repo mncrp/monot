@@ -14,7 +14,8 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |ビルド番号|10|
 |公開日|2023年7月16日(日曜日)|
 |ライセンス|[monochrome. License](./LICENSE)|
-|言語|日本語, JavaScript, HTML, CSS|
+|言語|JavaScript, HTML, CSS|
+|対応言語|日本語、英語|
 
 [技術仕様](https://mncrp.github.io/project/monot/technical)
 
