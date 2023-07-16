@@ -5,7 +5,6 @@ function select(n) {
     num = 0;
     if (n === 1) n = 0;
   }
-  console.log(num + n);
   try {
     if (document.getElementById('selected') === null) {
       document.getElementsByTagName('div')[num + n].id = 'selected';
@@ -14,6 +13,6 @@ function select(n) {
       document.getElementsByTagName('div')[num + n].id = 'selected';
     }
   } catch (e) {
-    console.error(e);
+    node.close();
   }
 }

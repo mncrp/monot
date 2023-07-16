@@ -1,5 +1,5 @@
-![image](https://user-images.githubusercontent.com/69241694/196036027-e052d55c-f43c-4a25-85bd-1fbedd458302.png)
-# **Monot by monochrome.** <span style="font-size: .5em">v.1.1.0 (Build 8)</span>
+![image](https://github.com/mncrp/monot/assets/69241694/7dc9e84b-1469-4b23-96fa-ea877707b184)
+# **Monot by monochrome.** <span style="font-size: .5em">v.2.0.0 (Build 12)</span>
 
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
 
@@ -9,12 +9,13 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|正式名称|Monot by monochrome. v.2.0.0 Beta 1 (Build 10)|
-|バージョン|v.2.0.0 Beta 1|
+|正式名称|Monot by monochrome. v.2.0.0 (Build 12)|
+|バージョン|v.2.0.0|
 |ビルド番号|10|
-|公開日|2023年1月23日(木曜日)|
+|公開日|2023年7月16日(日曜日)|
 |ライセンス|[monochrome. License](./LICENSE)|
-|言語|日本語, JavaScript, HTML, CSS|
+|言語|JavaScript, HTML, CSS|
+|対応言語|日本語、英語|
 
 [技術仕様](https://mncrp.github.io/project/monot/technical)
 
@@ -25,56 +26,42 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 
 ---
 
-![アップデート内容](https://user-images.githubusercontent.com/69241694/196036134-737d5eba-baaf-4520-982e-4f2448cae3f4.jpg)
+![アップデート内容](https://github.com/mncrp/monot/assets/69241694/7dc9e84b-1469-4b23-96fa-ea877707b184)
 ## アップデート内容
-詳細：https://mncrp.github.io/news/2
+詳細：https://mncrp.github.io/news/3
 
-- タブの移動を実装
-- タブの固定を実装
-- 検索候補（サジェスト）の実装
-- 壁紙を実装
-- UIに"Thin"を実装
-- 設定ウィンドウの項目の追加とデザイン等の修正
-- 主にタブ関連のバグを修正
-- 読み込み関連のバグの修正
-- 検索エンジンに"Frea Search"を追加
-- タブのファビコンを表示
-- ブックマーク重複防止
-- Homeを履歴に残さないように変更
-- Homeでブックマークを表示できるように変更
-- ブックマーク削除時にイベントが親要素に伝播しないように修正
-- コンテキストメニューの変更
-- アプリメニューの内容の変更・追加
-- オーバーフローメニューの挙動を変更
-- オーバーフローメニューの項目を追加
-- ユーザーエージェントを変更
-- ダークモード時でもWebページに明るい背景を使用する(White In Dark)を実験的に実装
-- 設定ウィンドウにバージョン情報などを記載
-- 細かいデザインの修正
-- ブックマークウィンドウでブックマークの削除を実装
-- 内部の細かな変更
-- 改行コードをLFに統一
+- Homeのデザインの大幅変更
+- 日本語以外の多言語に対応（現段階では英語のみ）
+- 信号機マークのネイティブ化
+- 検索エンジンの追加を実装
+- オーバーフローメニューで、階層化されているものに矢印を表示
+- ウィンドウがない時にアプリを終了するときのバグの修正
+- サジェストのバグを解消
+- タブ周りのバグを修正
+- その他バグの修正
+- 内部のアップデート
 
 ## スクリーンショット
 ### Default - ライトモード
-![起動直後](https://user-images.githubusercontent.com/69241694/172031044-0d6f360a-d4d7-45c2-9f86-05b7d888001c.png)
-![オプションを表示](https://user-images.githubusercontent.com/69241694/172031053-1ceb19d5-a65f-4f83-b003-d1d8ed40e85c.png)
+![起動直後](https://github.com/mncrp/monot/assets/69241694/f0793a02-66f6-44e1-89cd-fcc5f25634f7)
+![オプションを表示](https://github.com/mncrp/monot/assets/69241694/972948b1-a0a9-4c4d-b928-4e84ff90ad94)
 
 ### Default - ダークモード
-![起動直後](https://user-images.githubusercontent.com/69241694/172031064-1bb8539d-5d86-47b1-8381-e25e06456c58.png)
-![オプションを表示](https://user-images.githubusercontent.com/69241694/172031075-8d154f01-e8fa-45f8-bd08-33ad9c4ff921.png)
+![起動直後](https://github.com/mncrp/monot/assets/69241694/9af17584-2834-4b82-9677-a0c8b6092889)
+![オプションを表示](https://github.com/mncrp/monot/assets/69241694/fec3c14f-fe93-4463-9c66-b6a91c159d74)
 
 ### Thin - ライトモード
-![起動直後](https://user-images.githubusercontent.com/69241694/172031090-cd5bb654-1299-45b0-bb2a-b470f9f976a1.png)
-![オプションを表示](https://user-images.githubusercontent.com/69241694/172031096-28a2ad85-f053-464e-97b1-d10e095587bc.png)
+![起動直後](https://github.com/mncrp/monot/assets/69241694/294b2884-776f-4722-881c-f26e0047f542)
+![オプションを表示](https://github.com/mncrp/monot/assets/69241694/73795550-3d14-408e-a0a1-844b03f1a46f)
+
 
 ### Thin - ダークモード
-![起動直後](https://user-images.githubusercontent.com/69241694/172031195-dac7c557-2243-47aa-b310-11612a273f83.png)
-![オプションを表示](https://user-images.githubusercontent.com/69241694/172031197-158d4080-ee3b-4e38-8299-b6113c7bf760.png)
+![起動直後](https://github.com/mncrp/monot/assets/69241694/d3eb9598-a82c-4983-85f8-f4a78f8b6e27)
+![オプションを表示](https://github.com/mncrp/monot/assets/69241694/6e820af9-517a-4478-9e99-0812d1c0682c)
 
 ### 設定ウィンドウ
-![ライトモード](https://user-images.githubusercontent.com/69241694/172031236-92e917c6-ca25-4d52-bd3e-4541381e215b.png)
-![ダークモード](https://user-images.githubusercontent.com/69241694/172031258-cd24b39d-6f94-4136-b13c-ac4247c44fe4.png)
+![ライトモード](https://github.com/mncrp/monot/assets/69241694/afc2aed0-fff7-4778-a55f-0697f82e8fa8)
+![ダークモード](https://github.com/mncrp/monot/assets/69241694/f56ec4ee-aac0-474f-b28b-4e47e2b9a221)
 
 ### 履歴
 ![ライトモード](https://user-images.githubusercontent.com/69241694/172031277-1d75b3d0-3b39-41c4-be37-a3d3da5acf35.png)
@@ -113,5 +100,5 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 その他のショートカットキーは[こちら](https://mncrp.github.io/docs/monot/menu)をご覧ください。
 
 ---
-Copyright &copy; 2021-2022 monochrome Project.
+Copyright &copy; 2021-2023 monochrome Project.
 Licensed by [monochrome. License](./LICENSE)

@@ -14,9 +14,9 @@ const aboutContent = {
   icon: isMac ? './src/image/logo-mac.png' : './src/image/logo.png',
   title: lang.getAbout('title'),
   message: lang.getAbout('title'),
-  detail: `Monot by monochrome. v.2.0.0 Beta 1 (Build 11)
-${lang.getAbout('version')}: 2.0.0 Beta 1
-${lang.getAbout('build_no')}: 11
+  detail: `Monot by monochrome. v.2.0.0 (Build 12)
+${lang.getAbout('version')}: 2.0.0
+${lang.getAbout('build_no')}: 12
 ${lang.getAbout('developer')}: monochrome Project.
 
 ${lang.getAbout('repository')}: https://github.com/mncrp/monot
@@ -300,7 +300,9 @@ const menuTemplate = [
         click: () => {
           if (global.win !== null) {
             global.win.webContents.executeJavaScript(`
-              document.getElementsByTagName('span')[${global.tabs.current}].classList.toggle('fixed');
+              document.getElementsByTagName('tab-el')[0]
+                .getElementsByTagName('span')[${global.tabs.current}]
+                .classList.toggle('fixed');
             `);
           }
         }

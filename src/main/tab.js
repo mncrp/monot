@@ -18,7 +18,7 @@ const monotConfig = new LowLevelConfig('config.mncfg').copyFileIfNeeded(`${direc
 const enginesConfig = new LowLevelConfig('engines.mncfg').copyFileIfNeeded(`${directory}/default/config/engines.mncfg`);
 const bookmark = new LowLevelConfig('bookmark.mndata').copyFileIfNeeded(`${directory}/default/data/bookmark.mndata`);
 let windowSize;
-if (monotConfig.update().get('ui') === 'thin') viewY = 28;
+if (monotConfig.update().get('ui') === 'thin') viewY = 29;
 
 class ViewY {
   constructor() {
@@ -39,13 +39,13 @@ class ViewY {
   }
 
   toThin() {
-    viewY = 28;
+    viewY = 29;
     monotConfig
       .update()
       .set('ui', 'thin')
       .save();
     this.type = 'thin';
-    return 28;
+    return 29;
   }
 
   toDefault() {
@@ -112,7 +112,7 @@ class TabManager {
     global.win.webContents.executeJavaScript(`
       document.getElementsByTagName('yomikomi-bar')[0]
       .removeAttribute('id');
-      document.getElementsByTagName('span')[${index}].remove();
+      document.getElementsByTagName('tab-el')[0].getElementsByTagName('span')[${index}].remove();
     `);
     this.tabs[index] = null;
     this.tabs.splice(index, 1);
@@ -150,7 +150,7 @@ class TabManager {
           id: 'search',
           click: () => {
             const selectEngine = enginesConfig.get('engine');
-            const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+            const engineURL = enginesConfig.get(`values`, true).find((item) => item.id === selectEngine).url;
             this.newTab(true, `${engineURL}${selection}`);
           }
         }));
@@ -216,7 +216,7 @@ class Tab {
       browserView.webContents.getUserAgent()
         .replace('monot', 'Chrome')
         .replace(/Electron\/[0-9 | .]/, '')
-        .replace('Chrome/1.1.0', '')
+        .replace('Chrome/2.0.0', '')
     );
 
     try {
@@ -236,7 +236,9 @@ class Tab {
         `file://${directory}/browser/server-notfound.html`
       );
       browserView.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[0].innerText='${browserView.webContents.getURL().toLowerCase()}';
+        window.translated = () => {
+          document.getElementsByTagName('span')[0].innerText='${browserView.webContents.getURL().toLowerCase()}';
+        };
       `);
     });
     // dom-ready
@@ -259,7 +261,7 @@ class Tab {
         enginesConfig.update();
         const wallpaper = monotConfig.update().get('wallpaper');
         const selectEngine = enginesConfig.get('engine');
-        const engineURL = enginesConfig.get(`values.${selectEngine}`, true);
+        const engineURL = enginesConfig.get(`values`, true).find((item) => item.id === selectEngine).url;
         const bookmarks = bookmark.update().data;
         let html = '';
         let i = 0;
@@ -291,7 +293,7 @@ class Tab {
       // favicon-updated
       browserView.webContents.on('page-favicon-updated', (e, favicons) => {
         global.win.webContents.executeJavaScript(`
-          document.getElementsByTagName('span')[${this.number()}]
+          document.getElementsByTagName('tab-el')[0].getElementsByTagName('span')[${this.number()}]
             .getElementsByTagName('img')[0]
             .src = '${favicons[0]}';
         `);
@@ -398,6 +400,7 @@ class Tab {
   }
 
   load(url = new URL(`file://${directory}/browser/home.html`)) {
+    const originalURL = url;
     try {
       if (!(url instanceof URL)) {
         try {
@@ -406,7 +409,7 @@ class Tab {
           if (url.match(/\S+\.\S+/)) {
             url = new URL(`http://${url}`);
           } else {
-            url = new URL(enginesConfig.update().get(`values.${enginesConfig.get('engine')}`, true) + url);
+            url = new URL(enginesConfig.update().get(`values`, true).find((item) => item.id === enginesConfig.get('engine')).url.replace('%s', originalURL));
           }
         }
       }
@@ -447,7 +450,7 @@ class Tab {
   setTabTitle() {
     try {
       global.win.webContents.executeJavaScript(`
-        document.getElementsByTagName('span')[${this.number()}]
+        document.getElementsByTagName('tab-el')[0].getElementsByTagName('span')[${this.number()}]
           .getElementsByTagName('p')[0]
           .innerText='${this.entity.webContents.getTitle()}';
       `);

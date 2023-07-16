@@ -49,7 +49,7 @@ function each() {
       };
       let direction;
       const els = document.getElementsByTagName('span');
-      const target = [].slice.call(els).indexOf(e.target);
+      const target = [].slice.call(els).indexOf(e.target) - 1;
       const destination = [].slice.call(els).indexOf(el());
       const value = (
         pointerX - el().getBoundingClientRect().left
@@ -83,9 +83,6 @@ each();
 
 document.getElementById('textbox').addEventListener('input', () => {
   node.suggest(document.getElementById('textbox').value);
-});
-document.getElementById('textbox').addEventListener('blur', () => {
-  setTimeout(node.suggestClose, 100);
 });
 
 window.addEventListener('contextmenu', (e) => {

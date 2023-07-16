@@ -3,14 +3,15 @@ function moveBrowser() {
   document.activeElement.blur();
 
   node.moveBrowser(word);
+  node.suggestClose();
 }
 
 function textKey(e) {
   const word = e.target.value;
 
-  if (word !== '' && e.key.length === 1)
+  if (!e.isComposing && word !== '' && e.key.length === 1)
     node.suggest(word);
-  else if (e.key.length === 1)
+  else if (!e.isComposing && e.key.length === 1)
     node.suggestClose();
 
   if (!e.isComposing && e.key === 'ArrowUp') {
@@ -22,8 +23,9 @@ function textKey(e) {
   }
 
   if (!e.isComposing && e.key === 'Enter' && word != null) {
-    console.log(e);
     // <span#opened>
     moveBrowser();
   }
+
+  if (word.length === 0) node.suggestClose();
 }

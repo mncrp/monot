@@ -5,7 +5,7 @@
     <title>Monot by monochrome.</title>
     <link rel="stylesheet" href="style/navigation.css">
   </head>
-  <body>
+  <body class="thin">
     <nav>
       <a href="javascript:node.moveToNewTab()" title="Home" id="home"></a>
       <a href="javascript:node.reloadBrowser()" title="${reload}" id="reload"></a>
@@ -14,9 +14,7 @@
       <input type="text" placeholder="${enter_url_word}" id="textbox">
       <a href="javascript:moveBrowser()" title="${go}" id="move"></a>
       <a href="javascript:node.showMenu()" title="${view_menu}" id="menu" class="window"></a>
-      <a href="javascript:node.winMinimize()" title="${minimize}" id="minimize" class="window"></a>
-      <a href="javascript:node.maxMin()" title="${maximize}" id="maximize" class="window"></a>
-      <a href="javascript:node.winClose()" title="${quit}" id="close" class="window"></a>
+      <span id="window-btn"></span>
     </nav>
     <tab-el>
       <div>
@@ -26,5 +24,6 @@
     <yomikomi-bar></yomikomi-bar>
     <script src="script/moveBrowser.js"></script>
     <script src="script/event.js"></script>
+    <script src="../../proprietary/renderer/lang.js"></script>
   </body>
 </html>

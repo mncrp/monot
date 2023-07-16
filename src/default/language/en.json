@@ -14,7 +14,7 @@
     "go_back": "Back",
     "go_forward": "Forward",
     "new_tab": "New Tab",
-    "setting": "Setting",
+    "setting": "Settings",
     "history": "History",
     "bookmark": "Bookmark",
     "hideothers": "Hide Others",
@@ -63,10 +63,12 @@
     "wallpaper": "Wallpaper",
     "select_wallpaper": "Select a wallpaper",
     "select_file": "Select file",
+    "add": "Add",
     "reset_wallpaper": "Reset a wallpaper",
     "reset_theme": "Reset a theme",
     "language": "language",
     "searchEngine": "Search Engine",
+    "addEngine_none": "Enter the URL or name of a search engine.",
     "default": "Default",
     "remove_history": "Remove All History",
     "experimental_function": "Experimental Functions",
@@ -76,6 +78,7 @@
     "fontChange": "Font Change",
     "changedfont": "Enter The Font Name here",
     "acknowledgements": "Acknowledgements",
+    "searchEngineAdd": "To add a search engine, enter it in the input field below. Also, please denote search terms with %s.<br>Example: https://duckduckgo.com/?q=%s",
     "image": "image",
     "theme": "Theme",
     "theme_notset": "Theme is not set now",
@@ -87,6 +90,7 @@
     "overflowMenu": "Overflow Menu",
     "show_window": "Show a Window",
     "other": "Others",
-    "fullScreen": "Enter Full Screen"
+    "fullScreen": "Enter Full Screen",
+    "success": "Succeeded. Reload the settings."
   }
 }

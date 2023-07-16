@@ -49,16 +49,26 @@ const enginesConfig = new LowLevelConfig(
   `${directory}/default/config/engines.mncfg`
 );
 
+if (enginesConfig.update().data.version !== 2) {
+  enginesConfig.data = JSON.parse(require('fs').readFileSync(`${directory}/default/config/engines.mncfg`, 'utf-8'));
+  enginesConfig.save();
+}
+
 function nw() {
   // create window
   monotConfig.update();
   global.win = new BrowserWindow({
     width: monotConfig.get('width'),
     height: monotConfig.get('height'),
-    minWidth: 400,
-    minHeight: 400,
+    minWidth: 450,
+    minHeight: 450,
     show: false,
-    frame: false,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: true,
+    trafficLightPosition: {
+      x: 8,
+      y: 8
+    },
     transparent: false,
     backgroundColor: '#efefef',
     title: 'Monot by monochrome.',
@@ -73,11 +83,16 @@ function nw() {
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
+  global.win.webContents.openDevTools();
 
   function getEngine() {
     enginesConfig.update();
     const selectEngine = enginesConfig.get('engine');
-    return enginesConfig.get(`values.${selectEngine}`, true);
+    return enginesConfig.get(
+      `values`, true
+    ).find(
+      (item) => item.id === selectEngine
+    ).url;
   }
 
   // window's behavior
@@ -105,22 +120,27 @@ function nw() {
     `);
   }
   global.win.webContents.insertCSS(`
-  :root {
-    --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
-  }
-`);
+    :root {
+      --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+    }
+  `);
+
+  global.win.on('enter-full-screen', () => global.win.webContents.executeJavaScript(`document.body.classList.add('full')`));
+  global.win.on('leave-full-screen', () => global.win.webContents.executeJavaScript(`document.body.classList.remove('full')`));
 
   // create tab
   global.tabs.newTab();
 }
 
 function windowClose() {
-  windowSize = global.win.getSize();
-  monotConfig.update()
-    .set('width', windowSize[0])
-    .set('height', windowSize[1])
-    .save();
-  global.win.close();
+  if (global.win) {
+    windowSize = global.win.getSize();
+    monotConfig.update()
+      .set('width', windowSize[0])
+      .set('height', windowSize[1])
+      .save();
+    global.win.close();
+  }
 }
 
 app.on('ready', () => {
@@ -259,10 +279,11 @@ app.on('ready', () => {
     }
     enginesConfig.update();
     global.win.webContents.executeJavaScript(`
-      engine = '${enginesConfig.get(`values.${engine}`, true)}';
+      engine = '${enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url}';
     `);
+    console.log(enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url);
     global.tabs.get().entity.webContents.executeJavaScript(`
-      url = '${enginesConfig.get(`values.${engine}`, true)}';
+      url = '${enginesConfig.get(`values`, true).filter(ar => ar.id === enginesConfig.get(`engine`, true))[0].url}';
     `);
   });
   ipcMain.handle('setting.changeExperimental', (e, change, to) => {
@@ -316,7 +337,7 @@ app.on('ready', () => {
     showHistory();
   });
   ipcMain.handle('updateHistory', () => {
-    const histories = history.getAll();
+    const histories = history.get(0, 20);
     let html = '';
     // eslint-disable-next-line
     for (const [key, value] of Object.entries(histories)) {
@@ -542,6 +563,16 @@ app.on('ready', () => {
   ipcMain.handle('setLang', (e, language) => {
     lang.setLang(language);
   });
+  ipcMain.handle('addEngine', (e, url, name) => {
+    enginesConfig
+      .update()
+      .data.values.push({
+        id: name.slice(0, 3) + name.slice(-3),
+        url: url,
+        name: name
+      });
+    enginesConfig.save();
+  });
 });
 
 app.on('window-all-closed', () => {
@@ -569,13 +600,6 @@ function showSetting() {
 
   // Apply of changes
   const experiments = monotConfig.get('experiments');
-
-  setting.webContents.executeJavaScript(`
-    document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
-    document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
-    ui('${monotConfig.get('ui')}');
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
-  `);
 
   if (monotConfig.get('wallpaper') !== '') {
     setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
@@ -629,6 +653,19 @@ function showSetting() {
         setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
     });
   });
+  ipcMain.removeHandler('init');
+  ipcMain.handle('init', () => {
+    setting.webContents.executeJavaScript(`
+    searchJson = \`${JSON.stringify(enginesConfig.get('values'))}\`;
+    setSearchList(JSON.parse(searchJson));
+    document.getElementById('engine-select').value = '${enginesConfig.get('engine')}';
+
+    document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
+
+    ui('${monotConfig.get('ui')}');
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+  `);
+  });
   ipcMain.removeHandler('setting.openWallpaperDialog');
   ipcMain.handle('setting.openWallpaperDialog', () => {
     const fileDialog = dialog.showOpenDialog(
@@ -648,7 +685,7 @@ function showSetting() {
     );
     fileDialog.then((path) => {
       monotConfig.update()
-        .set('wallpaper', path.filePaths[0])
+        .set('wallpaper', path.filePaths[0].replace(/\\/g, '/'))
         .save();
       if (path.filePaths[0] !== '') {
         setting.webContents.send('updateWallpaper', (monotConfig.get('wallpaper')));
@@ -657,6 +694,11 @@ function showSetting() {
             --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
           }
         `);
+        console.log(`
+        :root {
+          --wallpaper: url('file://${monotConfig.get('wallpaper')}')!important;
+        }
+      `);
       }
     });
   });
@@ -673,7 +715,7 @@ function showHistory() {
       scrollBounce: true
     }
   });
-  historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
+
   // Convert object to html
   const histories = history.getAll();
   let html = '';
@@ -681,18 +723,22 @@ function showHistory() {
   for (const [key, value] of Object.entries(histories)) {
     html = `
       ${html}
-      <div onclick="node.open('${value.pageUrl}');">
-        <div class="history-favicon" style="background-image: url('${value.pageIcon}');"></div>
+      <div onclick="node.open('${value.pageUrl.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}');">
+        <div class="history-favicon" style="background-image: url('${value.pageIcon.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}');"></div>
         <div class="history-details">
           <p>${value.pageTitle.replace(/{/g, '&lbrace;').replace(/}/g, '&rbrace;')}</p>
         </div>
       </div>
     `;
   }
-  historyWin.webContents.executeJavaScript(`
-    document.getElementById('histories').innerHTML = \`${html}\`;
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+  ipcMain.removeHandler('update.History');
+  ipcMain.handle('update.History', () => {
+    historyWin.webContents.executeJavaScript(`
+      document.getElementById('histories').innerHTML = \`${html}\`;
+      document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
   `);
+  });
+  historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
 }
 function showBookmark() {
   const bookmarkWin = new BrowserWindow({
@@ -726,7 +772,7 @@ function showBookmark() {
   }
   bookmarkWin.webContents.executeJavaScript(`
     document.getElementById('bookmarks').innerHTML = \`${html}\`;
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';;
+    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
   `);
 }
 
