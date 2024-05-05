@@ -429,7 +429,7 @@ const menuTemplate = [
         label: lang.get('document'),
         click: () => {
           if (global.tabs.get() !== null) {
-            global.tabs.get().load('https://mncrp.github.io/document/monot/');
+            global.tabs.get().load('https://mncrp.github.io/docs/monot/');
           }
         }
       }
