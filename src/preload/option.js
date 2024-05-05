@@ -75,7 +75,7 @@ contextBridge.exposeInMainWorld('node', {
   },
   viewDocs: () => {
     ipcRenderer.invoke('options');
-    ipcRenderer.invoke('openPage', 'https://mncrp.github.io/document/monot/');
+    ipcRenderer.invoke('openPage', 'https://mncrp.github.io/docs/monot/');
   },
   about: () => {
     ipcRenderer.invoke('options');
