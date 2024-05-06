@@ -98,7 +98,11 @@ const menuTemplate = [
       },
       {
         role: 'hide',
-        label: lang.get('hide')
+        label: lang.get('hide'),
+        accelerator: 'Win+H',
+        click: () => {
+          global.win.hide();
+        }
       },
       {
         type: 'separator'
