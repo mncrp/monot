@@ -36,6 +36,7 @@ h1 {
   box-shadow: 5px 5px 5px #bfbfbf00;
   height: 25px;
   display: flex;
+  cursor: default;
 }
 
 .history-favicon {
