@@ -1,7 +1,7 @@
 {
   "name": "monot",
   "homepage": "https://mncrp.github.io/project/monot",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "The new web browser \"Monot\" by monochrome.",
   "main": "src/main/main.js",
   "repository": "https://github.com/mncrp/monot/",
