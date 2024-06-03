@@ -99,7 +99,7 @@ const menuTemplate = [
       {
         role: 'hide',
         label: lang.get('hide'),
-        accelerator: 'H',
+        accelerator: 'CmdOrCtrl+H',
         click: () => {
           global.win.hide();
         }
