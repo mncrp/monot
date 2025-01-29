@@ -25,6 +25,7 @@ ipcRenderer.on('updatedBookmark', (e, html) => {
 });
 
 contextBridge.exposeInMainWorld('node', {
+  platform: process.platform,
   viewSettings: () => {
     ipcRenderer.invoke('options');
     ipcRenderer.invoke('settings.view');
