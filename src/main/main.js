@@ -54,6 +54,10 @@ if (enginesConfig.update().data.version !== 2) {
   enginesConfig.save();
 }
 
+function replaceBackslashes(str) {
+  return str.replace(/\\/g, "\/");
+}
+
 function nw() {
   // create window
   monotConfig.update();
@@ -106,7 +110,7 @@ function nw() {
     if (monotConfig.get('cssTheme') !== '') {
       const style = monotConfig.get('cssTheme');
       global.win.webContents.executeJavaScript(`
-      document.head.innerHTML += '<link rel="stylesheet" href="${style}">'
+      document.head.innerHTML += '<link rel="stylesheet" href="${replaceBackslashes(style)}">'
     `);
     }
   });
@@ -538,7 +542,7 @@ app.on('ready', () => {
         });
       });
       optionView.webContents.executeJavaScript(`
-        document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+        document.head.innerHTML += '<link rel="stylesheet" href="${replaceBackslashes(monotConfig.get('cssTheme'))}">';
       `);
       global.win.setTopBrowserView(optionView);
     }
@@ -649,7 +653,7 @@ function showSetting() {
         .set('cssTheme', path.filePaths[0])
         .save();
       if (path.filePaths[0] !== '')
-        setting.webContents.send('updateTheme', (monotConfig.get('cssTheme')));
+        setting.webContents.send('updateTheme', (replaceBackslashes(monotConfig.get('cssTheme'))));
     });
   });
   ipcMain.removeHandler('init');
@@ -662,7 +666,7 @@ function showSetting() {
     document.getElementById('lang-select').value = '${monotConfig.get('lang')}';
 
     ui('${monotConfig.get('ui')}');
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+    document.head.innerHTML += '<link rel="stylesheet" href="${replaceBackslashes(monotConfig.get('cssTheme'))}">';
   `);
   });
   ipcMain.removeHandler('setting.openWallpaperDialog');
@@ -734,7 +738,7 @@ function showHistory() {
   ipcMain.handle('update.History', () => {
     historyWin.webContents.executeJavaScript(`
       document.getElementById('histories').innerHTML = \`${html}\`;
-      document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+      document.head.innerHTML += '<link rel="stylesheet" href="${replaceBackslashes(monotConfig.get('cssTheme'))}">';
   `);
   });
   historyWin.webContents.loadFile(`${directory}/renderer/history/index.html`);
@@ -771,7 +775,7 @@ function showBookmark() {
   }
   bookmarkWin.webContents.executeJavaScript(`
     document.getElementById('bookmarks').innerHTML = \`${html}\`;
-    document.head.innerHTML += '<link rel="stylesheet" href="${monotConfig.get('cssTheme')}">';
+    document.head.innerHTML += '<link rel="stylesheet" href="${replaceBackslashes(monotConfig.get('cssTheme'))}">';
   `);
 }
 
