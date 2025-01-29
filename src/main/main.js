@@ -7,6 +7,7 @@ const {
   Menu,
   BrowserView,
   MenuItem,
+  nativeTheme
 } = require('electron');
 
 const {
@@ -68,7 +69,10 @@ function nw() {
     minHeight: 450,
     show: false,
     titleBarStyle: 'hidden',
-    titleBarOverlay: true,
+    titleBarOverlay: isMac ? true : {
+      color: '#0000',
+      symbolColor: nativeTheme.shouldUseDarkColors ? '#fff' : '#000'
+    },
     trafficLightPosition: {
       x: 8,
       y: 8
@@ -87,6 +91,12 @@ function nw() {
       `${directory}/renderer/navigation/navigation-mac.html` :
       `${directory}/renderer/navigation/navigation.html`
   );
+
+  nativeTheme.on('updated', () => {
+    global.win.setTitleBarOverlay({
+      symbolColor: nativeTheme.shouldUseDarkColors ? '#fff' : '#000'
+    });
+  });
 
   function getEngine() {
     enginesConfig.update();
