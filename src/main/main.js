@@ -109,7 +109,6 @@ function nw() {
     ).url;
   }
 
-  global.win.webContents.openDevTools()
   // window's behavior
   global.win.on('closed', () => {
     global.win = null;
