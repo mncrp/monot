@@ -31,6 +31,7 @@ const lang = require(`${directory}/proprietary/lib/lang`);
 const {History} = require(`${directory}/proprietary/lib/history`);
 const history = new History();
 const viewY = new ViewY();
+let textColor = '#000';
 
 // config setting
 const {LowLevelConfig} = require(`${directory}/proprietary/lib/config.js`);
@@ -71,7 +72,7 @@ function nw() {
     titleBarStyle: 'hidden',
     titleBarOverlay: isMac ? true : {
       color: '#0000',
-      symbolColor: nativeTheme.shouldUseDarkColors ? '#fff' : '#000'
+      symbolColor: textColor ? textColor : (nativeTheme.shouldUseDarkColors ? '#fff' : '#000')
     },
     trafficLightPosition: {
       x: 8,
@@ -94,7 +95,7 @@ function nw() {
 
   nativeTheme.on('updated', () => {
     global.win.setTitleBarOverlay({
-      symbolColor: nativeTheme.shouldUseDarkColors ? '#fff' : '#000'
+      symbolColor: textColor ? textColor : (nativeTheme.shouldUseDarkColors ? '#fff' : '#000')
     });
   });
 
@@ -108,6 +109,7 @@ function nw() {
     ).url;
   }
 
+  global.win.webContents.openDevTools()
   // window's behavior
   global.win.on('closed', () => {
     global.win = null;
@@ -120,8 +122,8 @@ function nw() {
     if (monotConfig.get('cssTheme') !== '') {
       const style = monotConfig.get('cssTheme');
       global.win.webContents.executeJavaScript(`
-      document.head.innerHTML += '<link rel="stylesheet" href="${replaceBackslashes(style)}">'
-    `);
+        document.head.innerHTML += '<link rel="stylesheet" href="${replaceBackslashes(style)}" onload="updateTextColor()">';
+      `);
     }
   });
   global.win.on('ready-to-show', () => {
@@ -143,6 +145,17 @@ function nw() {
 
   // create tab
   global.tabs.newTab();
+
+  ipcMain.handle("getTextColor", () => {
+    return textColor;
+  });
+  ipcMain.on("setTextColor", (event, newColor) => {
+    textColor = newColor ? newColor : '#000';
+    console.debug(textColor);
+    global.win.setTitleBarOverlay({
+      symbolColor: textColor
+    });
+  });
 }
 
 function windowClose() {

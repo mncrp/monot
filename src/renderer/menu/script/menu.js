@@ -36,6 +36,6 @@ function toggleVisiblityByPlatform(platform) {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener('DOMContentLoaded', () => {
   toggleVisiblityByPlatform(window.node.platform);
 });
