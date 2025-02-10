@@ -22,7 +22,7 @@ ${lang.getAbout('developer')}: monochrome Project.
 ${lang.getAbout('repository')}: https://github.com/mncrp/monot
 ${lang.getAbout('official_website')}: https://mncrp.github.io/project/monot/
 
-Copyright ©︎ 2021-2024 monochrome Project.`
+Copyright ©︎ 2021-2025 monochrome Project.`
 };
 
 const navigationContextMenuTemplate = [
