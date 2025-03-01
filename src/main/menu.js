@@ -14,15 +14,15 @@ const aboutContent = {
   icon: isMac ? './src/image/logo-mac.png' : './src/image/logo.png',
   title: lang.getAbout('title'),
   message: lang.getAbout('title'),
-  detail: `Monot by monochrome. v.2.0.0 (Build 12)
-${lang.getAbout('version')}: 2.0.0
-${lang.getAbout('build_no')}: 12
+  detail: `Monot by monochrome. v.2.0.1 (Build 13)
+${lang.getAbout('version')}: 2.0.1
+${lang.getAbout('build_no')}: 13
 ${lang.getAbout('developer')}: monochrome Project.
 
 ${lang.getAbout('repository')}: https://github.com/mncrp/monot
 ${lang.getAbout('official_website')}: https://mncrp.github.io/project/monot/
 
-Copyright ©︎ 2021-2023 monochrome Project.`
+Copyright ©︎ 2021-2025 monochrome Project.`
 };
 
 const navigationContextMenuTemplate = [
@@ -98,7 +98,11 @@ const menuTemplate = [
       },
       {
         role: 'hide',
-        label: lang.get('hide')
+        label: lang.get('hide'),
+        accelerator: 'CmdOrCtrl+H',
+        click: () => {
+          global.win.hide();
+        }
       },
       {
         type: 'separator'
@@ -429,7 +433,7 @@ const menuTemplate = [
         label: lang.get('document'),
         click: () => {
           if (global.tabs.get() !== null) {
-            global.tabs.get().load('https://mncrp.github.io/document/monot/');
+            global.tabs.get().load('https://mncrp.github.io/docs/monot/');
           }
         }
       }
