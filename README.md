@@ -1,5 +1,5 @@
 ![image](https://github.com/mncrp/monot/assets/69241694/7dc9e84b-1469-4b23-96fa-ea877707b184)
-# **Monot by monochrome.** <span style="font-size: .5em">v.2.0.0 (Build 12)</span>
+# **Monot by monochrome.** <span style="font-size: .5em">v.2.0.1 (Build 13)</span>
 
 monochrome.による、「オシャレ、高機能、そして使いやすい」を目指しているウェブブラウザです。
 
@@ -9,10 +9,10 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 |Monot|について|
 |:--|:--|
 |名前|Monot|
-|正式名称|Monot by monochrome. v.2.0.0 (Build 12)|
-|バージョン|v.2.0.0|
-|ビルド番号|10|
-|公開日|2023年7月16日(日曜日)|
+|正式名称|Monot by monochrome. v.2.0.1 (Build 13)|
+|バージョン|v.2.0.1|
+|ビルド番号|13|
+|公開日|2025年3月2日(日曜日)|
 |ライセンス|[monochrome. License](./LICENSE)|
 |言語|JavaScript, HTML, CSS|
 |対応言語|日本語、英語|
@@ -28,7 +28,7 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 
 ![アップデート内容](https://github.com/mncrp/monot/assets/69241694/7dc9e84b-1469-4b23-96fa-ea877707b184)
 ## アップデート内容
-詳細：https://mncrp.github.io/news/3
+詳細：https://mncrp.github.io/news/4
 
 - Homeのデザインの大幅変更
 - 日本語以外の多言語に対応（現段階では英語のみ）
@@ -100,5 +100,5 @@ monochrome.による、「オシャレ、高機能、そして使いやすい」
 その他のショートカットキーは[こちら](https://mncrp.github.io/docs/monot/menu)をご覧ください。
 
 ---
-Copyright &copy; 2021-2023 monochrome Project.
+Copyright &copy; 2021-2025 monochrome Project.
 Licensed by [monochrome. License](./LICENSE)
