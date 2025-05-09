@@ -485,11 +485,11 @@ class Tab {
 
   goBack() {
     this.entity.webContents.stop();
-    this.entity.webContents.goBack();
+    this.entity.webContents.navigationHistory.goBack();
   }
 
   goForward() {
-    this.entity.webContents.goForward();
+    this.entity.webContents.navigationHistory.goForward();
   }
 
   reload() {
