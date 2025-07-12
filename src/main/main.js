@@ -57,7 +57,7 @@ if (enginesConfig.update().data.version !== 2) {
 }
 
 function replaceBackslashes(str) {
-  return str.replace(/\\/g, "\/");
+  return str.replace(/\\/g, '\/');
 }
 
 function nw() {
@@ -145,10 +145,10 @@ function nw() {
   // create tab
   global.tabs.newTab();
 
-  ipcMain.handle("getTextColor", () => {
+  ipcMain.handle('getTextColor', () => {
     return textColor;
   });
-  ipcMain.on("setTextColor", (event, newColor) => {
+  ipcMain.on('setTextColor', (event, newColor) => {
     textColor = newColor ? newColor : '#000';
     console.debug(textColor);
     global.win.setTitleBarOverlay({

@@ -88,10 +88,10 @@ contextBridge.exposeInMainWorld('node', {
   translate: (inEn) => {
     return ipcRenderer.invoke('translate.get', inEn);
   },
-  getTextColor: async () => {
-    await ipcRenderer.invoke("getTextColor")
+  getTextColor: async() => {
+    await ipcRenderer.invoke('getTextColor');
   },
   setTextColor: (newColor) => {
-    ipcRenderer.send("setTextColor", newColor)
+    ipcRenderer.send('setTextColor', newColor);
   }
 });

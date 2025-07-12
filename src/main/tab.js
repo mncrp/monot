@@ -21,7 +21,7 @@ let windowSize;
 if (monotConfig.update().get('ui') === 'thin') viewY = 29;
 
 function replaceBackslashes(str) {
-  return str.replace(/\\/g, "\/");
+  return str.replace(/\\/g, '\/');
 }
 
 class ViewY {

@@ -90,6 +90,6 @@ window.addEventListener('contextmenu', (e) => {
   node.popupMenu();
 });
 
-function updateTextColor () {
+function updateTextColor() {
   window.node.setTextColor(getComputedStyle(document.documentElement).getPropertyValue('--text-color'));
 }

@@ -27,7 +27,7 @@ function experimental(e) {
 }
 
 function setSearchList(array) {
-  let searctList = document.getElementsByTagName('select')[1];
+  const searctList = document.getElementsByTagName('select')[1];
   for (let i = 0; i < array.length; i++) {
     const list = document.createElement('option');
     list.value = array[i].id;
