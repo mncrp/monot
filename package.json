@@ -13,7 +13,7 @@
     "format": "npx eslint --fix ."
   },
   "author": "monochrome Project.",
-  "license": "ISC",
+  "license": "monochrome. License by monochrome. v.2.0.0",
   "devDependencies": {
     "electron": "^34.5.8",
     "electron-builder": "^23.3.3",
