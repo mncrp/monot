@@ -39,7 +39,7 @@ if (webFrame.parent === null) {
       }();
 
       node.addHistory(
-        ${webFrame.routingId},
+        ${webFrame.frameToken},
         document.head.getElementsByTagName('title')[0].innerText,
         description,
         location.href,
@@ -100,7 +100,7 @@ ipcRenderer.on('addBookmark', () => {
       }();
       
       node.addBookmark(
-        ${webFrame.routingId},
+        ${webFrame.frameToken},
         document.head.getElementsByTagName('title')[0].innerText,
         description,
         location.href,
@@ -117,8 +117,8 @@ contextBridge.exposeInMainWorld('node', {
   context: (text) => {
     ipcRenderer.invoke('context', text);
   },
-  addHistory: (routingId, title, description, url, icon) => {
-    if (routingId === webFrame.routingId) {
+  addHistory: (frameToken, title, description, url, icon) => {
+    if (frameToken === webFrame.frameToken) {
       // 最高
       ipcRenderer.invoke('addHistory', {
         pageTitle: title,
@@ -128,8 +128,8 @@ contextBridge.exposeInMainWorld('node', {
       });
     }
   },
-  addBookmark: (routingId, title, description, url, icon) => {
-    if (routingId === webFrame.routingId) {
+  addBookmark: (frameToken, title, description, url, icon) => {
+    if (frameToken === webFrame.frameToken) {
       // 最高
       ipcRenderer.invoke('addBookmark', {
         pageTitle: title,
